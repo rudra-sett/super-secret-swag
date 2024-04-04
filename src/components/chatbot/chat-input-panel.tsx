@@ -348,7 +348,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
 
 
   function assembleHistory(history: ChatBotHistoryItem[]) {
-    var hist = [];
+    var hist : Object[] = [];
     pairwise(history, function (current: ChatBotHistoryItem, next: ChatBotHistoryItem) {
       hist.push({ "user": current.content, "chatbot": next.content })
     })
@@ -370,6 +370,25 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
 
     const messageToSend = state.value.trim();
     try {
+      /*
+      curl -X POST -H "Content-Type: application/json" -d '{"projectId": "rsrs111111", "systemPrompt": "You are an AI assistant for the MBTAs The RIDE. Answer questions about it.", "userMessage":"how much does it cost?", "chatHistory": [{"user":"what is the RIDE?","chatbot":"The RIDE is a shared paratransit service that offers door-to-door transit."}]}' "https://sg4ozxukd5pu7nplx6gd3m64by0qslfb.lambda-url.us-east-1.on.aws/"
+      */
+
+      /*
+          userMessage: messageToSend,
+          chatHistory: assembleHistory(messageHistoryRef.current),
+          systemPrompt: `You are an AI chatbot for the RIDE, an MBTA paratransit service. You will help customer service representatives respond to user complaints and queries.
+          Answer questions based on your knowledge and nothing more. If you are unable to decisively answer a question, direct them to customer service. Do not make up information outside of your given information.
+          Customer service is needed if it is something you cannot answer. Requests for fare history require customer service, as do service complaints like a rude driver or late pickup.
+          Highly-specific situations will also require customer service to step in. Remember that RIDE Flex and RIDE are not the same service. 
+          Phone numbers:
+          TRAC (handles scheduling/booking, trip changes/cancellations, anything time-sensitive): 844-427-7433 (voice/relay) 857-206-6569 (TTY)
+          Mobility Center (handles eligibility questions, renewals, and changes to mobility status): 617-337-2727 (voice/relay)
+          MBTA Customer support (handles all other queries): 617-222-3200 (voice/relay)`,
+          projectId: 'rsrs111111'
+
+
+      */
       const response = await fetch('http://Ride-ALB-1625448229.us-east-1.elb.amazonaws.com:8000/chat', {
         method: 'POST',
         headers: {

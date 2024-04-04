@@ -13,6 +13,7 @@ export default function NavigationPanel() {
   const onFollow = useOnFollow();
   const [navigationPanelState, setNavigationPanelState] =
     useNavigationPanelState();
+    
   const [items] = useState<SideNavigationProps.Item[]>(() => {
     const items: SideNavigationProps.Item[] = [
       {
@@ -44,39 +45,39 @@ export default function NavigationPanel() {
       },
     ];
 
-    if (appContext?.config.rag_enabled) {
-      const crossEncodersItems: SideNavigationProps.Item[] = appContext?.config
-        .cross_encoders_enabled
-        ? [
-            {
-              type: "link",
-              text: "Cross-encoders",
-              href: "/rag/cross-encoders",
-            },
-          ]
-        : [];
+    // if (appContext?.config.rag_enabled) {
+    //   const crossEncodersItems: SideNavigationProps.Item[] = appContext?.config
+    //     .cross_encoders_enabled
+    //     ? [
+    //         {
+    //           type: "link",
+    //           text: "Cross-encoders",
+    //           href: "/rag/cross-encoders",
+    //         },
+    //       ]
+    //     : [];
 
-      items.push({
-        type: "section",
-        text: "Retrieval-Augmented Generation (RAG)",
-        items: [
-          { type: "link", text: "Dashboard", href: "/rag" },
-          {
-            type: "link",
-            text: "Semantic search",
-            href: "/rag/semantic-search",
-          },
-          { type: "link", text: "Workspaces", href: "/rag/workspaces" },
-          {
-            type: "link",
-            text: "Embeddings",
-            href: "/rag/embeddings",
-          },
-          ...crossEncodersItems,
-          { type: "link", text: "Engines", href: "/rag/engines" },
-        ],
-      });
-    }
+    //   items.push({
+    //     type: "section",
+    //     text: "Retrieval-Augmented Generation (RAG)",
+    //     items: [
+    //       { type: "link", text: "Dashboard", href: "/rag" },
+    //       {
+    //         type: "link",
+    //         text: "Semantic search",
+    //         href: "/rag/semantic-search",
+    //       },
+    //       { type: "link", text: "Workspaces", href: "/rag/workspaces" },
+    //       {
+    //         type: "link",
+    //         text: "Embeddings",
+    //         href: "/rag/embeddings",
+    //       },
+    //       ...crossEncodersItems,
+    //       { type: "link", text: "Engines", href: "/rag/engines" },
+    //     ],
+    //   });
+    // }
 
     items.push(
       { type: "divider" },

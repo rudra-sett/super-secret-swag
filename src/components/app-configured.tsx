@@ -45,9 +45,9 @@ export default function AppConfigured() {
               currentConfig.config.auth_federated_provider;
 
             if (!federatedProvider.custom) {
-              Auth.federatedSignIn({ provider: federatedProvider.name });
+              // Auth.federatedSignIn({ provider: federatedProvider.name });
             } else {
-              Auth.federatedSignIn({ customProvider: federatedProvider.name });
+              // Auth.federatedSignIn({ customProvider: federatedProvider.name });
             }
 
             return;
