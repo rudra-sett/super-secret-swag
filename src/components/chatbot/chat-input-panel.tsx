@@ -370,6 +370,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
 
     const messageToSend = state.value.trim();
     try {
+      props.setRunning(true);
       /*
       curl -X POST -H "Content-Type: application/json" -d '{"projectId": "rsrs111111", "systemPrompt": "You are an AI assistant for the MBTAs The RIDE. Answer questions about it.", "userMessage":"how much does it cost?", "chatHistory": [{"user":"what is the RIDE?","chatbot":"The RIDE is a shared paratransit service that offers door-to-door transit."}]}' "https://sg4ozxukd5pu7nplx6gd3m64by0qslfb.lambda-url.us-east-1.on.aws/"
       */
@@ -419,8 +420,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       let receivedData = '';
       if (response.body) {
         const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        props.setRunning(true);
+        const decoder = new TextDecoder();        
 
         messageHistoryRef.current = [
           ...messageHistoryRef.current,
@@ -479,7 +479,8 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     } catch (error) {
       // setMessage('');
       console.error('Error sending message:', error);
-      alert('Sorry, something has gone horribly wrong!');
+      alert('Sorry, something has gone horribly wrong! Please try again or refresh the page.');
+      props.setRunning(false);
     }
     // const request: ChatBotRunRequest = {
     //   action: ChatBotAction.Run,
