@@ -369,6 +369,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     // // );
 
     const messageToSend = state.value.trim();
+    setState({value:""});
     try {
       props.setRunning(true);
       /*
@@ -511,18 +512,25 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     //   },
     // };
     // console.log(request);
-    setState((state) => ({
-      ...state,
-      value: "",
-    }));
+    
+    // THIS RESETS THE MESSAGE BOX ONCE A RESPONSE IS DONE
+    // commented because if you type out your next query while a message is streaming,
+    // it'll delete that query which sucks
+
+    // setState((state) => ({
+    //   ...state,
+    //   value: "",
+    // }));
     // setFiles([]);
+
+    // no idea what this does
 
     // props.setConfiguration({
     //   ...props.configuration,
     //   files: [],
     // });
 
-
+    // graphQL things we don't need anymore
 
     // API.graphql({
     //   query: sendQuery,
@@ -540,12 +548,16 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     [ReadyState.UNINSTANTIATED]: "Uninstantiated",
   }[readyState];
 
-  // const modelsOptions = OptionsHelper.getSelectOptionGroups(state.models ?? []);
+  // imagine having model options
 
-  // const workspaceOptions = [
-  //   ...workspaceDefaultOptions,
-  //   ...OptionsHelper.getSelectOptions(state.workspaces ?? []),
-  // ];
+  /*
+  const modelsOptions = OptionsHelper.getSelectOptionGroups(state.models ?? []);
+
+  const workspaceOptions = [
+    ...workspaceDefaultOptions,
+    ...OptionsHelper.getSelectOptions(state.workspaces ?? []),
+  ]; 
+  */
 
   return (
     <SpaceBetween direction="vertical" size="l">
@@ -565,7 +577,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             ) : (
               <Icon name="microphone-off" variant="disabled" />
             )}
-            {/* {state.selectedModelMetadata?.inputModalities.includes(
+            {/* 
+            image button dialogue
+            {state.selectedModelMetadata?.inputModalities.includes(
               ChabotInputModality.Image
             ) && (
               <Button
