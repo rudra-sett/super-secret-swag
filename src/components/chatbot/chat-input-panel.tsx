@@ -389,16 +389,30 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
 
 
       */
-      const response = await fetch('http://Ride-ALB-1625448229.us-east-1.elb.amazonaws.com:8000/chat', {
+
+          /*
+          message: messageToSend,
+          history: assembleHistory(messageHistoryRef.current),
+          model: 'anthropic.claude-v2:1',
+          rag: 'fdfa8142-736d-44e9-baab-7491f3faeea3'
+          */
+      const response = await fetch('https://sg4ozxukd5pu7nplx6gd3m64by0qslfb.lambda-url.us-east-1.on.aws/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: messageToSend,
-          history: assembleHistory(messageHistoryRef.current),
-          model: 'anthropic.claude-v2:1',
-          rag: 'fdfa8142-736d-44e9-baab-7491f3faeea3'
+          userMessage: messageToSend,
+          chatHistory: assembleHistory(messageHistoryRef.current),
+          systemPrompt: `You are an AI chatbot for the RIDE, an MBTA paratransit service. You will help customer service representatives respond to user complaints and queries.
+          Answer questions based on your knowledge and nothing more. If you are unable to decisively answer a question, direct them to customer service. Do not make up information outside of your given information.
+          Customer service is needed if it is something you cannot answer. Requests for fare history require customer service, as do service complaints like a rude driver or late pickup.
+          Highly-specific situations will also require customer service to step in. Remember that RIDE Flex and RIDE are not the same service. 
+          Phone numbers:
+          TRAC (handles scheduling/booking, trip changes/cancellations, anything time-sensitive): 844-427-7433 (voice/relay) 857-206-6569 (TTY)
+          Mobility Center (handles eligibility questions, renewals, and changes to mobility status): 617-337-2727 (voice/relay)
+          MBTA Customer support (handles all other queries): 617-222-3200 (voice/relay)`,
+          projectId: 'rsrs111111'
         }),
       });
 
