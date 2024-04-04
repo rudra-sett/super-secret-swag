@@ -424,7 +424,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         },
         body: JSON.stringify({
           userMessage: messageToSend,
-          chatHistory: assembleHistory(messageHistoryRef.current),
+          chatHistory: assembleHistory(messageHistoryRef.current.slice(0,-2)),
           systemPrompt: `You are an AI chatbot for the RIDE, an MBTA paratransit service. You will help customer service representatives respond to user complaints and queries.
           Answer questions based on your knowledge and nothing more. If you are unable to decisively answer a question, direct them to customer service. Do not make up information outside of your given information.
           Customer service is needed if it is something you cannot answer. Requests for fare history require customer service, as do service complaints like a rude driver or late pickup.
