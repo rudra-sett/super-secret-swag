@@ -430,7 +430,7 @@ bin/*.js
 lib/**/*.js
 !lib/chatbot-api/functions/resolvers/**/*.js
 !jest.config.js
-*.d.ts
+
 node_modules
 
 aws-exports.json
