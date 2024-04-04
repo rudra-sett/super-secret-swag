@@ -397,6 +397,25 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           model: 'anthropic.claude-v2:1',
           rag: 'fdfa8142-736d-44e9-baab-7491f3faeea3'
           */
+        let receivedData = '';
+        messageHistoryRef.current = [
+          ...messageHistoryRef.current,
+
+          {
+            type: ChatBotMessageType.Human,
+            content: messageToSend,
+            metadata: {
+              ...props.configuration,
+            },
+            tokens: [],
+          },
+          {
+            type: ChatBotMessageType.AI,
+            tokens: [],
+            content: receivedData,
+            metadata: {},
+          },
+        ];
       const response = await fetch('https://sg4ozxukd5pu7nplx6gd3m64by0qslfb.lambda-url.us-east-1.on.aws/', {
         method: 'POST',
         headers: {
@@ -417,29 +436,11 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         }),
       });
 
-      let receivedData = '';
+      
       if (response.body) {
         const reader = response.body.getReader();
         const decoder = new TextDecoder();        
 
-        messageHistoryRef.current = [
-          ...messageHistoryRef.current,
-
-          {
-            type: ChatBotMessageType.Human,
-            content: messageToSend,
-            metadata: {
-              ...props.configuration,
-            },
-            tokens: [],
-          },
-          {
-            type: ChatBotMessageType.AI,
-            tokens: [],
-            content: receivedData,
-            metadata: {},
-          },
-        ];
         while (true) {
           const { value, done } = await reader.read();
           if (done) {
