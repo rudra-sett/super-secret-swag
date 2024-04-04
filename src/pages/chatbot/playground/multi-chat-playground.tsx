@@ -1,5 +1,5 @@
 import BaseAppLayout from "../../../components/base-app-layout";
-import MultiChat from "../../../components/chatbot/multi-chat";
+// import MultiChat from "../../../components/chatbot/multi-chat";
 import { Header, HelpPanel } from "@cloudscape-design/components";
 import { Link } from "react-router-dom";
 

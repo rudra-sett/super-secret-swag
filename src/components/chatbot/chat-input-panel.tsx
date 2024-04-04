@@ -18,6 +18,9 @@ import {
   useState,
 } from "react";
 import { useNavigate } from "react-router-dom";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 import TextareaAutosize from "react-textarea-autosize";
 import { ReadyState } from "react-use-websocket";
 // import { ApiClient } from "../../common/api-client/api-client";
@@ -47,7 +50,7 @@ import {
 } from "./types";
 // import { sendQuery } from "../../graphql/mutations";
 import {
-  getSelectedModelMetadata,
+  // getSelectedModelMetadata,
   getSignedUrl,
   updateMessageHistoryRef,
 } from "./utils";
@@ -86,6 +89,8 @@ export abstract class ChatScrollState {
 export default function ChatInputPanel(props: ChatInputPanelProps) {
   // const appContext = useContext(AppContext);
   const navigate = useNavigate();
+  const { transcript, listening, browserSupportsSpeechRecognition } =
+    useSpeechRecognition();
   const [state, setState] = useState<ChatInputState>({
     value: "",
     // selectedModel: null,
@@ -194,11 +199,11 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
 
   // uhhh I think this handles speech stuff??
 
-  // useEffect(() => {
-  //   if (transcript) {
-  //     setState((state) => ({ ...state, value: transcript }));
-  //   }
-  // }, [transcript]);
+  useEffect(() => {
+    if (transcript) {
+      setState((state) => ({ ...state, value: transcript }));
+    }
+  }, [transcript]);
 
   // this handles models/workspaces
 
@@ -511,6 +516,19 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       <Container>
         <div className={styles.input_textarea_container}>
           <SpaceBetween size="xxs" direction="horizontal" alignItems="center">
+          {browserSupportsSpeechRecognition ? (
+              <Button
+                iconName={listening ? "microphone-off" : "microphone"}
+                variant="icon"
+                onClick={() =>
+                  listening
+                    ? SpeechRecognition.stopListening()
+                    : SpeechRecognition.startListening()
+                }
+              />
+            ) : (
+              <Icon name="microphone-off" variant="disabled" />
+            )}
             {/* {state.selectedModelMetadata?.inputModalities.includes(
               ChabotInputModality.Image
             ) && (
@@ -532,7 +550,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
                   </svg>
                 }
               ></Button>
-            )} */}
+             )}*/} 
           </SpaceBetween>
           {/* <ImageDialog
             sessionId={props.session.id}

@@ -1,4 +1,4 @@
-import { Model, Workspace } from "../../API";
+// import { Model, Workspace } from "../../API";
 import { LoadingStatus, ModelInterface } from "../../common/types";
 import { SelectProps } from "@cloudscape-design/components";
 

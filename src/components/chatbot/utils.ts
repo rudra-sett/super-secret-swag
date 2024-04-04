@@ -9,7 +9,7 @@ import {
 import { ChatSession } from "./multi-chat";
 import { SelectProps } from "@cloudscape-design/components";
 import { OptionsHelper } from "../../common/helpers/options-helper";
-import { Model } from "../../API";
+// import { Model } from "../../API";
 
 export function updateMessageHistory(
   sessionId: string,
@@ -308,24 +308,24 @@ export async function getSignedUrl(key: string) {
   return signedUrl;
 }
 
-export function getSelectedModelMetadata(
-  models: Model[] | undefined,
-  selectedModelOption: SelectProps.Option | null
-): Model | null {
-  let selectedModelMetadata: Model | null = null;
+// export function getSelectedModelMetadata(
+//   models: Model[] | undefined,
+//   selectedModelOption: SelectProps.Option | null
+// ): Model | null {
+//   let selectedModelMetadata: Model | null = null;
 
-  if (selectedModelOption) {
-    const { name, provider } = OptionsHelper.parseValue(
-      selectedModelOption.value
-    );
-    const targetModel = models?.find(
-      (m) => m.name === name && m.provider === provider
-    );
+//   if (selectedModelOption) {
+//     const { name, provider } = OptionsHelper.parseValue(
+//       selectedModelOption.value
+//     );
+//     const targetModel = models?.find(
+//       (m) => m.name === name && m.provider === provider
+//     );
 
-    if (targetModel) {
-      selectedModelMetadata = targetModel;
-    }
-  }
+//     if (targetModel) {
+//       selectedModelMetadata = targetModel;
+//     }
+//   }
 
-  return selectedModelMetadata;
-}
+//   return selectedModelMetadata;
+// }

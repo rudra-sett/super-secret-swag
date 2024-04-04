@@ -1,7 +1,7 @@
 export class Utils {
-  static isDevelopment() {
-    return import.meta.env.MODE === "development";
-  }
+  // static isDevelopment() {
+  //   return import.meta.env.MODE === "development";
+  // }
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   static isFunction(value: unknown): value is Function {
