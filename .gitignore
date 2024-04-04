@@ -433,7 +433,7 @@ lib/**/*.js
 
 node_modules
 
-aws-exports.json
+# aws-exports.json
 .cdk.staging
 cdk.context.json
 cdk.out
