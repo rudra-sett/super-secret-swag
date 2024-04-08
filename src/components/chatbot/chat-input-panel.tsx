@@ -449,6 +449,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         ];
 
         props.setMessageHistory(messageHistoryRef.current);
+<<<<<<< HEAD
         // if (data.data == '') {
         //   ws.close()
         // }
@@ -463,6 +464,23 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         // await apiClient.sessions.updateSession("0", props.session.id, messageHistoryRef.current);
         props.setRunning(false);        
         console.log('Disconnected from the WebSocket server');
+=======
+      const response = await fetch('https://sg4ozxukd5pu7nplx6gd3m64by0qslfb.lambda-url.us-east-1.on.aws/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userMessage: messageToSend,
+          chatHistory: assembleHistory(messageHistoryRef.current.slice(0,-2)),
+          systemPrompt: `You are an AI chatbot for the MassDOT Highway Division. 
+          Your role is to assist engineers with guidelines, information, and standard specifications relevant to their queries.
+          Provide answers based on official MassDOT documents, standards, and your programmed knowledge. 
+          If a question is outside your scope or requires specific, real-time data, direct the engineers to the appropriate department or resource.
+          In cases where detailed project specifications or updated regulations are needed, recommend contacting the relevant MassDOT department.)`,
+          projectId: 'smjv012345'
+        }),
+>>>>>>> df402c8 (First commit with dot changes)
       });
 
     } catch (error) {
