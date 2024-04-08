@@ -8,7 +8,7 @@ import {
 import { SpaceBetween, StatusIndicator } from "@cloudscape-design/components";
 import { v4 as uuidv4 } from "uuid";
 // import { AppContext } from "../../common/app-context";
-import { ApiClient } from "../../common/api-client/api-client";
+// import { ApiClient } from "../../common/api-client/api-client";
 import ChatMessage from "./chat-message";
 import ChatInputPanel, { ChatScrollState } from "./chat-input-panel";
 import styles from "../../styles/chat.module.scss";
