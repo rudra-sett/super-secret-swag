@@ -475,7 +475,8 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           chatHistory: assembleHistory(messageHistoryRef.current.slice(0,-2)),
           systemPrompt: `You are an AI Assistant for the MassDOT Highway Division. 
           Your role is to assist engineers with MassDOT specific guidelines, information, and standard specifications based on the provided context. 
-          If you don't know the answer, just say that you don't know. Don't try to make up an answer. Do not answer beyond this context.`,
+          If you don't know the answer, just say that you don't know. Don't try to make up an answer. Do not answer beyond this context.
+          Give the link of citation you got from the Kendra at the end.`,
           projectId: 'smjv012345'
         }),
 >>>>>>> df402c8 (First commit with dot changes)
