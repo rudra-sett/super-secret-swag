@@ -25,24 +25,29 @@ export default function NavigationPanel() {
         type: "section",
         text: "Chatbot",
         items: [
-          { type: "link", text: "Playground", href: "/chatbot/playground" },
-          {
-            type: "link",
-            text: "Multi-chat playground",
-            href: "/chatbot/multichat",
-          },
-          {
-            type: "link",
-            text: "Sessions",
-            href: "/chatbot/sessions",
-          },
-          {
-            type: "link",
-            text: "Models",
-            href: "/chatbot/models",
-          },
+          { type: "link", text: "Chat", href: "/chatbot/playground" },
+          // {
+          //   type: "link",
+          //   text: "Multi-chat playground",
+          //   href: "/chatbot/multichat",
+          // },
+          // {
+          //   type: "link",
+          //   text: "Sessions",
+          //   href: "/chatbot/sessions",
+          // },
+          // {
+          //   type: "link",
+          //   text: "Models",
+          //   href: "/chatbot/models",
+          // },
         ],
       },
+      {
+        type: "section",
+        text: "Admin",
+        items: [
+          { type: "link", text: "Update Data", href: "/admin/add-data" },]}
     ];
 
     // if (appContext?.config.rag_enabled) {

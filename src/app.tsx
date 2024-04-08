@@ -10,7 +10,7 @@ import { AppContext } from "./common/app-context";
 import GlobalHeader from "./components/global-header";
 import Playground from "./pages/chatbot/playground/playground";
 import NotFound from "./pages/not-found";
-// import AddData from "./pages/rag/add-data/add-data";
+import AddData from "./pages/admin/add-data";
 // import CreateWorkspace from "./pages/rag/create-workspace/create-workspace";
 // import Dashboard from "./pages/rag/dashboard/dashboard";
 // import RssFeed from "./pages/rag/workspace/rss-feed";
@@ -33,7 +33,11 @@ function App() {
             <Route index path="/" element={<Playground />} />
             <Route path="/chatbot" element={<Outlet />}>
               <Route path="playground" element={<Playground />} />
-              <Route path="playground/:sessionId" element={<Playground />} />
+              {/* <Route path="playground/:sessionId" element={<Playground />} /> */}
+              {/* <Route path="sessions" element={<SessionPage />} /> if we want history*/}
+            </Route>
+            <Route path="/admin" element={<Outlet />}>
+             <Route path="add-data" element={<AddData />} />          
               {/* <Route path="sessions" element={<SessionPage />} /> if we want history*/}
             </Route>
             {/* <Route path="/rag" element={<Outlet />}>
