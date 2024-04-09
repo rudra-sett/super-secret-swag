@@ -32,8 +32,8 @@ export interface ChatMessageProps {
   message: ChatBotHistoryItem;
   configuration?: ChatBotConfiguration;
   showMetadata?: boolean;
-  // onThumbsUp: () => void;
-  // onThumbsDown: () => void;
+  onThumbsUp: () => void;
+  onThumbsDown: () => void;
 }
 
 export default function ChatMessage(props: ChatMessageProps) {
@@ -284,7 +284,8 @@ export default function ChatMessage(props: ChatMessageProps) {
                 variant="icon"
                 iconName={selectedIcon === 1 ? "thumbs-up-filled" : "thumbs-up"}
                 onClick={() => {
-                  // props.onThumbsUp();
+                  // console.log("pressed thumbs up!")
+                  props.onThumbsUp();
                   setSelectedIcon(1);
                 }}
               />
@@ -296,7 +297,7 @@ export default function ChatMessage(props: ChatMessageProps) {
                 }
                 variant="icon"
                 onClick={() => {
-                  // props.onThumbsDown();
+                  props.onThumbsDown();
                   setSelectedIcon(0);
                 }}
               />

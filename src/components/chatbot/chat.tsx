@@ -80,33 +80,41 @@ export default function Chat(props: { sessionId?: string }) {
   //   })();
   // }, [appContext, props.sessionId]);
 
-  // const handleFeedback = (feedbackType: 1 | 0, idx: number, message: ChatBotHistoryItem) => {
-  //   if (message.metadata.sessionId) {
-      
-  //     let prompt = "";
-  //     if (Array.isArray(message.metadata.prompts) && Array.isArray(message.metadata.prompts[0])) { 
-  //         prompt = message.metadata.prompts[0][0];
-  //     }
-  //     const completion = message.content;
-  //     const model = message.metadata.modelId;
-  //     const feedbackData: FeedbackData = {
-  //       sessionId: message.metadata.sessionId as string,
-  //       key: idx,
-  //       feedback: feedbackType,
-  //       prompt: prompt,
-  //       completion: completion,
-  //       model: model as string
-  //     };
-  //     addUserFeedback(feedbackData);
-  //   }
-  // };
+  const handleFeedback = (feedbackType: 1 | 0, idx: number, message: ChatBotHistoryItem) => {
+    // if (message.metadata.sessionId) {
+      console.log("submitting feedback...")
+      // let prompt = "";
+      // if (Array.isArray(message.metadata.prompts) && Array.isArray(message.metadata.prompts[0])) { 
+      //     prompt = message.metadata.prompts[0][0];
+      // }
+      const prompt = messageHistory[idx - 1].content
+      const completion = message.content;
+      // const model = message.metadata.modelId;
+      const feedbackData = {
+        sessionId: '0', //message.metadata.sessionId as string,        
+        feedback: feedbackType,
+        prompt: prompt,
+        completion: completion,        
+      };
+      addUserFeedback(feedbackData);
+    // }
+  };
 
-  // const addUserFeedback = async (feedbackData: FeedbackData) => {
-  //   if (!appContext) return;
+  const addUserFeedback = async (feedbackData) => {
+    // if (!appContext) return;
 
-  //   const apiClient = new ApiClient(appContext);
-  //   await apiClient.userFeedback.addUserFeedback({feedbackData});
-  // };
+    // const apiClient = new ApiClient(appContext);
+    // await apiClient.userFeedback.addUserFeedback({feedbackData});
+    // console.log("hi")
+    const response = await fetch('https://4eyjyb4lqouzyvvvs5fh6zwwse0spnhw.lambda-url.us-east-1.on.aws/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body : JSON.stringify({feedbackData})
+    });
+    console.log(response);
+  }
 
   return (
     <div className={styles.chat_container}>
@@ -116,8 +124,8 @@ export default function Chat(props: { sessionId?: string }) {
             key={idx}
             message={message}
             showMetadata={configuration.showMetadata}
-            // onThumbsUp={() => handleFeedback(1, idx, message)}
-            // onThumbsDown={() => handleFeedback(0, idx, message)}
+            onThumbsUp={() => handleFeedback(1,idx, message)}
+            onThumbsDown={() => handleFeedback(0,idx, message)}
           />
         ))}
       </SpaceBetween>

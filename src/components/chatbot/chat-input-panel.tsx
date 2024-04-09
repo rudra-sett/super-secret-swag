@@ -372,32 +372,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     setState({value:""});
     try {
       props.setRunning(true);
-      /*
-      curl -X POST -H "Content-Type: application/json" -d '{"projectId": "rsrs111111", "systemPrompt": "You are an AI assistant for the MBTAs The RIDE. Answer questions about it.", "userMessage":"how much does it cost?", "chatHistory": [{"user":"what is the RIDE?","chatbot":"The RIDE is a shared paratransit service that offers door-to-door transit."}]}' "https://sg4ozxukd5pu7nplx6gd3m64by0qslfb.lambda-url.us-east-1.on.aws/"
-      */
-
-      /*
-          userMessage: messageToSend,
-          chatHistory: assembleHistory(messageHistoryRef.current),
-          systemPrompt: `You are an AI chatbot for the RIDE, an MBTA paratransit service. You will help customer service representatives respond to user complaints and queries.
-          Answer questions based on your knowledge and nothing more. If you are unable to decisively answer a question, direct them to customer service. Do not make up information outside of your given information.
-          Customer service is needed if it is something you cannot answer. Requests for fare history require customer service, as do service complaints like a rude driver or late pickup.
-          Highly-specific situations will also require customer service to step in. Remember that RIDE Flex and RIDE are not the same service. 
-          Phone numbers:
-          TRAC (handles scheduling/booking, trip changes/cancellations, anything time-sensitive): 844-427-7433 (voice/relay) 857-206-6569 (TTY)
-          Mobility Center (handles eligibility questions, renewals, and changes to mobility status): 617-337-2727 (voice/relay)
-          MBTA Customer support (handles all other queries): 617-222-3200 (voice/relay)`,
-          projectId: 'rsrs111111'
-
-
-      */
-
-          /*
-          message: messageToSend,
-          history: assembleHistory(messageHistoryRef.current),
-          model: 'anthropic.claude-v2:1',
-          rag: 'fdfa8142-736d-44e9-baab-7491f3faeea3'
-          */
         let receivedData = '';
         messageHistoryRef.current = [
           ...messageHistoryRef.current,
@@ -484,34 +458,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       console.error('Error sending message:', error);
       alert('Sorry, something has gone horribly wrong! Please try again or refresh the page.');
       props.setRunning(false);
-    }
-    // const request: ChatBotRunRequest = {
-    //   action: ChatBotAction.Run,
-    //   modelInterface:
-    //     (props.configuration.files && props.configuration.files.length > 0) ||
-    //     (hasImagesInChatHistory() &&
-    //       state.selectedModelMetadata?.inputModalities.includes(
-    //         ChabotInputModality.Image
-    //       ))
-    //       ? "multimodal"
-    //       : (state.selectedModelMetadata!.interface as ModelInterface),
-    //   data: {
-    //     mode: ChatBotMode.Chain,
-    //     text: value,
-    //     files: props.configuration.files ?? [],
-    //     modelName: name,
-    //     provider: provider,
-    //     sessionId: props.session.id,
-    //     workspaceId: state.selectedWorkspace?.value,
-    //     modelKwargs: {
-    //       streaming: props.configuration.streaming,
-    //       maxTokens: props.configuration.maxTokens,
-    //       temperature: props.configuration.temperature,
-    //       topP: props.configuration.topP,
-    //     },
-    //   },
-    // };
-    // console.log(request);
+    }    
     
     // THIS RESETS THE MESSAGE BOX ONCE A RESPONSE IS DONE
     // commented because if you type out your next query while a message is streaming,
