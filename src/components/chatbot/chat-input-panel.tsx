@@ -23,6 +23,7 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import TextareaAutosize from "react-textarea-autosize";
 import { ReadyState } from "react-use-websocket";
+// import WebSocket from 'ws';
 // import { ApiClient } from "../../common/api-client/api-client";
 // import { AppContext } from "../../common/app-context";
 // import { OptionsHelper } from "../../common/helpers/options-helper";
@@ -348,7 +349,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
 
 
   function assembleHistory(history: ChatBotHistoryItem[]) {
-    var hist : Object[] = [];
+    var hist: Object[] = [];
     pairwise(history, function (current: ChatBotHistoryItem, next: ChatBotHistoryItem) {
       hist.push({ "user": current.content, "chatbot": next.content })
     })
@@ -362,37 +363,105 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     if (readyState !== ReadyState.OPEN) return;
     ChatScrollState.userHasScrolled = false;
 
-    // if we want multi-model support?
-
-    // // const { name, provider } = OptionsHelper.parseValue(
-    // //   state.selectedModel.value
-    // // );
+    
+    // const readline = require('readline').createInterface({
+    //   input: process.stdin,
+    //   output: process.stdout
+    // });    
 
     const messageToSend = state.value.trim();
-    setState({value:""});
+    setState({ value: "" });
     try {
       props.setRunning(true);
-        let receivedData = '';
-        messageHistoryRef.current = [
-          ...messageHistoryRef.current,
+      let receivedData = '';
+      messageHistoryRef.current = [
+        ...messageHistoryRef.current,
 
-          {
-            type: ChatBotMessageType.Human,
-            content: messageToSend,
-            metadata: {
-              ...props.configuration,
+        {
+          type: ChatBotMessageType.Human,
+          content: messageToSend,
+          metadata: {
+            ...props.configuration,
+          },
+          tokens: [],
+        },
+        {
+          type: ChatBotMessageType.AI,
+          tokens: [],
+          content: receivedData,
+          metadata: {},
+        },
+      ];
+      props.setMessageHistory(messageHistoryRef.current);
+
+      const wsUrl = 'wss://ngdpdxffy0.execute-api.us-east-1.amazonaws.com/test/';
+      // Create a new WebSocket connection
+      const ws = new WebSocket(wsUrl);
+      // Event listener for when the connection is open
+      ws.addEventListener('open', function open() {
+        console.log('Connected to the WebSocket server');
+        // readline.question('What is your question? ', question => {
+        const message = JSON.stringify({
+          "action": "getChatbotResponse",
+          "data": {
+            userMessage: messageToSend,
+            chatHistory: assembleHistory(messageHistoryRef.current.slice(0, -2)),
+            systemPrompt: `You are an AI chatbot for the RIDE, an MBTA paratransit service. You will help customer service representatives respond to user complaints and queries.
+          Answer questions based on your knowledge and nothing more. If you are unable to decisively answer a question, direct them to customer service. Do not make up information outside of your given information.
+          Customer service is needed if it is something you cannot answer. Requests for fare history require customer service, as do service complaints like a rude driver or late pickup.
+          Highly-specific situations will also require customer service to step in. Remember that RIDE Flex and RIDE are not the same service. 
+          Phone numbers:
+          TRAC (handles scheduling/booking, trip changes/cancellations, anything time-sensitive): 844-427-7433 (voice/relay) 857-206-6569 (TTY)
+          Mobility Center (handles eligibility questions, renewals, and changes to mobility status): 617-337-2727 (voice/relay)
+          MBTA Customer support (handles all other queries): 617-222-3200 (voice/relay)`,
+            projectId: 'rsrs111111'
+          }
+        });
+        // readline.close();
+        // Replace 'Hello, world!' with your message
+        ws.send(message);
+        console.log('Message sent:', message);
+        // });
+      });
+      // Event listener for incoming messages
+      ws.addEventListener('message', function incoming(data) {
+        receivedData += data.data;
+        console.log(data.data);
+          // Update the chat history state with the new message        
+          messageHistoryRef.current = [
+            ...messageHistoryRef.current.slice(0, -2),
+
+            {
+              type: ChatBotMessageType.Human,
+              content: messageToSend,
+              metadata: {
+                ...props.configuration,
+              },
+              tokens: [],
             },
-            tokens: [],
-          },
-          {
-            type: ChatBotMessageType.AI,
-            tokens: [],
-            content: receivedData,
-            metadata: {},
-          },
-        ];
-        props.setMessageHistory(messageHistoryRef.current);
-        
+            {
+              type: ChatBotMessageType.AI,
+              tokens: [],
+              content: receivedData,
+              metadata: {},
+            },
+          ];
+
+          props.setMessageHistory(messageHistoryRef.current);
+          if (data.data == ''){
+            ws.close()
+          }
+      });
+      // Handle possible errors
+      ws.addEventListener('error', function error(err) {
+        console.error('WebSocket error:', err);
+      });
+      // Handle WebSocket closure
+      ws.addEventListener('close', function close() {
+        props.setRunning(false);
+        console.log('Disconnected from the WebSocket server');
+      });
+      /*
       const response = await fetch('https://sg4ozxukd5pu7nplx6gd3m64by0qslfb.lambda-url.us-east-1.on.aws/', {
         method: 'POST',
         headers: {
@@ -400,7 +469,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         },
         body: JSON.stringify({
           userMessage: messageToSend,
-          chatHistory: assembleHistory(messageHistoryRef.current.slice(0,-2)),
+          chatHistory: assembleHistory(messageHistoryRef.current.slice(0, -2)),
           systemPrompt: `You are an AI chatbot for the RIDE, an MBTA paratransit service. You will help customer service representatives respond to user complaints and queries.
           Answer questions based on your knowledge and nothing more. If you are unable to decisively answer a question, direct them to customer service. Do not make up information outside of your given information.
           Customer service is needed if it is something you cannot answer. Requests for fare history require customer service, as do service complaints like a rude driver or late pickup.
@@ -413,10 +482,10 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         }),
       });
 
-      
+
       if (response.body) {
         const reader = response.body.getReader();
-        const decoder = new TextDecoder();        
+        const decoder = new TextDecoder();
 
         while (true) {
           const { value, done } = await reader.read();
@@ -451,7 +520,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           props.setMessageHistory(messageHistoryRef.current);
         }
 
-      }
+      }*/
 
 
     } catch (error) {
@@ -459,8 +528,8 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       console.error('Error sending message:', error);
       alert('Sorry, something has gone horribly wrong! Please try again or refresh the page.');
       props.setRunning(false);
-    }    
-    
+    }
+
     // THIS RESETS THE MESSAGE BOX ONCE A RESPONSE IS DONE
     // commented because if you type out your next query while a message is streaming,
     // it'll delete that query which sucks
@@ -512,7 +581,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       <Container>
         <div className={styles.input_textarea_container}>
           <SpaceBetween size="xxs" direction="horizontal" alignItems="center">
-          {browserSupportsSpeechRecognition ? (
+            {browserSupportsSpeechRecognition ? (
               <Button
                 iconName={listening ? "microphone-off" : "microphone"}
                 variant="icon"
@@ -548,7 +617,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
                   </svg>
                 }
               ></Button>
-             )}*/} 
+             )}*/}
           </SpaceBetween>
           {/* <ImageDialog
             sessionId={props.session.id}
