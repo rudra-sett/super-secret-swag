@@ -17,6 +17,7 @@ import { AppContext } from "../../common/app-context";
 import { Utils } from "../../common/utils";
 import { FileUploader } from "../../common/file-uploader";
 import { useNavigate } from "react-router-dom";
+import { getSignedUrl } from "../../components/chatbot/utils";
 // import { Workspace } from "../../../API";
 
 export interface DataFileUploadProps {
@@ -46,6 +47,63 @@ const fileExtensions = new Set([
   ".txt",
   ".xml",
 ]);
+
+const mimeTypes = {
+  '.pdf': 'application/pdf',
+  '.doc': 'application/msword',
+  '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  '.xls': 'application/vnd.ms-excel',
+  '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  '.ppt': 'application/vnd.ms-powerpoint',
+  '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  '.txt': 'text/plain',
+  '.csv': 'text/csv',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.gif': 'image/gif',
+  '.svg': 'image/svg+xml',
+  '.mp3': 'audio/mpeg',
+  '.wav': 'audio/wav',
+  '.mp4': 'video/mp4',
+  '.zip': 'application/zip',
+  '.rar': 'application/x-rar-compressed',
+  '.tar': 'application/x-tar'
+};
+
+async function getUploadURL(fileName : string) : Promise<string> {
+  // const fileName = document.getElementById('fileNameInput').value;
+  const fileExtension = fileName.slice(fileName.lastIndexOf('.')).toLowerCase();
+  const fileType = mimeTypes[fileExtension];
+
+  if (!fileType) {
+    alert('Unsupported file type');
+    return;
+  }
+
+  const lambdaUrl = 'https://rwhdthjaixihb3kmxcnpojeuli0giqhi.lambda-url.us-east-1.on.aws/'; 
+
+  try {
+    const response = await fetch(lambdaUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ fileName, fileType })
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to get upload URL');
+    }
+
+    const data = await response.json();
+    return data.signedUrl;
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+}
+
 
 export default function DataFileUpload(props: DataFileUploadProps) {
   const appContext = useContext(AppContext);
@@ -92,9 +150,9 @@ export default function DataFileUpload(props: DataFileUploadProps) {
   };
 
   const onUpload = async () => {
-    if (!props.validate()) return;
-    if (!appContext) return;
-    if (!props.data.workspace?.value) return;
+    // if (!props.validate()) return;
+    // if (!appContext) return;
+    // if (!props.data.workspace?.value) return;
     setUploadingStatus("in-progress");
     setUploadProgress(0);
     setUploadingIndex(1);
@@ -116,17 +174,18 @@ export default function DataFileUpload(props: DataFileUploadProps) {
         //   props.data.workspace?.value,
         //   file.name
         // );
-
+        const result = await getUploadURL(file.name);
+        // console.log(result);      
         try {
           await uploader.upload(
-            // file,
-            // result.data!.getUploadFileURL!,
-            // (uploaded: number) => {
-            //   fileUploaded = uploaded;
-            //   const totalUploaded = fileUploaded + accumulator;
-            //   const percent = Math.round((totalUploaded / totalSize) * 100);
-            //   setUploadProgress(percent);
-            // }
+            file,
+            result, //.data!.getUploadFileURL!,
+            (uploaded: number) => {
+              fileUploaded = uploaded;
+              const totalUploaded = fileUploaded + accumulator;
+              const percent = Math.round((totalUploaded / totalSize) * 100);
+              setUploadProgress(percent);
+            }
           );
 
           accumulator += file.size;

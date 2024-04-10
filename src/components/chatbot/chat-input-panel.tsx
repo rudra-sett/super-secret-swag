@@ -392,6 +392,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           },
         ];
         props.setMessageHistory(messageHistoryRef.current);
+        
       const response = await fetch('https://sg4ozxukd5pu7nplx6gd3m64by0qslfb.lambda-url.us-east-1.on.aws/', {
         method: 'POST',
         headers: {
