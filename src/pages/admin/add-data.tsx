@@ -9,6 +9,13 @@ import {
   SpaceBetween,
   Tabs,
 } from "@cloudscape-design/components";
+import {
+  Authenticator,
+  Heading,
+  ThemeProvider,
+  defaultDarkModeOverride,
+  useTheme,
+} from "@aws-amplify/ui-react";
 import { useContext, useEffect, useState } from "react";
 import { LoadingStatus } from "../../common/types";
 import { OptionsHelper } from "../../common/helpers/options-helper";
@@ -99,6 +106,7 @@ export default function AddData() {
     workspace?.engine === "kendra" ? ["qna", "website", "rssfeed"] : [];*/
 
   return (
+    <Authenticator>
     <BaseAppLayout
       contentType="cards"
       breadcrumbs={
@@ -257,5 +265,6 @@ export default function AddData() {
         </ContentLayout>
       }
     />
+    </Authenticator>
   );
 }

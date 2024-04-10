@@ -14,10 +14,10 @@
 // import { Link } from "react-router-dom";
 // import { v4 as uuidv4 } from "uuid";
 // import { useCollection } from "@cloudscape-design/collection-hooks";
-// import { ApiClient } from "../../common/api-client/old-api-client";
+// import { ApiClient } from "../../common/api-client/api-client";
 // import { AppContext } from "../../common/app-context";
 // import RouterButton from "../wrappers/router-button";
-// import { Session } from "../../API";
+// // import { Session } from "../../API";
 
 // export interface SessionsProps {
 //   readonly toolsOpen: boolean;
@@ -170,8 +170,7 @@
 //           allItemsSelectionLabel: ({ selectedItems }) =>
 //             `${selectedItems.length} ${
 //               selectedItems.length === 1 ? "item" : "items"
-//             } selected`,
-//           // @ts-expect-error no-unused-var
+//             } selected`,          
 //           itemSelectionLabel: (e, item) => item.title!,
 //         }}
 //         pagination={<Pagination {...paginationProps} />}
