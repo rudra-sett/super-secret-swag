@@ -47,7 +47,8 @@ export default function NavigationPanel() {
         type: "section",
         text: "Admin",
         items: [
-          { type: "link", text: "Update Data", href: "/admin/add-data" },]}
+          { type: "link", text: "Update Data", href: "/admin/add-data" },
+          { type: "link", text: "Data", href: "/admin/data" }]}
     ];
 
     // if (appContext?.config.rag_enabled) {

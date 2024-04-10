@@ -363,7 +363,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     if (readyState !== ReadyState.OPEN) return;
     ChatScrollState.userHasScrolled = false;
 
-    
+
     // const readline = require('readline').createInterface({
     //   input: process.stdin,
     //   output: process.stdout
@@ -420,37 +420,37 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         // readline.close();
         // Replace 'Hello, world!' with your message
         ws.send(message);
-        console.log('Message sent:', message);
+        // console.log('Message sent:', message);
         // });
       });
       // Event listener for incoming messages
       ws.addEventListener('message', function incoming(data) {
         receivedData += data.data;
-        console.log(data.data);
-          // Update the chat history state with the new message        
-          messageHistoryRef.current = [
-            ...messageHistoryRef.current.slice(0, -2),
+        // console.log(data.data);
+        // Update the chat history state with the new message        
+        messageHistoryRef.current = [
+          ...messageHistoryRef.current.slice(0, -2),
 
-            {
-              type: ChatBotMessageType.Human,
-              content: messageToSend,
-              metadata: {
-                ...props.configuration,
-              },
-              tokens: [],
+          {
+            type: ChatBotMessageType.Human,
+            content: messageToSend,
+            metadata: {
+              ...props.configuration,
             },
-            {
-              type: ChatBotMessageType.AI,
-              tokens: [],
-              content: receivedData,
-              metadata: {},
-            },
-          ];
+            tokens: [],
+          },
+          {
+            type: ChatBotMessageType.AI,
+            tokens: [],
+            content: receivedData,
+            metadata: {},
+          },
+        ];
 
-          props.setMessageHistory(messageHistoryRef.current);
-          if (data.data == ''){
-            ws.close()
-          }
+        props.setMessageHistory(messageHistoryRef.current);
+        if (data.data == '') {
+          ws.close()
+        }
       });
       // Handle possible errors
       ws.addEventListener('error', function error(err) {
@@ -461,67 +461,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         props.setRunning(false);
         console.log('Disconnected from the WebSocket server');
       });
-      /*
-      const response = await fetch('https://sg4ozxukd5pu7nplx6gd3m64by0qslfb.lambda-url.us-east-1.on.aws/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userMessage: messageToSend,
-          chatHistory: assembleHistory(messageHistoryRef.current.slice(0, -2)),
-          systemPrompt: `You are an AI chatbot for the RIDE, an MBTA paratransit service. You will help customer service representatives respond to user complaints and queries.
-          Answer questions based on your knowledge and nothing more. If you are unable to decisively answer a question, direct them to customer service. Do not make up information outside of your given information.
-          Customer service is needed if it is something you cannot answer. Requests for fare history require customer service, as do service complaints like a rude driver or late pickup.
-          Highly-specific situations will also require customer service to step in. Remember that RIDE Flex and RIDE are not the same service. 
-          Phone numbers:
-          TRAC (handles scheduling/booking, trip changes/cancellations, anything time-sensitive): 844-427-7433 (voice/relay) 857-206-6569 (TTY)
-          Mobility Center (handles eligibility questions, renewals, and changes to mobility status): 617-337-2727 (voice/relay)
-          MBTA Customer support (handles all other queries): 617-222-3200 (voice/relay)`,
-          projectId: 'rsrs111111'
-        }),
-      });
-
-
-      if (response.body) {
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-
-        while (true) {
-          const { value, done } = await reader.read();
-          if (done) {
-            // setLoadingResponse(false);
-            props.setRunning(false);
-            break;
-          }
-          let chunk = decoder.decode(value, { stream: true });
-          receivedData += chunk;
-
-          // Update the chat history state with the new message        
-          messageHistoryRef.current = [
-            ...messageHistoryRef.current.slice(0, -2),
-
-            {
-              type: ChatBotMessageType.Human,
-              content: messageToSend,
-              metadata: {
-                ...props.configuration,
-              },
-              tokens: [],
-            },
-            {
-              type: ChatBotMessageType.AI,
-              tokens: [],
-              content: receivedData,
-              metadata: {},
-            },
-          ];
-
-          props.setMessageHistory(messageHistoryRef.current);
-        }
-
-      }*/
-
 
     } catch (error) {
       // setMessage('');

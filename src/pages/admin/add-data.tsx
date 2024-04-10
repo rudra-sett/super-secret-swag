@@ -37,6 +37,7 @@ import { CHATBOT_NAME } from "../../common/constants";
 
 export default function AddData() {
   const onFollow = useOnFollow();
+  const { tokens } = useTheme();
   const appContext = useContext(AppContext);
   const [searchParams, setSearchParams] = useSearchParams();
   const [submitting, setSubmitting] = useState(false);
@@ -106,7 +107,21 @@ export default function AddData() {
     workspace?.engine === "kendra" ? ["qna", "website", "rssfeed"] : [];*/
 
   return (
-    <Authenticator>
+    <Authenticator hideSignUp={true}
+    components={{
+      SignIn: {
+        Header: () => {
+          return (
+            <Heading
+              padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
+              level={3}
+            >
+              {CHATBOT_NAME}
+            </Heading>
+          );
+        },
+      },
+    }}>
     <BaseAppLayout
       contentType="cards"
       breadcrumbs={
