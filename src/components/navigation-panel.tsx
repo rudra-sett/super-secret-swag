@@ -9,7 +9,7 @@ import {
 import useOnFollow from "../common/hooks/use-on-follow";
 import { useNavigationPanelState } from "../common/hooks/use-navigation-panel-state";
 import { AppContext } from "../common/app-context";
-
+import  RouterButton from "../components/wrappers/router-button"; 
 import { useContext, useState } from "react";
 import { CHATBOT_NAME } from "../common/constants";
 
@@ -60,6 +60,7 @@ export default function NavigationPanel() {
           {type: "link", text: "View Sessions", href: "chatbot/sessions"},
         ], 
       },
+    ];
     
 
     // if (appContext?.config.rag_enabled) {
@@ -124,15 +125,16 @@ export default function NavigationPanel() {
   };
 
   return (
-    <Header> 
-      <RouterButton>
-        iconName="add-plus"
-        href={`/chatbot/playground/${uuidv4()}`}
-        variant="inline-link"
-        onClick={() => getSessions()}
-        New session
-      </RouterButton>
-      </Header>
+    <div>
+     <Header> 
+       <RouterButton>
+         iconName="add-plus"
+         href={`/chatbot/playground/${uuidv4()}`}
+         variant="inline-link"
+         onClick={() => getSessions()}
+         New session
+       </RouterButton>
+     </Header>
     <SideNavigation
         onFollow={onFollow}
         onChange={onChange}
@@ -145,5 +147,6 @@ export default function NavigationPanel() {
 
           return value;
         })} />
+        </div>
   );
 }
