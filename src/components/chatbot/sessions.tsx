@@ -43,14 +43,14 @@ export default function Sessions(props: SessionsProps) {
       ),
     },
     pagination: { pageSize: preferences.pageSize },
-    sorting: {
-      defaultState: {
-        sortingColumn: {
-          sortingField: "startTime",
-        },
-        isDescending: true,
-      },
-    },
+    // sorting: {
+    //   defaultState: {
+    //     sortingColumn: {
+    //       sortingField: "startTime",
+    //     },
+    //     isDescending: true,
+    //   },
+    // },
     selection: {},
   });
 

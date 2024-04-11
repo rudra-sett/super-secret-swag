@@ -2,15 +2,19 @@ export class SessionsClient {
   async getSessions(
     userId : string
   ) {
-    const response = await fetch('"https://chpjfyezv2.execute-api.us-east-1.amazonaws.com/user_session_handler"', {
+    const response = await fetch('https://bu4z2a26c7.execute-api.us-east-1.amazonaws.com/user_session_handler', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ "operation" : "list_sessions_by_user_id","user_id" : userId })
     });
-    console.log(response.body);
-    return response.body;
+    const reader = response.body.getReader();
+    const { value, done } = await reader.read();
+    const decoder = new TextDecoder();        
+    const output = decoder.decode(value);
+    console.log(output);
+    return JSON.parse(output);
   }
 
   async getSession(
