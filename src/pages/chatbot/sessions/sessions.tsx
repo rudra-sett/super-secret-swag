@@ -1,6 +1,6 @@
 import { useState } from "react";
 import BaseAppLayout from "../../../components/base-app-layout";
-// import Sessions from "../../../components/chatbot/sessions";
+import Sessions from "../../../components/chatbot/sessions";
 import { BreadcrumbGroup } from "@cloudscape-design/components";
 import { CHATBOT_NAME } from "../../../common/constants";
 import useOnFollow from "../../../common/hooks/use-on-follow";
@@ -29,7 +29,7 @@ export default function SessionPage() {
           ]}
         />
       }
-      // content={<Sessions toolsOpen={true} />}
+      content={<Sessions toolsOpen={true} />}
     />
   );
 }

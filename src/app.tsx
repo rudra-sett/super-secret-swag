@@ -12,6 +12,7 @@ import Playground from "./pages/chatbot/playground/playground";
 import NotFound from "./pages/not-found";
 import AddData from "./pages/admin/add-data";
 import WorkspacePane from "./pages/admin/workspace";
+import SessionPage from "./pages/chatbot/sessions/sessions"
 // import CreateWorkspace from "./pages/rag/create-workspace/create-workspace";
 // import Dashboard from "./pages/rag/dashboard/dashboard";
 // import RssFeed from "./pages/rag/workspace/rss-feed";
@@ -34,6 +35,7 @@ function App() {
             <Route index path="/" element={<Playground />} />
             <Route path="/chatbot" element={<Outlet />}>
               <Route path="playground" element={<Playground />} />
+              <Route path="session" element={<SessionPage />} />
               {/* <Route path="playground/:sessionId" element={<Playground />} /> */}
               {/* <Route path="sessions" element={<SessionPage />} /> if we want history*/}
             </Route>
