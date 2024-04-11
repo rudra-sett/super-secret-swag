@@ -12,6 +12,7 @@ import { AppContext } from "../common/app-context";
 import  RouterButton from "../components/wrappers/router-button"; 
 import { useContext, useState } from "react";
 import { CHATBOT_NAME } from "../common/constants";
+import { v4 as uuidv4 } from "uuid";
 
 export default function NavigationPanel() {
   const appContext = useContext(AppContext);
@@ -25,17 +26,11 @@ export default function NavigationPanel() {
         type: "link",
         text: "Home",
         href: "/",
-        items: [
-      //      { type: "link", text: "New Session", href: "/chatbot/playground/${uuidv4()}"}
-        ],
       },
       {
         type: "link",
         text: "New Session", 
         href: "/chatbot/plauground/${uuidv4()}",
-        items: [
-
-        ],
       },
       {
         type: "section",
@@ -127,11 +122,12 @@ export default function NavigationPanel() {
   return (
     <div>
      <Header> 
-       <RouterButton>
+       <RouterButton
+        iconAlign="right"
          iconName="add-plus"
-         href={`/chatbot/playground/${uuidv4()}`}
          variant="inline-link"
-         onClick={() => getSessions()}
+         href={`/chatbot/playground/${uuidv4()}`}
+         >
          New session
        </RouterButton>
      </Header>

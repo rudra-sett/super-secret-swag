@@ -1,8 +1,9 @@
-import React from 'react';
-import {BaseComponentProps} from  "@cloudscape-design/components"; 
-import useOnFollow from "../common/hooks/use-on-follow";
+// import React from 'react';
+// import {BaseComponentProps} from  "@cloudscape-design/components"; 
+import { SideNavigationProps } from "@cloudscape-design/components"
+import useOnFollow from "../../common/hooks/use-on-follow";
 
-export interface SideNavigationProps extends BaseComponentProps {
+export interface SideBarProps extends SideNavigationProps {
     /** Controls the header that appears at the top of the navigation component 
      * 
     */
@@ -10,7 +11,7 @@ export interface SideNavigationProps extends BaseComponentProps {
 
    activeHref?: string; 
 
-
+    
    
 
 }
