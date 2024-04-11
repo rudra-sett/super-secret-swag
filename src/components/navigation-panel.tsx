@@ -5,7 +5,7 @@ import {
   Button,
   SpaceBetween,
 } from "@cloudscape-design/components";
-import RouterButton from "../components/wrappers/router-button";
+
 import useOnFollow from "../common/hooks/use-on-follow";
 import { useNavigationPanelState } from "../common/hooks/use-navigation-panel-state";
 import { AppContext } from "../common/app-context";
