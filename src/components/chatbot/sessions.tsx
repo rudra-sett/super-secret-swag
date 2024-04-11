@@ -207,6 +207,7 @@
 //                   iconName="add-plus"
 //                   href={`/chatbot/playground/${uuidv4()}`}
 //                   variant="inline-link"
+//                   onClick={() => getSessions()}
 //                 >
 //                   New session
 //                 </RouterButton>
