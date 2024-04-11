@@ -25,9 +25,9 @@
 
 // export default function Sessions(props: SessionsProps) {
 //   const appContext = useContext(AppContext);
-//   const [sessions, setSessions] = useState<Session[]>([]);
+//   const [sessions, setSessions] = useState<any[]>([]);
 //   const [isLoading, setIsLoading] = useState(true);
-//   const [selectedItems, setSelectedItems] = useState<Session[]>([]);
+//   const [selectedItems, setSelectedItems] = useState<any[]>([]);
 //   const [preferences, setPreferences] = useState({ pageSize: 20 });
 //   const [showModalDelete, setShowModalDelete] = useState(false);
 //   const [deleteAllSessions, setDeleteAllSessions] = useState(false);

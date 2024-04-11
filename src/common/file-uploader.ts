@@ -1,5 +1,3 @@
-// import { FileUploadResult } from "../API";
-
 export class FileUploader {
   upload(
     file: File,
@@ -7,15 +5,7 @@ export class FileUploader {
     onProgress: (uploaded: number) => void
   ): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      const formData = new FormData();
-      // const fields = signature.fields!.replace("{", "").replace("}", "");
-      // fields.split(",").forEach((f) => {
-      //   const sepIdx = f.indexOf("=");
-      //   const k = f.slice(0, sepIdx);
-      //   const v = f.slice(sepIdx + 1);
-      //   formData.append(k, v);
-      // });
-
+      const formData = new FormData();     
       formData.append("file", file);
       const xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function () {
@@ -35,7 +25,4 @@ export class FileUploader {
       xhr.send(formData);
     });
   }
-  // upload () {
-    
-  // }
 }
