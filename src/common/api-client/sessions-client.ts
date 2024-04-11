@@ -21,7 +21,7 @@ export class SessionsClient {
     sessionId: string,
     userId: string,
   ) {
-    const response = await fetch("https://chpjfyezv2.execute-api.us-east-1.amazonaws.com/user_session_handler", {
+    const response = await fetch("https://bu4z2a26c7.execute-api.us-east-1.amazonaws.com/user_session_handler", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ export class SessionsClient {
     sessionId: string
   ) {
     try {
-      const response = await fetch('https://chpjfyezv2.execute-api.us-east-1.amazonaws.com/user_session_handler', {
+      const response = await fetch('https://bu4z2a26c7.execute-api.us-east-1.amazonaws.com/user_session_handler', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
