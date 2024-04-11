@@ -34,8 +34,8 @@ function App() {
           <Routes>
             <Route index path="/" element={<Playground />} />
             <Route path="/chatbot" element={<Outlet />}>
-              <Route path="playground" element={<Playground />} />
-              <Route path="session" element={<SessionPage />} />
+              <Route path="playground/:sessionId" element={<Playground />} />
+              <Route path="sessions" element={<SessionPage />} />
               {/* <Route path="playground/:sessionId" element={<Playground />} /> */}
               {/* <Route path="sessions" element={<SessionPage />} /> if we want history*/}
             </Route>
