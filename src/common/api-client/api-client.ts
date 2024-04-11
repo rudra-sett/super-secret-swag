@@ -5,7 +5,7 @@ import { AppConfig } from "../types";
 // import { HealthClient } from "./health-client";
 // import { ModelsClient } from "./models-client";
 // import { WorkspacesClient } from "./workspaces-client";
-// import { SessionsClient } from "./sessions-client";
+import { SessionsClient } from "./sessions-client";
 // import { SemanticSearchClient } from "./semantic-search-client";
 // import { DocumentsClient } from "./documents-client";
 // import { KendraClient } from "./kendra-client";
@@ -18,7 +18,7 @@ export class ApiClient {
   // private _crossEncodersClient: CrossEncodersClient | undefined;
   // private _modelsClient: ModelsClient | undefined;
   // private _workspacesClient: WorkspacesClient | undefined;
-  // private _sessionsClient: SessionsClient | undefined;
+  private _sessionsClient: SessionsClient | undefined;
   // private _semanticSearchClient: SemanticSearchClient | undefined;
   // private _documentsClient: DocumentsClient | undefined;
   // private _kendraClient: KendraClient | undefined;
@@ -72,13 +72,13 @@ export class ApiClient {
   //   return this._workspacesClient;
   // }
 
-  // public get sessions() {
-  //   if (!this._sessionsClient) {
-  //     this._sessionsClient = new SessionsClient();
-  //   }
+  public get sessions() {
+    if (!this._sessionsClient) {
+      this._sessionsClient = new SessionsClient();
+    }
 
-  //   return this._sessionsClient;
-  // }
+    return this._sessionsClient;
+  }
 
   // public get semanticSearch() {
   //   if (!this._semanticSearchClient) {
