@@ -425,7 +425,12 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       });
       // Event listener for incoming messages
       ws.addEventListener('message', function incoming(data) {
+        // console.log(data);
         receivedData += data.data;
+        if (data.data == '!<|EOF_STREAM|>!') {
+          ws.close();
+          return;
+        }
         // console.log(data.data);
         // Update the chat history state with the new message        
         messageHistoryRef.current = [
@@ -448,9 +453,10 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         ];
 
         props.setMessageHistory(messageHistoryRef.current);
-        if (data.data == '') {
-          ws.close()
-        }
+        // if (data.data == '') {
+        //   ws.close()
+        // }
+        
       });
       // Handle possible errors
       ws.addEventListener('error', function error(err) {
