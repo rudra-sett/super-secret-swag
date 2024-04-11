@@ -1,12 +1,18 @@
 import {
   SideNavigation,
   SideNavigationProps,
+  Header,
+  Button,
+  SpaceBetween,
 } from "@cloudscape-design/components";
+
 import useOnFollow from "../common/hooks/use-on-follow";
 import { useNavigationPanelState } from "../common/hooks/use-navigation-panel-state";
 import { AppContext } from "../common/app-context";
+import  RouterButton from "../components/wrappers/router-button"; 
 import { useContext, useState } from "react";
 import { CHATBOT_NAME } from "../common/constants";
+import { v4 as uuidv4 } from "uuid";
 
 export default function NavigationPanel() {
   const appContext = useContext(AppContext);
@@ -22,25 +28,16 @@ export default function NavigationPanel() {
         href: "/",
       },
       {
+        type: "link",
+        text: "New Session", 
+        href: "/chatbot/plauground/${uuidv4()}",
+      },
+      {
         type: "section",
         text: "Chatbot",
         items: [
           { type: "link", text: "Chat", href: "/chatbot/playground" },
-          // {
-          //   type: "link",
-          //   text: "Multi-chat playground",
-          //   href: "/chatbot/multichat",
-          // },
-          // {
-          //   type: "link",
-          //   text: "Sessions",
-          //   href: "/chatbot/sessions",
-          // },
-          // {
-          //   type: "link",
-          //   text: "Models",
-          //   href: "/chatbot/models",
-          // },
+
         ],
       },
       {
@@ -48,8 +45,18 @@ export default function NavigationPanel() {
         text: "Admin",
         items: [
           { type: "link", text: "Update Data", href: "/admin/add-data" },
-          { type: "link", text: "Data", href: "/admin/data" }]}
+          { type: "link", text: "Data", href: "/admin/data" }
+        ]
+      },
+      {
+        type: "section",
+        text: "Session History",
+        items: [
+          {type: "link", text: "View Sessions", href: "chatbot/sessions"},
+        ], 
+      },
     ];
+    
 
     // if (appContext?.config.rag_enabled) {
     //   const crossEncodersItems: SideNavigationProps.Item[] = appContext?.config
@@ -83,7 +90,7 @@ export default function NavigationPanel() {
     //       { type: "link", text: "Engines", href: "/rag/engines" },
     //     ],
     //   });
-    // }
+     
 
     items.push(
       { type: "divider" },
@@ -113,19 +120,29 @@ export default function NavigationPanel() {
   };
 
   return (
+    <div>
+     <Header> 
+       <RouterButton
+        iconAlign="right"
+         iconName="add-plus"
+         variant="inline-link"
+         href={`/chatbot/playground/${uuidv4()}`}
+         >
+         New session
+       </RouterButton>
+     </Header>
     <SideNavigation
-      onFollow={onFollow}
-      onChange={onChange}
-      header={{ href: "/", text: CHATBOT_NAME }}
-      items={items.map((value, idx) => {
-        if (value.type === "section") {
-          const collapsed =
-            navigationPanelState.collapsedSections?.[idx] === true;
-          value.defaultExpanded = !collapsed;
-        }
+        onFollow={onFollow}
+        onChange={onChange}
+        header={{ href: "/", text: CHATBOT_NAME }}
+        items={items.map((value, idx) => {
+          if (value.type === "section") {
+            const collapsed = navigationPanelState.collapsedSections?.[idx] === true;
+            value.defaultExpanded = !collapsed;
+          }
 
-        return value;
-      })}
-    />
+          return value;
+        })} />
+        </div>
   );
 }

@@ -370,6 +370,7 @@ poetry.toml
 
 # LSP config files
 pyrightconfig.json
+postcss.config.js
 
 ### Windows ###
 # Windows thumbnail cache files
