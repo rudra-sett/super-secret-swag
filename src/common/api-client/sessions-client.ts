@@ -41,7 +41,7 @@ export class SessionsClient {
     const { value, done } = await reader.read();
     const decoder = new TextDecoder();        
     const output = decoder.decode(value);
-    console.log(JSON.parse(output));
+    // console.log(JSON.parse(output));
     // return JSON.parse(output);
   }
 
@@ -105,7 +105,8 @@ export class SessionsClient {
   }
 
   async deleteSession(
-    sessionId: string
+    sessionId: string,
+    userId: string,
   ) {
     try {
       const response = await fetch('https://bu4z2a26c7.execute-api.us-east-1.amazonaws.com/user_session_handler', {
@@ -113,7 +114,9 @@ export class SessionsClient {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ sessionId })
+        body: JSON.stringify({"operation" : "delete_session", "session_id" : sessionId,
+        "user_id" : userId
+       })
       });
     } catch {
       return "FAILED";

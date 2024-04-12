@@ -400,7 +400,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           TRAC (handles scheduling/booking, trip changes/cancellations, anything time-sensitive): 844-427-7433 (voice/relay) 857-206-6569 (TTY)
           Mobility Center (handles eligibility questions, renewals, and changes to mobility status): 617-337-2727 (voice/relay)
           MBTA Customer support (handles all other queries): 617-222-3200 (voice/relay)`,
-            projectId: 'rsrs111111'
+            projectId: 'rsrs111111',
+            user_id : "0",
+            session_id: props.session.id
           }
         });
         // readline.close();
@@ -451,7 +453,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       });
       // Handle WebSocket closure
       ws.addEventListener('close', async function close() {
-        await apiClient.sessions.updateSession("0", props.session.id, messageHistoryRef.current);
+        // await apiClient.sessions.updateSession("0", props.session.id, messageHistoryRef.current);
         props.setRunning(false);        
         console.log('Disconnected from the WebSocket server');
       });
