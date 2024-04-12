@@ -7,15 +7,15 @@ import {
 } from "./types";
 import { SpaceBetween, StatusIndicator } from "@cloudscape-design/components";
 import { v4 as uuidv4 } from "uuid";
-// import { AppContext } from "../../common/app-context";
-// import { ApiClient } from "../../common/api-client/api-client";
+import { AppContext } from "../../common/app-context";
+import { ApiClient } from "../../common/api-client/api-client";
 import ChatMessage from "./chat-message";
 import ChatInputPanel, { ChatScrollState } from "./chat-input-panel";
 import styles from "../../styles/chat.module.scss";
 import { CHATBOT_NAME } from "../../common/constants";
 
 export default function Chat(props: { sessionId?: string }) {
-  // const appContext = useContext(AppContext);
+  const appContext = useContext(AppContext);
   const [running, setRunning] = useState<boolean>(false);
   const [session, setSession] = useState<{ id: string; loading: boolean }>({
     id: props.sessionId ?? uuidv4(),
@@ -36,49 +36,50 @@ export default function Chat(props: { sessionId?: string }) {
     []
   );
 
-  // useEffect(() => {
-  //   if (!appContext) return;
-  //   setMessageHistory([]);
+  useEffect(() => {
+    if (!appContext) return;
+    setMessageHistory([]);
 
-  //   (async () => {
-  //     if (!props.sessionId) {
-  //       setSession({ id: uuidv4(), loading: false });
-  //       return;
-  //     }
+    (async () => {
+      if (!props.sessionId) {
+        setSession({ id: uuidv4(), loading: false });
+        return;
+      }
 
-  //     setSession({ id: props.sessionId, loading: true });
-  //     const apiClient = new ApiClient(appContext);
-  //     try {
-  //       const result = await apiClient.sessions.getSession(props.sessionId);
+      setSession({ id: props.sessionId, loading: true });
+      const apiClient = new ApiClient(appContext);
+      try {
+        // const result = await apiClient.sessions.getSession(props.sessionId);
+        const hist = await apiClient.sessions.getSession(props.sessionId,"0");
 
-  //       if (result.data?.getSession?.history) {
-  //         console.log(result.data.getSession);
-  //         ChatScrollState.skipNextHistoryUpdate = true;
-  //         ChatScrollState.skipNextScrollEvent = true;
-  //         console.log("History", result.data.getSession.history);
-  //         setMessageHistory(
-  //           result
-  //             .data!.getSession!.history.filter((x) => x !== null)
-  //             .map((x) => ({
-  //               type: x!.type as ChatBotMessageType,
-  //               metadata: JSON.parse(x!.metadata!),
-  //               content: x!.content,
-  //             }))
-  //         );
+        if (hist) {
+          console.log(hist);
+          ChatScrollState.skipNextHistoryUpdate = true;
+          ChatScrollState.skipNextScrollEvent = true;
+          // console.log("History", result.data.getSession.history);
+          setMessageHistory(
+            hist
+              .filter((x) => x !== null)
+              .map((x) => ({
+                type: x!.type as ChatBotMessageType,
+                metadata: {}, //JSON.parse(x!.metadata!),
+                content: x!.content,
+              }))
+          );
 
-  //         window.scrollTo({
-  //           top: 0,
-  //           behavior: "instant",
-  //         });
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
+          window.scrollTo({
+            top: 0,
+            behavior: "instant",
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
 
-  //     setSession({ id: props.sessionId, loading: false });
-  //     setRunning(false);
-  //   })();
-  // }, [appContext, props.sessionId]);
+      setSession({ id: props.sessionId, loading: false });
+      setRunning(false);
+    })();
+  }, [appContext, props.sessionId]);
 
   const handleFeedback = (feedbackType: 1 | 0, idx: number, message: ChatBotHistoryItem) => {
     // if (message.metadata.sessionId) {

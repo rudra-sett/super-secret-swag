@@ -1,3 +1,10 @@
+import {
+  ChatBotConfiguration,
+  ChatBotHistoryItem,
+  ChatBotMessageType,
+  FeedbackData,
+} from "../../components/chatbot/types";
+
 export class SessionsClient {
   async getSessions(
     userId : string
@@ -30,7 +37,32 @@ export class SessionsClient {
         "user_id" : userId
        })
     });
-    return response.body;
+    // console.log(response.body);
+    const reader = response.body.getReader();
+    const { value, done } = await reader.read();
+    // console.log(value);
+    const decoder = new TextDecoder();    
+    // console.log(decoder.decode(value));    
+    const output = JSON.parse(decoder.decode(value)).chat_history! as any[];
+    var history: ChatBotHistoryItem[] = [];
+    console.log(output);
+    output.forEach(function (value) {
+      history.push({
+        type: ChatBotMessageType.Human,
+        content: value.user,
+        metadata: {          
+        },
+        tokens: [],
+      },
+      {
+        type: ChatBotMessageType.AI,
+        tokens: [],
+        content: value.chatbot,
+        metadata: {},
+      },)
+    }) 
+    
+    return history;
   }
 
   async deleteSession(
