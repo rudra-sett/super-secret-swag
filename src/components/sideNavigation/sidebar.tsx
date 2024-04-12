@@ -55,11 +55,13 @@ export default function SidebarSessions() {
 
     //     fetchSessions();
     // }, [appContext]);
+    // need to send it back after retrieving the list 
+
     return (
         <div>
             {sessions.map(session => ( // need to change this
                 <Link key={session.sessionId} to={`/chatbot/sessions/${session.sessionId}`}>
-                    {session.sessionName || `Session from ${new Date(session.timestamp).toLocaleString()}`}
+        
                 </Link>
             ))}
         </div>
@@ -73,4 +75,4 @@ export default function SidebarSessions() {
             
 }
 
-
+// || `Session from ${new Date(session.timestamp).toLocaleString()}`

@@ -238,14 +238,6 @@ export default function ChatMessage(props: ChatMessageProps) {
                     navigator.clipboard.writeText(props.message.content);
                   }}
                 />
-                <Alert
-                 statusIconAriaLabel="Info"
-                 header="Known issues/limitations"
-                >
-                Review the documentation to learn about potential
-                compatibility issues with specific database
-                versions.
-                </Alert>
               </Popover>
             </div>
           ) : null}
