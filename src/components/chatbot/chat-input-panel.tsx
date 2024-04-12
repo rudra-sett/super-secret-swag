@@ -414,7 +414,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         // console.log(data);
         receivedData += data.data;
         if (data.data == '!<|EOF_STREAM|>!') {
-          await apiClient.sessions.updateSession(props.session.id, "0", messageHistoryRef.current);
+          // await apiClient.sessions.updateSession(props.session.id, "0", messageHistoryRef.current);
           ws.close();
           return;
         }
