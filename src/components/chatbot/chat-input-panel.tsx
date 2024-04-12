@@ -24,8 +24,8 @@ import SpeechRecognition, {
 import TextareaAutosize from "react-textarea-autosize";
 import { ReadyState } from "react-use-websocket";
 // import WebSocket from 'ws';
-// import { ApiClient } from "../../common/api-client/api-client";
-// import { AppContext } from "../../common/app-context";
+import { ApiClient } from "../../common/api-client/api-client";
+import { AppContext } from "../../common/app-context";
 // import { OptionsHelper } from "../../common/helpers/options-helper";
 // import { StorageHelper } from "../../common/helpers/storage-helper";
 // import { API } from "aws-amplify";
@@ -54,6 +54,7 @@ import {
   // getSelectedModelMetadata,
   getSignedUrl,
   updateMessageHistoryRef,
+  assembleHistory
 } from "./utils";
 // import { receiveMessages } from "../../graphql/subscriptions";
 // import { Utils } from "../../common/utils";
@@ -88,7 +89,8 @@ export abstract class ChatScrollState {
 // ];
 
 export default function ChatInputPanel(props: ChatInputPanelProps) {
-  // const appContext = useContext(AppContext);
+  const appContext = useContext(AppContext);
+  const apiClient = new ApiClient(appContext);
   const navigate = useNavigate();
   const { transcript, listening, browserSupportsSpeechRecognition } =
     useSpeechRecognition();
@@ -340,22 +342,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
   //   );
   // };
 
-  function pairwise(arr: ChatBotHistoryItem[], func) {
-    for (var i = 0; i < arr.length - 1; i++) {
-      func(arr[i], arr[i + 1])
-    }
-  }
-
-
-
-  function assembleHistory(history: ChatBotHistoryItem[]) {
-    var hist: Object[] = [];
-    pairwise(history, function (current: ChatBotHistoryItem, next: ChatBotHistoryItem) {
-      hist.push({ "user": current.content, "chatbot": next.content })
-    })
-    return hist;
-  }
-
   // THIS IS THE ALL-IMPORTANT MESSAGE SENDING FUNCTION
   const handleSendMessage = async () => {
     // if (!state.selectedModel) return;
@@ -424,10 +410,11 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         // });
       });
       // Event listener for incoming messages
-      ws.addEventListener('message', function incoming(data) {
+      ws.addEventListener('message', async function incoming(data) {
         // console.log(data);
         receivedData += data.data;
         if (data.data == '!<|EOF_STREAM|>!') {
+          await apiClient.sessions.updateSession(props.session.id, "0", messageHistoryRef.current);
           ws.close();
           return;
         }
@@ -463,8 +450,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         console.error('WebSocket error:', err);
       });
       // Handle WebSocket closure
-      ws.addEventListener('close', function close() {
-        props.setRunning(false);
+      ws.addEventListener('close', async function close() {
+        await apiClient.sessions.updateSession("0", props.session.id, messageHistoryRef.current);
+        props.setRunning(false);        
         console.log('Disconnected from the WebSocket server');
       });
 
@@ -499,7 +487,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     //   variables: {
     //     data: JSON.stringify(request),
     //   },
-    // });
+    // });    
   };
 
   const connectionStatus = {

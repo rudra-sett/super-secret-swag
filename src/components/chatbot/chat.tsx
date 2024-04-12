@@ -92,7 +92,7 @@ export default function Chat(props: { sessionId?: string }) {
       const completion = message.content;
       // const model = message.metadata.modelId;
       const feedbackData = {
-        sessionId: '0', //message.metadata.sessionId as string,        
+        sessionId: props.sessionId, //message.metadata.sessionId as string,        
         feedback: feedbackType,
         prompt: prompt,
         completion: completion,        
