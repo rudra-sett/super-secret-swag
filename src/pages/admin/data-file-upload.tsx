@@ -13,7 +13,7 @@ import {
 import { useContext, useState } from "react";
 import { AddDataData } from "./types";
 import { AppContext } from "../../common/app-context";
-// import { ApiClient } from "../../../common/api-client/old-api-client";
+import { ApiClient } from "../../common/api-client/api-client";
 import { Utils } from "../../common/utils";
 import { FileUploader } from "../../common/file-uploader";
 import { useNavigate } from "react-router-dom";
@@ -48,65 +48,10 @@ const fileExtensions = new Set([
   ".xml",
 ]);
 
-const mimeTypes = {
-  '.pdf': 'application/pdf',
-  '.doc': 'application/msword',
-  '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  '.xls': 'application/vnd.ms-excel',
-  '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  '.ppt': 'application/vnd.ms-powerpoint',
-  '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-  '.txt': 'text/plain',
-  '.csv': 'text/csv',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.gif': 'image/gif',
-  '.svg': 'image/svg+xml',
-  '.mp3': 'audio/mpeg',
-  '.wav': 'audio/wav',
-  '.mp4': 'video/mp4',
-  '.zip': 'application/zip',
-  '.rar': 'application/x-rar-compressed',
-  '.tar': 'application/x-tar'
-};
-
-async function getUploadURL(fileName : string) : Promise<string> {
-  // const fileName = document.getElementById('fileNameInput').value;
-  const fileExtension = fileName.slice(fileName.lastIndexOf('.')).toLowerCase();
-  const fileType = mimeTypes[fileExtension];
-
-  if (!fileType) {
-    alert('Unsupported file type');
-    return;
-  }
-
-  const lambdaUrl = 'https://rwhdthjaixihb3kmxcnpojeuli0giqhi.lambda-url.us-east-1.on.aws/'; 
-
-  try {
-    const response = await fetch(lambdaUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ fileName, fileType })
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to get upload URL');
-    }
-
-    const data = await response.json();
-    return data.signedUrl;
-  } catch (error) {
-    console.error('Error:', error);
-    throw error;
-  }
-}
-
 
 export default function DataFileUpload(props: DataFileUploadProps) {
   const appContext = useContext(AppContext);
+  const apiClient = new ApiClient(appContext);
   const navigate = useNavigate();
   const [files, setFiles] = useState<File[]>([]);
   const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
@@ -170,11 +115,9 @@ export default function DataFileUpload(props: DataFileUploadProps) {
       let fileUploaded = 0;
 
       try {
-        // const result = await apiClient.documents.presignedFileUploadPost(
-        //   props.data.workspace?.value,
-        //   file.name
-        // );
-        const result = await getUploadURL(file.name);
+        
+        
+        const result = await apiClient.knowledgeManagement.getUploadURL(file.name);
         // console.log(result);      
         try {
           await uploader.upload(

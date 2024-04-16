@@ -102,19 +102,9 @@ export default function Chat(props: { sessionId?: string }) {
   };
 
   const addUserFeedback = async (feedbackData) => {
-    // if (!appContext) return;
-
-    // const apiClient = new ApiClient(appContext);
-    // await apiClient.userFeedback.addUserFeedback({feedbackData});
-    // console.log("hi")
-    const response = await fetch('https://4eyjyb4lqouzyvvvs5fh6zwwse0spnhw.lambda-url.us-east-1.on.aws/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body : JSON.stringify({feedbackData})
-    });
-    console.log(response);
+    if (!appContext) return;
+    const apiClient = new ApiClient(appContext);
+    await apiClient.userFeedback.sendUserFeedback(feedbackData);
   }
 
   return (

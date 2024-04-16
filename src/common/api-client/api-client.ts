@@ -8,8 +8,8 @@ import { AppConfig } from "../types";
 import { SessionsClient } from "./sessions-client";
 // import { SemanticSearchClient } from "./semantic-search-client";
 // import { DocumentsClient } from "./documents-client";
-// import { KendraClient } from "./kendra-client";
-// import { UserFeedbackClient } from "./user-feedback-client";
+import { KnowledgeManagementClient } from "./knowledge-management-client";
+import { UserFeedbackClient } from "./user-feedback-client";
 
 export class ApiClient {
   // private _healthClient: HealthClient | undefined;
@@ -22,7 +22,8 @@ export class ApiClient {
   // private _semanticSearchClient: SemanticSearchClient | undefined;
   // private _documentsClient: DocumentsClient | undefined;
   // private _kendraClient: KendraClient | undefined;
-  // private _userFeedbackClient: UserFeedbackClient | undefined;
+  private _knowledgeManagementClient : KnowledgeManagementClient | undefined;
+  private _userFeedbackClient: UserFeedbackClient | undefined;
 
   // public get health() {
   //   if (!this._healthClient) {
@@ -72,6 +73,15 @@ export class ApiClient {
   //   return this._workspacesClient;
   // }
 
+  public get knowledgeManagement() {
+    if (!this._knowledgeManagementClient) {
+      this._knowledgeManagementClient = new KnowledgeManagementClient();
+    }
+
+    return this._knowledgeManagementClient;
+  }
+
+
   public get sessions() {
     if (!this._sessionsClient) {
       this._sessionsClient = new SessionsClient();
@@ -104,13 +114,13 @@ export class ApiClient {
   //   return this._kendraClient;
   // }
 
-  // public get userFeedback() {
-  //   if (!this._userFeedbackClient) {
-  //     this._userFeedbackClient = new UserFeedbackClient();
-  //   }
+  public get userFeedback() {
+    if (!this._userFeedbackClient) {
+      this._userFeedbackClient = new UserFeedbackClient();
+    }
 
-  //   return this._userFeedbackClient;
-  // }
+    return this._userFeedbackClient;
+  }
 
   constructor(protected _appConfig: AppConfig) {}
 }

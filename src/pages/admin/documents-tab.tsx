@@ -14,8 +14,8 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import RouterButton from "../../components/wrappers/router-button";
 import { RagDocumentType } from "../../common/types";
 import { TableEmptyState } from "../../components/table-empty-state";
+import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
-// import { ApiClient } from "../../common/api-client/old-api-client";
 import { getColumnDefinition } from "./columns";
 import { Utils } from "../../common/utils";
 import { useCollection } from "@cloudscape-design/collection-hooks";
@@ -27,10 +27,12 @@ export interface DocumentsTabProps {
 }
 
 export default function DocumentsTab(props: DocumentsTabProps) {
-  const appContext = useContext(AppContext);  
+  const appContext = useContext(AppContext);
+  const apiClient = new ApiClient(appContext);
   const [loading, setLoading] = useState(true);
   const [currentPageIndex, setCurrentPageIndex] = useState(1);
   const [pages, setPages] = useState<any[]>([]);
+  const [selectedItems, setSelectedItems] = useState<Object[]>([]);
 
   const { items, collectionProps, paginationProps } = useCollection(pages, {
     filtering: {
@@ -100,21 +102,10 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     async (params: { continuationToken?: string; pageIndex?: number }) => {
       setLoading(true);
 
-      try {
-        const response = await fetch('https://slyk7uahobntca2ysqvhgumsi40zmwsn.lambda-url.us-east-1.on.aws/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            // s3Bucket: props.s3Bucket,
-            // s3Prefix: props.s3Prefix,
-            continuationToken: params?.continuationToken,
-            pageIndex: params?.pageIndex,
-          }),
-        });
+      
+      try {        
+        const result = await apiClient.knowledgeManagement.getDocuments(params?.continuationToken,params?.pageIndex)
 
-        const result = await response.json();
       setPages((current) => {
         if (typeof params.pageIndex !== "undefined") {
           current[params.pageIndex - 1] = result;
@@ -179,6 +170,11 @@ export default function DocumentsTab(props: DocumentsTabProps) {
       loadingText={`Loading files`}
       columnDefinitions={columnDefinitions}
       selectionType="multi"
+      onSelectionChange={({ detail }) => {
+        console.log(detail);
+        setSelectedItems(detail.selectedItems);
+      }}
+      selectedItems={selectedItems}
       items={pages[Math.min(pages.length - 1, currentPageIndex - 1)]?.Contents!}
       trackBy="Key"
       header={
