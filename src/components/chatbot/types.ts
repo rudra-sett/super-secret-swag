@@ -22,6 +22,16 @@ export interface ChatInputState {
   // workspacesStatus: LoadingStatus;
 }
 
+export type ContentType =
+| "chats"
+| "presets"
+| "prompts" 
+| "filed"
+| "collections"
+| "assistants"
+| "tools"
+| "models"
+
 export enum ChatBotMessageType {
   AI = "ai",
   Human = "human",
