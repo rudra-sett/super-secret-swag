@@ -8,6 +8,7 @@ import {
   Header,
   CollectionPreferences,
   Modal,
+  Spinner,
 } from "@cloudscape-design/components";
 import React from 'react'
 import { useCallback, useContext, useEffect, useState } from "react";
@@ -30,11 +31,11 @@ export default function DocumentsTab(props: DocumentsTabProps) {
   const appContext = useContext(AppContext);
   const apiClient = new ApiClient(appContext);
   const [loading, setLoading] = useState(true);
+  const [syncing, setSyncing] = useState(false);
   const [currentPageIndex, setCurrentPageIndex] = useState(1);
   const [pages, setPages] = useState<any[]>([]);
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const [showModalDelete, setShowModalDelete] = useState(false);
-  const [deleteAllSessions, setDeleteAllSessions] = useState(false);
 
   const { items, collectionProps, paginationProps } = useCollection(pages, {
     filtering: {
@@ -175,6 +176,35 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     setLoading(false);
   };
 
+  const getStatus = async () => {
+    const result = await apiClient.knowledgeManagement.kendraIsSyncing();
+    console.log(result);
+    if (result == "DONE SYNCING") { 
+      setSyncing(false);
+      return result;
+    }
+  }
+
+  const syncKendra = async () => {
+    setSyncing(true);
+    try {
+    // const apiClient = new ApiClient(appContext);
+    const status = await getStatus()
+    if (status == "DONE SYNCING") {
+      setSyncing(false);
+      return;
+    } else if (status == "STILL SYNCING") {
+      
+    } else {
+      await apiClient.knowledgeManagement.syncKendra();
+    }
+    const interval = setInterval(getStatus, 20000);
+
+    return () => clearInterval(interval);
+    } catch {setSyncing(false);}
+    // 
+  }
+
   return (
     <><Modal
     onDismiss={() => setShowModalDelete(false)}
@@ -231,6 +261,23 @@ export default function DocumentsTab(props: DocumentsTabProps) {
               }}
               data-testid="submit">
               Delete
+            </Button>
+            <Button
+              variant="primary"
+              disabled={syncing}
+              onClick={() => {
+               syncKendra();
+              }}
+              // data-testid="submit"
+              >
+              {syncing ? (
+                <>
+                  Syncing data...&nbsp;&nbsp;
+                  <Spinner />
+                </>
+              ) : (
+                "Sync data now"
+              )}
             </Button>
             </SpaceBetween>
           }

@@ -85,4 +85,14 @@ export class KnowledgeManagementClient {
       }),
     });
   }
+
+  async syncKendra() : Promise<string> {
+    const response = await fetch("https://f8t413zb4d.execute-api.us-east-1.amazonaws.com/sync-kendra")
+    return await response.json()
+  }
+
+  async kendraIsSyncing() : Promise<string> {
+    const response = await fetch("https://f8t413zb4d.execute-api.us-east-1.amazonaws.com/still-syncing")
+    return await response.json()
+  }
 }
