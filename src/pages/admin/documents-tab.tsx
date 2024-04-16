@@ -32,7 +32,7 @@ export default function DocumentsTab(props: DocumentsTabProps) {
   const [loading, setLoading] = useState(true);
   const [currentPageIndex, setCurrentPageIndex] = useState(1);
   const [pages, setPages] = useState<any[]>([]);
-  const [selectedItems, setSelectedItems] = useState<Object[]>([]);
+  const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [deleteAllSessions, setDeleteAllSessions] = useState(false);
 
