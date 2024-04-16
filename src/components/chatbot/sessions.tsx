@@ -157,7 +157,7 @@ export default function Sessions(props: SessionsProps) {
         }}
         selectedItems={selectedItems}
         selectionType="multi"
-        trackBy="session_id"
+        trackBy="Key"
         empty={
           <Box margin={{ vertical: "xs" }} textAlign="center" color="inherit">
             <SpaceBetween size="m">
@@ -207,7 +207,7 @@ export default function Sessions(props: SessionsProps) {
                   iconName="add-plus"
                   href={`/chatbot/playground/${uuidv4()}`}
                   variant="inline-link"
-//                   onClick={() => getSessions()}
+                  onClick={() => getSessions()}
                 >
                   New session
                 </RouterButton>

@@ -204,9 +204,16 @@ function pairwise(arr: ChatBotHistoryItem[], func) {
 
 export function assembleHistory(history: ChatBotHistoryItem[]) {
   var hist: Object[] = [];
-  pairwise(history, function (current: ChatBotHistoryItem, next: ChatBotHistoryItem) {
-    hist.push({ "user": current.content, "chatbot": next.content })
-  })
+  for (var i = 0; i < history.length - 1; i++) {
+    if (history[i].type == ChatBotMessageType.Human) {
+      hist.push({ "user": history[i].content, "chatbot": history[i+1].content })
+    }
+  }
+  
+  // pairwise(history, function (current: ChatBotHistoryItem, next: ChatBotHistoryItem) {
+  //   hist.push({ "user": current.content, "chatbot": next.content })
+  // })
+  
   return hist;
 }
 

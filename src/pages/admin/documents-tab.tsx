@@ -1,9 +1,13 @@
 import {
-  Table,
-  Header,
+  Box,
   SpaceBetween,
-  Button,
+  Table,
   Pagination,
+  Button,
+  TableProps,
+  Header,
+  CollectionPreferences,
+  Modal,
 } from "@cloudscape-design/components";
 import React from 'react'
 import { useCallback, useContext, useEffect, useState } from "react";
@@ -14,6 +18,7 @@ import { AppContext } from "../../common/app-context";
 // import { ApiClient } from "../../common/api-client/old-api-client";
 import { getColumnDefinition } from "./columns";
 import { Utils } from "../../common/utils";
+import { useCollection } from "@cloudscape-design/collection-hooks";
 // import { DocumentsResult } from "../../../API";
 
 export interface DocumentsTabProps {
@@ -22,13 +27,32 @@ export interface DocumentsTabProps {
 }
 
 export default function DocumentsTab(props: DocumentsTabProps) {
-  const appContext = useContext(AppContext);
-  /*const [loading, setLoading] = useState(true);
-  const [currentPageIndex, setCurrentPageIndex] = useState(1);
-  const [pages, setPages] = useState<(DocumentsResult | undefined)[]>([]);*/
+  const appContext = useContext(AppContext);  
   const [loading, setLoading] = useState(true);
   const [currentPageIndex, setCurrentPageIndex] = useState(1);
   const [pages, setPages] = useState<any[]>([]);
+
+  const { items, collectionProps, paginationProps } = useCollection(pages, {
+    filtering: {
+      empty: (
+        <Box margin={{ vertical: "xs" }} textAlign="center" color="inherit">
+          <SpaceBetween size="m">
+            <b>No sessions</b>
+          </SpaceBetween>
+        </Box>
+      ),
+    },
+    // pagination: { pageSize: preferences.pageSize },
+    // sorting: {
+    //   defaultState: {
+    //     sortingColumn: {
+    //       sortingField: "startTime",
+    //     },
+    //     isDescending: true,
+    //   },
+    // },
+    selection: {},
+  });
 
   /*const getDocuments = useCallback(
     async (params: { lastDocumentId?: string; pageIndex?: number }) => {
@@ -98,7 +122,7 @@ export default function DocumentsTab(props: DocumentsTabProps) {
         } else {
           return [...current, result];
         }
-      });
+      });      
     } catch (error) {
       console.error(Utils.getErrorMessage(error));
     }
@@ -150,10 +174,13 @@ export default function DocumentsTab(props: DocumentsTabProps) {
 
   return (
     <Table
+      {...collectionProps}
       loading={loading}
       loadingText={`Loading files`}
       columnDefinitions={columnDefinitions}
+      selectionType="multi"
       items={pages[Math.min(pages.length - 1, currentPageIndex - 1)]?.Contents!}
+      trackBy="Key"
       header={
         <Header
           actions={
