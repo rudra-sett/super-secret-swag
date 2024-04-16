@@ -72,4 +72,17 @@ export class KnowledgeManagementClient {
     const result = await response.json();
     return result;
   }
+
+  async deleteFile(key : string) {
+    
+    await fetch("https://09do2xc5pe.execute-api.us-east-1.amazonaws.com/delete", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        KEY : key
+      }),
+    });
+  }
 }

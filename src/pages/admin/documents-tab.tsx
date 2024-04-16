@@ -33,6 +33,8 @@ export default function DocumentsTab(props: DocumentsTabProps) {
   const [currentPageIndex, setCurrentPageIndex] = useState(1);
   const [pages, setPages] = useState<any[]>([]);
   const [selectedItems, setSelectedItems] = useState<Object[]>([]);
+  const [showModalDelete, setShowModalDelete] = useState(false);
+  const [deleteAllSessions, setDeleteAllSessions] = useState(false);
 
   const { items, collectionProps, paginationProps } = useCollection(pages, {
     filtering: {
@@ -44,15 +46,15 @@ export default function DocumentsTab(props: DocumentsTabProps) {
         </Box>
       ),
     },
-    // pagination: { pageSize: preferences.pageSize },
-    // sorting: {
-    //   defaultState: {
-    //     sortingColumn: {
-    //       sortingField: "startTime",
-    //     },
-    //     isDescending: true,
-    //   },
-    // },
+    pagination: { pageSize: 5 },
+    sorting: {
+      defaultState: {
+        sortingColumn: {
+          sortingField: "Key",
+        },
+        isDescending: true,
+      },
+    },
     selection: {},
   });
 
@@ -157,13 +159,46 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     }
   };
 
-  // const typeStr = ragDocumentTypeToString(props.documentType);
-  // const typeAddStr = ragDocumentTypeToAddString(props.documentType);
-  // const typeTitleStr = ragDocumentTypeToTitleString(props.documentType);
 
   const columnDefinitions = getColumnDefinition(props.documentType);
 
+  const deleteSelectedFiles = async () => {
+    if (!appContext) return;
+
+    setLoading(true);
+    setShowModalDelete(false);
+    const apiClient = new ApiClient(appContext);
+    await Promise.all(
+      selectedItems.map((s) => apiClient.knowledgeManagement.deleteFile(s.Key!))
+    );
+    await getDocuments({pageIndex : currentPageIndex});
+    setLoading(false);
+  };
+
   return (
+    <><Modal
+    onDismiss={() => setShowModalDelete(false)}
+    visible={showModalDelete}
+    footer={
+      <Box float="right">
+        <SpaceBetween direction="horizontal" size="xs">
+          {" "}
+          <Button variant="link" onClick={() => setShowModalDelete(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={deleteSelectedFiles}>
+            Ok
+          </Button>
+        </SpaceBetween>{" "}
+      </Box>
+    }
+    header={"Delete session" + (selectedItems.length > 1 ? "s" : "")}
+  >
+    Do you want to delete{" "}
+    {selectedItems.length == 1
+      ? `file ${selectedItems[0].Key!}?`
+      : `${selectedItems.length} files?`}
+  </Modal>
     <Table
       {...collectionProps}
       loading={loading}
@@ -188,6 +223,15 @@ export default function DocumentsTab(props: DocumentsTabProps) {
               >
                 {'Add Files'}
               </RouterButton>
+              <Button
+              variant="primary"
+              disabled={selectedItems.length == 0}
+              onClick={() => {
+                if (selectedItems.length > 0) setShowModalDelete(true);
+              }}
+              data-testid="submit">
+              Delete
+            </Button>
             </SpaceBetween>
           }
           description="Please expect a delay for your changes to be reflected. Press the refresh button to see the latest changes."
@@ -215,6 +259,7 @@ export default function DocumentsTab(props: DocumentsTabProps) {
         )
       }
     />
+    </>
   );
 }
 /*
