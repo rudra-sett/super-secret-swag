@@ -252,7 +252,7 @@ export default function DataFileUpload(props: DataFileUploadProps) {
                   uploadingStatus === "success" ? "View files" : undefined,
                 onButtonClick: () =>
                   navigate(
-                    `/rag/workspaces/${props.data.workspace?.value}?tab=file`
+                    `/admin/data`
                   ),
               },
             ]}

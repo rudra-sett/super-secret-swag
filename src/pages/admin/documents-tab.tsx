@@ -105,24 +105,24 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     async (params: { continuationToken?: string; pageIndex?: number }) => {
       setLoading(true);
 
-      
-      try {        
-        const result = await apiClient.knowledgeManagement.getDocuments(params?.continuationToken,params?.pageIndex)
 
-      setPages((current) => {
-        if (typeof params.pageIndex !== "undefined") {
-          current[params.pageIndex - 1] = result;
-          return [...current];
-        } else {
-          return [...current, result];
-        }
-      });      
-    } catch (error) {
-      console.error(Utils.getErrorMessage(error));
-    }
+      try {
+        const result = await apiClient.knowledgeManagement.getDocuments(params?.continuationToken, params?.pageIndex)
+
+        setPages((current) => {
+          if (typeof params.pageIndex !== "undefined") {
+            current[params.pageIndex - 1] = result;
+            return [...current];
+          } else {
+            return [...current, result];
+          }
+        });
+      } catch (error) {
+        console.error(Utils.getErrorMessage(error));
+      }
 
       console.log(pages);
-      setLoading(false);      
+      setLoading(false);
     },
     [appContext, props.documentType]
   );
@@ -172,140 +172,151 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     await Promise.all(
       selectedItems.map((s) => apiClient.knowledgeManagement.deleteFile(s.Key!))
     );
-    await getDocuments({pageIndex : currentPageIndex});
+    await getDocuments({ pageIndex: currentPageIndex });
+    setSelectedItems([])
     setLoading(false);
   };
 
-  const getStatus = async () => {
-    const result = await apiClient.knowledgeManagement.kendraIsSyncing();
-    console.log(result);
-    if (result == "DONE SYNCING") { 
-      setSyncing(false);
-      return result;
-    }
-  }
+  useEffect(() => {
+    if (!appContext) return;
+    const apiClient = new ApiClient(appContext);
 
-  const syncKendra = async () => {
-    setSyncing(true);
-    try {
-    // const apiClient = new ApiClient(appContext);
-    const status = await getStatus()
-    if (status == "DONE SYNCING") {
-      setSyncing(false);
-      return;
-    } else if (status == "STILL SYNCING") {
-      
-    } else {
-      await apiClient.knowledgeManagement.syncKendra();
-    }
-    const interval = setInterval(getStatus, 20000);
+    const getStatus = async () => {
+      try {
+        const result = await apiClient.knowledgeManagement.kendraIsSyncing();
+        setSyncing(result == "STILL SYNCING");
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const interval = setInterval(getStatus, 5000);
+    getStatus();
 
     return () => clearInterval(interval);
-    } catch {setSyncing(false);}
-    // 
+  });
+
+  // const getStatus = async () => {
+  //   const result = await apiClient.knowledgeManagement.kendraIsSyncing();
+  //   console.log(result);    
+  //   if (result == "DONE SYNCING") {
+  //     setSyncing(false); 
+  //   }
+  //   return result;
+  // }
+
+  const syncKendra = async () => {
+    if (syncing) return;
+    try {
+      await apiClient.knowledgeManagement.syncKendra();
+      setSyncing(true);
+    } catch (error) {
+      console.log(error);
+      setSyncing(false)
+    }
   }
 
   return (
     <><Modal
-    onDismiss={() => setShowModalDelete(false)}
-    visible={showModalDelete}
-    footer={
-      <Box float="right">
-        <SpaceBetween direction="horizontal" size="xs">
-          {" "}
-          <Button variant="link" onClick={() => setShowModalDelete(false)}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={deleteSelectedFiles}>
-            Ok
-          </Button>
-        </SpaceBetween>{" "}
-      </Box>
-    }
-    header={"Delete session" + (selectedItems.length > 1 ? "s" : "")}
-  >
-    Do you want to delete{" "}
-    {selectedItems.length == 1
-      ? `file ${selectedItems[0].Key!}?`
-      : `${selectedItems.length} files?`}
-  </Modal>
-    <Table
-      {...collectionProps}
-      loading={loading}
-      loadingText={`Loading files`}
-      columnDefinitions={columnDefinitions}
-      selectionType="multi"
-      onSelectionChange={({ detail }) => {
-        console.log(detail);
-        setSelectedItems(detail.selectedItems);
-      }}
-      selectedItems={selectedItems}
-      items={pages[Math.min(pages.length - 1, currentPageIndex - 1)]?.Contents!}
-      trackBy="Key"
-      header={
-        <Header
-          actions={
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button iconName="refresh" onClick={refreshPage} />
-              <RouterButton
-                // href={`/rag/workspaces/add-data?workspaceId=${props.workspaceId}&tab=${props.documentType}`}
-                href={`/admin/add-data`}
-              >
-                {'Add Files'}
-              </RouterButton>
-              <Button
-              variant="primary"
-              disabled={selectedItems.length == 0}
-              onClick={() => {
-                if (selectedItems.length > 0) setShowModalDelete(true);
-              }}
-              data-testid="submit">
-              Delete
+      onDismiss={() => setShowModalDelete(false)}
+      visible={showModalDelete}
+      footer={
+        <Box float="right">
+          <SpaceBetween direction="horizontal" size="xs">
+            {" "}
+            <Button variant="link" onClick={() => setShowModalDelete(false)}>
+              Cancel
             </Button>
-            <Button
-              variant="primary"
-              disabled={syncing}
-              onClick={() => {
-               syncKendra();
-              }}
-              // data-testid="submit"
-              >
-              {syncing ? (
-                <>
-                  Syncing data...&nbsp;&nbsp;
-                  <Spinner />
-                </>
-              ) : (
-                "Sync data now"
-              )}
+            <Button variant="primary" onClick={deleteSelectedFiles}>
+              Ok
             </Button>
-            </SpaceBetween>
-          }
-          description="Please expect a delay for your changes to be reflected. Press the refresh button to see the latest changes."
-        >
-          {"Files"}
-        </Header>
+          </SpaceBetween>{" "}
+        </Box>
       }
-      empty={
-        <TableEmptyState
-          resourceName={"File"}
-          // createHref={`/rag/workspaces/add-data?workspaceId=${props.workspaceId}&tab=${props.documentType}`}
-          createHref={`/admin/add-data`}
-          createText={"Add Files"}
-        />
-      }
-      pagination={
-        pages.length === 0 ? null : (
-          <Pagination
-            openEnd={true}
-            pagesCount={pages.length}
-            currentPageIndex={currentPageIndex}
-            onNextPageClick={onNextPageClick}
-            onPreviousPageClick={onPreviousPageClick}
+      header={"Delete session" + (selectedItems.length > 1 ? "s" : "")}
+    >
+      Do you want to delete{" "}
+      {selectedItems.length == 1
+        ? `file ${selectedItems[0].Key!}?`
+        : `${selectedItems.length} files?`}
+    </Modal>
+      <Table
+        {...collectionProps}
+        loading={loading}
+        loadingText={`Loading files`}
+        columnDefinitions={columnDefinitions}
+        selectionType="multi"
+        onSelectionChange={({ detail }) => {
+          console.log(detail);
+          setSelectedItems(detail.selectedItems);
+        }}
+        selectedItems={selectedItems}
+        items={pages[Math.min(pages.length - 1, currentPageIndex - 1)]?.Contents!}
+        trackBy="Key"
+        header={
+          <Header
+            actions={
+              <SpaceBetween direction="horizontal" size="xs">
+                <Button iconName="refresh" onClick={refreshPage} />
+                <RouterButton
+                  // href={`/rag/workspaces/add-data?workspaceId=${props.workspaceId}&tab=${props.documentType}`}
+                  href={`/admin/add-data`}
+                >
+                  {'Add Files'}
+                </RouterButton>
+                <Button
+                  variant="primary"
+                  disabled={selectedItems.length == 0}
+                  onClick={() => {
+                    if (selectedItems.length > 0) setShowModalDelete(true);
+                  }}
+                  data-testid="submit">
+                  Delete
+                </Button>
+                <Button
+                  variant="primary"
+                  disabled={syncing}
+                  onClick={() => {
+                    syncKendra();
+                  }}
+                // data-testid="submit"
+                >
+                  {syncing ? (
+                    <>
+                      Syncing data...&nbsp;&nbsp;
+                      <Spinner />
+                    </>
+                  ) : (
+                    "Sync data now"
+                  )}
+                </Button>
+              </SpaceBetween>
+            }
+            description="Please expect a delay for your changes to be reflected. Press the refresh button to see the latest changes."
+          >
+            {"Files"}
+          </Header>
+        }
+        empty={
+          <TableEmptyState
+            resourceName={"File"}
+            // createHref={`/rag/workspaces/add-data?workspaceId=${props.workspaceId}&tab=${props.documentType}`}
+            createHref={`/admin/add-data`}
+            createText={"Add Files"}
           />
-        )
-      }
-    />
+        }
+        pagination={
+          pages.length === 0 ? null : (
+            <Pagination
+              openEnd={true}
+              pagesCount={pages.length}
+              currentPageIndex={currentPageIndex}
+              onNextPageClick={onNextPageClick}
+              onPreviousPageClick={onPreviousPageClick}
+            />
+          )
+        }
+      />
     </>
   );
 }
