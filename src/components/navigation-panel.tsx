@@ -76,7 +76,7 @@ export default function NavigationPanel() {
         text: "Session History",
         items: sessions.map(session => ({ 
            type: "link", 
-           text: `Session ${session.session_id}`, 
+           text: `${session.title}`, 
            href: `/chatbot/playground/${session.session_id}`,
           })), 
       }, // finish changing back from v2
