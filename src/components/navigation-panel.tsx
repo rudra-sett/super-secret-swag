@@ -34,6 +34,11 @@ export default function NavigationPanel() {
       updateItems(fetchedSessions); 
     }
    // hit console.log("pong"); 
+
+   const interval = setInterval(loadSessions, 1000);
+   loadSessions();
+
+    return () => clearInterval(interval);
     loadSessions(); 
   }, [apiClient]); 
 

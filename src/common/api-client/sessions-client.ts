@@ -92,6 +92,9 @@ export class SessionsClient {
     const output = JSON.parse(decoder.decode(value)).chat_history! as any[];
     let history: ChatBotHistoryItem[] = [];
     console.log(output);
+    if (output === undefined) {
+      return history;
+    }
     output.forEach(function (value) {
       history.push({
         type: ChatBotMessageType.Human,
