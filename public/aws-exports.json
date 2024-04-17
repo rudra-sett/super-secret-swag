@@ -1,7 +1,31 @@
 {
+  "aws_project_region": "us-east-1",
+  "aws_cognito_region": "us-east-1",
+  "aws_user_pools_id": "us-east-1_YgHSdZhF3",
+  "aws_user_pools_web_client_id": "4nrbl1kl30gameqo1is5g3de2m",
+  "aws_cognito_identity_pool_id": "us-east-1:b02b6637-f681-48b6-8523-b56c16b3d41d",
+  "Auth": {
+    "region": "us-east-1",
+    "userPoolId": "us-east-1_YgHSdZhF3",
+    "userPoolWebClientId": "4nrbl1kl30gameqo1is5g3de2m",
+    "identityPoolId": "us-east-1:b02b6637-f681-48b6-8523-b56c16b3d41d"
+  },
+  "aws_appsync_graphqlEndpoint": "https://kein73egq5bcdc2q5jo2w27czi.appsync-api.us-east-1.amazonaws.com/graphql",
+  "aws_appsync_region": "us-east-1",
+  "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS",
+  "aws_appsync_apiKey": "da2-xmvgv3oj7nbirja6eqyedu5chi",
+  "Storage": {
+    "AWSS3": {
+      "bucket": "testgenaichatbotstack-chatbotapichatbucketsfilesbu-bj1sdgxb48fl",
+      "region": "us-east-1"
+    }
+  },
   "config": {
-    "api_endpoint": "https://undefined/api",
-    "websocket_endpoint": "wss://undefined/socket",
-    "rag_enabled": false
+    "rag_enabled": true,
+    "cross_encoders_enabled": true,
+    "sagemaker_embeddings_enabled": true,
+    "default_embeddings_model": "sagemaker::1024::intfloat/multilingual-e5-large",
+    "default_cross_encoder_model": "sagemaker::cross-encoder/ms-marco-MiniLM-L-12-v2",
+    "privateWebsite": false
   }
 }

@@ -30,7 +30,7 @@ export default function NavigationPanel() {
   useEffect(() => {
     async function loadSessions() {
       const fetchedSessions = await apiClient.sessions.getSessions("0"); 
-      console.log(fetchedSessions); 
+      // console.log(fetchedSessions); 
       setSessions(fetchedSessions); 
       updateItems(fetchedSessions); 
     }
@@ -50,7 +50,7 @@ export default function NavigationPanel() {
       {
         type: "link",
         text: "New Session", 
-        href: "/chatbot/plauground/${uuidv4()}",
+        href: `/chatbot/playground/${uuidv4()}`,
       },
       {
         type: "section",
