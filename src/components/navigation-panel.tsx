@@ -12,7 +12,6 @@ import { AppContext } from "../common/app-context";
 import  RouterButton from "../components/wrappers/router-button"; 
 import { useContext, useState, useEffect } from "react";
 import { ApiClient } from "../common/api-client/api-client";
-import { SessionsClient } from "../common/api-client/sessions-client";
 import { CHATBOT_NAME } from "../common/constants";
 import { v4 as uuidv4 } from "uuid";
 

@@ -1,4 +1,5 @@
 export class FileUploader {
+  // This function takes in a file, a signed S3 upload URL, and a callback handler for progress indication in order to upload a file to S3
   upload(
     file: File,
     url: string,

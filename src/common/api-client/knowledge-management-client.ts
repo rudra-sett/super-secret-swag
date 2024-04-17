@@ -23,8 +23,8 @@ const mimeTypes = {
 
 export class KnowledgeManagementClient {
 
+  // Returns a URL from the API that allows one file upload to S3 with that exact filename
   async getUploadURL(fileName: string): Promise<string> {
-    // const fileName = document.getElementById('fileNameInput').value;
     const fileExtension = fileName.slice(fileName.lastIndexOf('.')).toLowerCase();
     const fileType = mimeTypes[fileExtension];
 
@@ -33,6 +33,7 @@ export class KnowledgeManagementClient {
       return;
     }
 
+    // TODO: switch to API Gateway, add JWT
     const lambdaUrl = 'https://rwhdthjaixihb3kmxcnpojeuli0giqhi.lambda-url.us-east-1.on.aws/';
     try {
       const response = await fetch(lambdaUrl, {
@@ -55,15 +56,16 @@ export class KnowledgeManagementClient {
     }
   }
 
+  // Returns a list of documents in the S3 bucket (hard-coded on the backend)
   async getDocuments(continuationToken?: string, pageIndex?: number) {
+
+    // TODO: switch to API Gateway
     const response = await fetch('https://slyk7uahobntca2ysqvhgumsi40zmwsn.lambda-url.us-east-1.on.aws/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        // s3Bucket: props.s3Bucket,
-        // s3Prefix: props.s3Prefix,
         continuationToken: continuationToken,
         pageIndex: pageIndex,
       }),
@@ -73,6 +75,7 @@ export class KnowledgeManagementClient {
     return result;
   }
 
+  // Deletes a given file on the S3 bucket (hardcoded on the backend!)
   async deleteFile(key : string) {
     
     await fetch("https://09do2xc5pe.execute-api.us-east-1.amazonaws.com/delete", {
@@ -86,11 +89,13 @@ export class KnowledgeManagementClient {
     });
   }
 
+  // Runs a sync job on Kendra (hardcoded datasource as well as index on the backend)
   async syncKendra() : Promise<string> {
     const response = await fetch("https://f8t413zb4d.execute-api.us-east-1.amazonaws.com/sync-kendra")
     return await response.json()
   }
 
+  // Checks if Kendra is currently syncing (used to disable the sync button)
   async kendraIsSyncing() : Promise<string> {
     const response = await fetch("https://f8t413zb4d.execute-api.us-east-1.amazonaws.com/still-syncing")
     return await response.json()
