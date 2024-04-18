@@ -28,7 +28,7 @@ export default function NavigationPanel() {
 
   useEffect(() => {
     async function loadSessions() {
-      const fetchedSessions = await apiClient.sessions.getSessions("0"); 
+      const fetchedSessions = await apiClient.sessions.getSessions("29"); 
       // console.log(fetchedSessions); 
       setSessions(fetchedSessions); 
       updateItems(fetchedSessions); 

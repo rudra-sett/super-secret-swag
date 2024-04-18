@@ -50,7 +50,7 @@ export default function Chat(props: { sessionId?: string }) {
       const apiClient = new ApiClient(appContext);
       try {
         // const result = await apiClient.sessions.getSession(props.sessionId);
-        const hist = await apiClient.sessions.getSession(props.sessionId,"0");
+        const hist = await apiClient.sessions.getSession(props.sessionId,"29");
 
         if (hist) {
           console.log(hist);
