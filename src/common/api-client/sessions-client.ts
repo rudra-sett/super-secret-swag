@@ -99,7 +99,7 @@ export class SessionsClient {
       let metadata = {}
       if (value.metadata) {
         metadata = {"Sources" : JSON.parse(value.metadata)}
-      }
+      }      
       history.push({
         type: ChatBotMessageType.Human,
         content: value.user,
@@ -107,14 +107,14 @@ export class SessionsClient {
         },
         tokens: [],
       },
-        {
-          type: ChatBotMessageType.AI,
-          tokens: [],
-          content: value.chatbot,
-          metadata: metadata,
-        },)
+      {
+        type: ChatBotMessageType.AI,
+        tokens: [],
+        content: value.chatbot,
+        metadata: metadata,
+      },)
     })
-
+    console.log(history);
     return history;
   }
 

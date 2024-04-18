@@ -447,7 +447,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             metadata: sources,
           },
         ];
-
+        console.log(messageHistoryRef.current)
         props.setMessageHistory(messageHistoryRef.current);
         // if (data.data == '') {
         //   ws.close()
