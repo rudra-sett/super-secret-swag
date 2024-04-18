@@ -63,7 +63,7 @@ export class SessionsClient {
     const { value, done } = await reader.read();
     const decoder = new TextDecoder();
     const output = decoder.decode(value);
-    console.log(output);
+    // console.log(output);
     return JSON.parse(output);
   }
 
@@ -96,6 +96,10 @@ export class SessionsClient {
       return history;
     }
     output.forEach(function (value) {
+      let metadata = {}
+      if (value.metadata) {
+        metadata = {"Sources" : JSON.parse(value.metadata)}
+      }
       history.push({
         type: ChatBotMessageType.Human,
         content: value.user,
@@ -107,7 +111,7 @@ export class SessionsClient {
           type: ChatBotMessageType.AI,
           tokens: [],
           content: value.chatbot,
-          metadata: {},
+          metadata: metadata,
         },)
     })
 

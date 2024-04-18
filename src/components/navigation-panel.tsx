@@ -45,7 +45,7 @@ export default function NavigationPanel() {
  //  const [items, setItems] = useState<SideNavigationProps.Item[]>
  // const [items] = useState<SideNavigationProps.Item[]>(() => {
   const updateItems = (sessions: any[]) => {
-    console.log("hit the update button")
+    // console.log("hit the update button")
     const newItems: SideNavigationProps.Item[] = [
       {
         type: "link",

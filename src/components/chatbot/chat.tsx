@@ -24,7 +24,7 @@ export default function Chat(props: { sessionId?: string }) {
   const [configuration, setConfiguration] = useState<ChatBotConfiguration>(
     () => ({
       streaming: true,
-      showMetadata: false,
+      showMetadata: true,
       maxTokens: 512,
       temperature: 0.6,
       topP: 0.9,

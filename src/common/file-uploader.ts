@@ -14,7 +14,6 @@ export class FileUploader {
         const v = f.slice(sepIdx + 1);
         formData.append(k, v);
       }); */ 
-      formData.append("Content-Type",type)
       formData.append("file", file);
       const xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function () {
@@ -32,7 +31,7 @@ export class FileUploader {
       xhr.upload.addEventListener("progress", (event) => {
         onProgress(event.loaded);
       });
-      xhr.send(formData);
+      xhr.send(file);
     });
   }
 }
