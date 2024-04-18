@@ -139,7 +139,7 @@ export default function AppConfigured() {
         }}
         colorMode={theme === Mode.Dark ? "dark" : "light"}
       >
-        <Authenticator
+        {/* <Authenticator
           hideSignUp={true}
           components={{
             SignIn: {
@@ -155,9 +155,9 @@ export default function AppConfigured() {
               },
             },
           }}
-        >
+        > */}
           <App />
-        </Authenticator>
+        {/* </Authenticator> */}
       </ThemeProvider>
     </AppContext.Provider>
   );
