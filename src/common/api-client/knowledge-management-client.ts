@@ -1,35 +1,10 @@
-const mimeTypes = {
-  '.pdf': 'application/pdf',
-  '.doc': 'application/msword',
-  '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  '.xls': 'application/vnd.ms-excel',
-  '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  '.ppt': 'application/vnd.ms-powerpoint',
-  '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-  '.txt': 'text/plain',
-  '.csv': 'text/csv',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.gif': 'image/gif',
-  '.svg': 'image/svg+xml',
-  '.mp3': 'audio/mpeg',
-  '.wav': 'audio/wav',
-  '.mp4': 'video/mp4',
-  '.zip': 'application/zip',
-  '.rar': 'application/x-rar-compressed',
-  '.tar': 'application/x-tar'
-};
 
 export class KnowledgeManagementClient {
 
   // Returns a URL from the API that allows one file upload to S3 with that exact filename
-  async getUploadURL(fileName: string): Promise<string> {
-    const fileExtension = fileName.slice(fileName.lastIndexOf('.')).toLowerCase();
-    const fileType = mimeTypes[fileExtension];
-
+  async getUploadURL(fileName: string, fileType : string): Promise<string> {    
     if (!fileType) {
-      alert('Unsupported file type');
+      alert('Must have valid file type!');
       return;
     }
 
