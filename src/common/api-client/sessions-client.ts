@@ -98,7 +98,7 @@ export class SessionsClient {
     output.forEach(function (value) {
       let metadata = {}
       if (value.metadata) {
-        metadata = value.metadata
+        metadata = JSON.parse(value.metadata)
       }
       history.push({
         type: ChatBotMessageType.Human,
@@ -111,7 +111,7 @@ export class SessionsClient {
           type: ChatBotMessageType.AI,
           tokens: [],
           content: value.chatbot,
-          metadata: JSON.parse(value.metadata),
+          metadata: metadata,
         },)
     })
 
