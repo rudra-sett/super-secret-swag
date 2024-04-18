@@ -10,46 +10,63 @@ export default function Playground() {
   return (
     <BaseAppLayout
       info={
-      //   <HelpPanel header={<Header variant="h3">Using the chat</Header>}>
-      //     <p>
-      //       This chatbot application allows engineers from MassDOT to quickly search & find relevant information for their projects from the MassDOT Documentation. 
-      //     </p>
-      //     <h3>Settings</h3>
-      //     <p>
-      //       You can configure additional settings for the LLM via the setting
-      //       action at the bottom-right. You can change the Temperature and Top P
-      //       values to be used for the answer generation. You can also enable and
-      //       disable streaming mode for those models that support it (the setting
-      //       is ignored if the model does not support streaming). Turning on
-      //       Metadata displays additional information about the answer, such as
-      //       the prompts being used to interact with the LLM and the document
-      //       passages that might have been retrieved from the RAG storage.
-      //     </p>
-      //     <h3>Multimodal chat</h3>
-      //     <p>
-      //       If you select a multimodal model (like Anthropic Claude 3), you can
-      //       upload images to use in the conversation.
-      //     </p>
-      //     <h3>Session history</h3>
-      //     <p>
-      //       All conversations are saved and can be later accessed via the{" "}
-      //       <Link to="/chatbot/sessions">Session</Link> in the navigation bar.
-      //     </p>
-      //   </HelpPanel>
-      // }
-      // toolsWidth={300}
-      // content={
-      //  <div>
-      // {/* <Chat sessionId={sessionId} /> */}
-      <Alert
-          statusIconAriaLabel="Info"
-          header=""
-       >
-        AI Models can make mistakes. Be mindful in validating important information.
-      </Alert>
-      <Chat sessionId={sessionId} />
-      </div>
-     }
+        <div>
+          <Alert
+            statusIconAriaLabel="Info"
+            header="Attention"
+          >
+            AI Models can make mistakes. Be mindful in validating important information.
+          </Alert>
+        </div>
+      }
     />
   );
 }
+
+
+  //   return (
+//     <BaseAppLayout
+//       info={
+//       //   <HelpPanel header={<Header variant="h3">Using the chat</Header>}>
+//       //     <p>
+//       //       This chatbot application allows engineers from MassDOT to quickly search & find relevant information for their projects from the MassDOT Documentation. 
+//       //     </p>
+//       //     <h3>Settings</h3>
+//       //     <p>
+//       //       You can configure additional settings for the LLM via the setting
+//       //       action at the bottom-right. You can change the Temperature and Top P
+//       //       values to be used for the answer generation. You can also enable and
+//       //       disable streaming mode for those models that support it (the setting
+//       //       is ignored if the model does not support streaming). Turning on
+//       //       Metadata displays additional information about the answer, such as
+//       //       the prompts being used to interact with the LLM and the document
+//       //       passages that might have been retrieved from the RAG storage.
+//       //     </p>
+//       //     <h3>Multimodal chat</h3>
+//       //     <p>
+//       //       If you select a multimodal model (like Anthropic Claude 3), you can
+//       //       upload images to use in the conversation.
+//       //     </p>
+//       //     <h3>Session history</h3>
+//       //     <p>
+//       //       All conversations are saved and can be later accessed via the{" "}
+//       //       <Link to="/chatbot/sessions">Session</Link> in the navigation bar.
+//       //     </p>
+//       //   </HelpPanel>
+//       // }
+//       // toolsWidth={300}
+//       // content={
+//       //  <div>
+//       // {/* <Chat sessionId={sessionId} /> */}
+//       <Alert
+//           statusIconAriaLabel="Info"
+//           header=""
+//        >
+//         AI Models can make mistakes. Be mindful in validating important information.
+//       </Alert>
+//       <Chat sessionId={sessionId} />
+//       </div>
+//      }
+//     />
+//   );
+// }
