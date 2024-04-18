@@ -31,7 +31,7 @@ export class FileUploader {
       xhr.upload.addEventListener("progress", (event) => {
         onProgress(event.loaded);
       });
-      xhr.send(formData);
+      xhr.send(file);
     });
   }
 }
