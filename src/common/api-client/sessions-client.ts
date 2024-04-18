@@ -63,7 +63,7 @@ export class SessionsClient {
     const { value, done } = await reader.read();
     const decoder = new TextDecoder();
     const output = decoder.decode(value);
-    console.log(output);
+    // console.log(output);
     return JSON.parse(output);
   }
 
