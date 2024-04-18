@@ -116,24 +116,12 @@ export default function Chat(props: { sessionId?: string }) {
     });
     console.log(response);
   }
-
   return (
-    <div className={styles.chat_container}>
-      <SpaceBetween direction="vertical" size="m">
-        {messageHistory.map((message, idx) => (
-          <ChatMessage
-            key={idx}
-            message={message}
-            showMetadata={configuration.showMetadata}
-            onThumbsUp={() => handleFeedback(1,idx, message)}
-            onThumbsDown={() => handleFeedback(0,idx, message)}
-          />
-        ))}
-      </SpaceBetween>
+    <div>
+      {messageHistory.length === 0 && !session?.loading && (
+        <div className={`${styles.fullscreen_center} ${styles.chatbot_name}`}>{CHATBOT_NAME}</div>
+      )}
       <div className={styles.welcome_text}>
-        {messageHistory.length == 0 && !session?.loading && (
-          <center>{CHATBOT_NAME}</center>
-        )}
         {session?.loading && (
           <center>
             <StatusIndicator type="loading">Loading session</StatusIndicator>
@@ -141,16 +129,31 @@ export default function Chat(props: { sessionId?: string }) {
         )}
       </div>
       <div className={styles.input_container}>
-        <ChatInputPanel
-          session={session}
-          running={running}
-          setRunning={setRunning}
-          messageHistory={messageHistory}
-          setMessageHistory={(history) => setMessageHistory(history)}
-          configuration={configuration}
-          setConfiguration={setConfiguration}
-        />
+        <SpaceBetween direction="vertical" size="m">
+          <ChatInputPanel
+            session={session}
+            running={running}
+            setRunning={setRunning}
+            messageHistory={messageHistory}
+            setMessageHistory={setMessageHistory}
+            configuration={configuration}
+            setConfiguration={setConfiguration} />
+        </SpaceBetween>
+        <div className={styles.chat_container}>
+          <SpaceBetween direction="vertical" size="m">
+            {messageHistory.map((message, idx) => (
+              <ChatMessage
+                key={idx}
+                message={message}
+                showMetadata={configuration.showMetadata}
+                onThumbsUp={() => handleFeedback(1, idx, message)}
+                onThumbsDown={() => handleFeedback(0, idx, message)} />
+            ))}
+          </SpaceBetween>
+        </div>
       </div>
     </div>
   );
+  
+
 }

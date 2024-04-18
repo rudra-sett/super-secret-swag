@@ -3,41 +3,25 @@ import Chat from "../../../components/chatbot/chat";
 
 import { Link, useParams } from "react-router-dom";
 import { Header, HelpPanel } from "@cloudscape-design/components";
-
+import "../../../styles/chat.module.scss"; 
 export default function Playground() {
   const { sessionId } = useParams();
 
   return (
     <BaseAppLayout
       info={
-        <HelpPanel header={<Header variant="h3">Using the chat</Header>}>
+        <HelpPanel header={<Header variant="h3">Using the search tool</Header>}>
           <p>
-            This chatbot application allows users to ask questions about the RIDE, an MBTA
+            This enhanced search application helps people discover grant opportunities from the State of Massachusetts Executive Office of Energy and Environmental Affairs (EEOEA)
           </p>
-          <h3>Settings</h3>
+          <h3>More resources</h3>
           <p>
-            You can configure additional settings for the LLM via the setting
-            action at the bottom-right. You can change the Temperature and Top P
-            values to be used for the answer generation. You can also enable and
-            disable streaming mode for those models that support it (the setting
-            is ignored if the model does not support streaming). Turning on
-            Metadata displays additional information about the answer, such as
-            the prompts being used to interact with the LLM and the document
-            passages that might have been retrieved from the RAG storage.
+            Discover more about the grant programs offered by the EOEEA here!
           </p>
-          <h3>Multimodal chat</h3>
-          <p>
-            If you select a multimodal model (like Anthropic Claude 3), you can
-            upload images to use in the conversation.
-          </p>
-          <h3>Session history</h3>
-          <p>
-            All conversations are saved and can be later accessed via the{" "}
-            <Link to="/chatbot/sessions">Session</Link> in the navigation bar.
-          </p>
+        
         </HelpPanel>
       }
-      toolsWidth={300}
+// toolsWidth={0}
       content={<Chat sessionId={sessionId} />}
     />
   );

@@ -109,6 +109,25 @@
   border-radius: 8px;
 }
 
+.fullscreen_center {
+  position: fixed; // Use absolute if you don't want it to stay in view during scrolling
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10; // Adjust as necessary to ensure it's above other content
+}
+
+.chatbot_name {
+  font-family: 'Papyrus', sans-serif; // Example font
+  font-size: 30px; // Example size
+  font-weight: bold; // Makes the font bold
+  color: rgb(156, 194, 171); // Sets the text color
+}
+
 @media (max-width: 689px) {
   .input_controls {
     display: grid;

@@ -31,10 +31,10 @@ export interface AppConfig {
   };
 }
 
-export interface NavigationPanelState {
-  collapsed?: boolean;
-  collapsedSections?: Record<number, boolean>;
-}
+// export interface NavigationPanelState {
+//   collapsed?: boolean;
+//   collapsedSections?: Record<number, boolean>;
+// }
 
 export type LoadingStatus = "pending" | "loading" | "finished" | "error";
 export type ModelProvider = "sagemaker" | "bedrock" | "openai";

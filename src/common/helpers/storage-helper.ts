@@ -1,11 +1,11 @@
 import { Mode, applyMode } from "@cloudscape-design/global-styles";
-import { NavigationPanelState } from "../types";
+// import { NavigationPanelState } from "../types";
 
 const PREFIX = "aws-genai-llm-chatbot";
 const THEME_STORAGE_NAME = `${PREFIX}-theme`;
 const SELECTED_MODEL_STORAGE_NAME = `${PREFIX}-selected-model`;
 const SELECTED_WORKSPACE_STORAGE_NAME = `${PREFIX}-selected-workspace`;
-const NAVIGATION_PANEL_STATE_STORAGE_NAME = `${PREFIX}-navigation-panel-state`;
+// const NAVIGATION_PANEL_STATE_STORAGE_NAME = `${PREFIX}-navigation-panel-state`;
 
 export abstract class StorageHelper {
   static getTheme() {
@@ -27,31 +27,31 @@ export abstract class StorageHelper {
     return theme;
   }
 
-  static getNavigationPanelState(): NavigationPanelState {
-    const value =
-      localStorage.getItem(NAVIGATION_PANEL_STATE_STORAGE_NAME) ??
-      JSON.stringify({
-        collapsed: true,
-      });
+  // static getNavigationPanelState(): NavigationPanelState {
+  //   const value =
+  //     localStorage.getItem(NAVIGATION_PANEL_STATE_STORAGE_NAME) ??
+  //     JSON.stringify({
+  //       collapsed: true,
+  //     });
 
-    let state: NavigationPanelState | null = null;
-    try {
-      state = JSON.parse(value);
-    } catch {
-      state = {};
-    }
+  //   let state: NavigationPanelState | null = null;
+  //   try {
+  //     state = JSON.parse(value);
+  //   } catch {
+  //     state = {};
+  //   }
 
-    return state ?? {};
-  }
+  //   return state ?? {};
+  // }
 
-  static setNavigationPanelState(state: Partial<NavigationPanelState>) {
-    const currentState = this.getNavigationPanelState();
-    const newState = { ...currentState, ...state };
-    const stateStr = JSON.stringify(newState);
-    localStorage.setItem(NAVIGATION_PANEL_STATE_STORAGE_NAME, stateStr);
+  // static setNavigationPanelState(state: Partial<NavigationPanelState>) {
+  //   const currentState = this.getNavigationPanelState();
+  //   const newState = { ...currentState, ...state };
+  //   const stateStr = JSON.stringify(newState);
+  //   localStorage.setItem(NAVIGATION_PANEL_STATE_STORAGE_NAME, stateStr);
 
-    return newState;
-  }
+  //   return newState;
+  // }
 
   static getSelectedLLM() {
     const value = localStorage.getItem(SELECTED_MODEL_STORAGE_NAME) ?? null;

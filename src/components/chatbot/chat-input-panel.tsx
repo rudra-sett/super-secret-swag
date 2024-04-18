@@ -406,15 +406,12 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           "data": {
             userMessage: messageToSend,
             chatHistory: assembleHistory(messageHistoryRef.current.slice(0, -2)),
-            systemPrompt: `You are an AI chatbot for the RIDE, an MBTA paratransit service. You will help customer service representatives respond to user complaints and queries.
-          Answer questions based on your knowledge and nothing more. If you are unable to decisively answer a question, direct them to customer service. Do not make up information outside of your given information.
-          Customer service is needed if it is something you cannot answer. Requests for fare history require customer service, as do service complaints like a rude driver or late pickup.
-          Highly-specific situations will also require customer service to step in. Remember that RIDE Flex and RIDE are not the same service. 
-          Phone numbers:
-          TRAC (handles scheduling/booking, trip changes/cancellations, anything time-sensitive): 844-427-7433 (voice/relay) 857-206-6569 (TTY)
-          Mobility Center (handles eligibility questions, renewals, and changes to mobility status): 617-337-2727 (voice/relay)
-          MBTA Customer support (handles all other queries): 617-222-3200 (voice/relay)`,
-            projectId: 'rsrs111111'
+            systemPrompt: `You are a navigator of grants offered by the Massachusetts Executive Office of Energy and Enviornmental Affairs(EEA). With each
+            user input, you will return the relevant grants offered by the EEA that are most relevant to the user input. The response should be formatted to include
+            the name of the grant as a bolded subheading, a 2-3 sentence description of the grant, then subsequent bullet points on different lines listing the deadline, funding available, match requirement, and relevant contact information
+            for the person in charge of that particular grant program. The bulletpoints for deadlin, funding available, match requirements, and contact information, should all be listed
+            on their own line. After each grant, include a link to the webpage where this information was found.`,
+            projectId: 'rkdg062824'
           }
         });
         // readline.close();
@@ -587,7 +584,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
               }
             }}
             value={state.value}
-            placeholder={"Send a message"}
+            placeholder={"Enter Search ex. \"Grants for farms\""}
           />
           <div style={{ marginLeft: "8px" }}>
             {/* {state.selectedModelMetadata?.inputModalities.includes(

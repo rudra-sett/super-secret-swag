@@ -51,10 +51,11 @@ export default function GlobalHeader() {
       style={{ zIndex: 1002, top: 0, left: 0, right: 0, position: "fixed" }}
       id="awsui-top-navigation"
     >
+      
       <TopNavigation
         identity={{
           href: "/",
-          logo: { src: "/images/icon.png", alt: { CHATBOT_NAME } + " Logo" },
+          logo: { src: "/images/EEAJointLogo.png", alt: { CHATBOT_NAME } + " Logo" },
         }}
         utilities={[
           {
