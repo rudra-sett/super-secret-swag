@@ -13,7 +13,7 @@ import {
 import { useContext, useState } from "react";
 import { AddDataData } from "./types";
 import { AppContext } from "../../common/app-context";
-// import { ApiClient } from "../../../common/api-client/old-api-client";
+import { ApiClient } from "../../common/api-client/api-client";
 import { Utils } from "../../common/utils";
 import { FileUploader } from "../../common/file-uploader";
 import { useNavigate } from "react-router-dom";
@@ -71,42 +71,9 @@ const mimeTypes = {
   '.tar': 'application/x-tar'
 };
 
-async function getUploadURL(fileName : string) : Promise<string> {
-  // const fileName = document.getElementById('fileNameInput').value;
-  const fileExtension = fileName.slice(fileName.lastIndexOf('.')).toLowerCase();
-  const fileType = mimeTypes[fileExtension];
-
-  if (!fileType) {
-    alert('Unsupported file type');
-    return;
-  }
-
-  const lambdaUrl = 'https://rwhdthjaixihb3kmxcnpojeuli0giqhi.lambda-url.us-east-1.on.aws/'; 
-
-  try {
-    const response = await fetch(lambdaUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ fileName, fileType })
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to get upload URL');
-    }
-
-    const data = await response.json();
-    return data.signedUrl;
-  } catch (error) {
-    console.error('Error:', error);
-    throw error;
-  }
-}
-
-
 export default function DataFileUpload(props: DataFileUploadProps) {
   const appContext = useContext(AppContext);
+  const apiClient = new ApiClient(appContext);
   const navigate = useNavigate();
   const [files, setFiles] = useState<File[]>([]);
   const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
@@ -170,16 +137,16 @@ export default function DataFileUpload(props: DataFileUploadProps) {
       let fileUploaded = 0;
 
       try {
-        // const result = await apiClient.documents.presignedFileUploadPost(
-        //   props.data.workspace?.value,
-        //   file.name
-        // );
-        const result = await getUploadURL(file.name);
+        
+        const fileExtension = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
+        const fileType = mimeTypes[fileExtension];
+        const result = await apiClient.knowledgeManagement.getUploadURL(file.name,fileType);
         // console.log(result);      
         try {
           await uploader.upload(
             file,
             result, //.data!.getUploadFileURL!,
+            fileType,
             (uploaded: number) => {
               fileUploaded = uploaded;
               const totalUploaded = fileUploaded + accumulator;
@@ -309,7 +276,7 @@ export default function DataFileUpload(props: DataFileUploadProps) {
                   uploadingStatus === "success" ? "View files" : undefined,
                 onButtonClick: () =>
                   navigate(
-                    `/rag/workspaces/${props.data.workspace?.value}?tab=file`
+                    `/admin/data`
                   ),
               },
             ]}

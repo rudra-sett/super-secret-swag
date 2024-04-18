@@ -36,18 +36,12 @@ import styles from "../../styles/chat.module.scss";
 // import ConfigDialog from "./config-dialog";
 // import ImageDialog from "./image-dialog";
 import {
-  ChabotInputModality,
-  ChatBotHeartbeatRequest,
-  ChatBotAction,
   ChatBotConfiguration,
   ChatBotHistoryItem,
   ChatBotMessageResponse,
   ChatBotMessageType,
-  ChatBotMode,
-  ChatBotRunRequest,
   ChatInputState,
   ImageFile,
-  ChatBotModelInterface,
 } from "./types";
 // import { sendQuery } from "../../graphql/mutations";
 import {
@@ -383,6 +377,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       const wsUrl = 'wss://ngdpdxffy0.execute-api.us-east-1.amazonaws.com/test/';
       // Create a new WebSocket connection
       const ws = new WebSocket(wsUrl);
+
+      let incomingMetadata : boolean = false;
+      let sources = {};
       // Event listener for when the connection is open
       ws.addEventListener('open', function open() {
         console.log('Connected to the WebSocket server');
@@ -407,13 +404,23 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       });
       // Event listener for incoming messages
       ws.addEventListener('message', async function incoming(data) {
-        // console.log(data);
-        receivedData += data.data;
+        console.log(data);        
         if (data.data == '!<|EOF_STREAM|>!') {
           // await apiClient.sessions.updateSession(props.session.id, "0", messageHistoryRef.current);
-          ws.close();
+          // ws.close();
+          incomingMetadata = true;
           return;
+          // return;
         }
+        if (!incomingMetadata) {
+          receivedData += data.data;
+        } else {
+          sources = {"Sources" : JSON.parse(data.data)}
+          console.log(sources);
+        }
+        
+        
+
         // console.log(data.data);
         // Update the chat history state with the new message        
         messageHistoryRef.current = [
@@ -431,10 +438,10 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             type: ChatBotMessageType.AI,
             tokens: [],
             content: receivedData,
-            metadata: {},
+            metadata: sources,
           },
         ];
-
+        console.log(messageHistoryRef.current)
         props.setMessageHistory(messageHistoryRef.current);
         // if (data.data == '') {
         //   ws.close()

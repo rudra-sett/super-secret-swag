@@ -81,7 +81,7 @@ export default function ChatMessage(props: ChatMessageProps) {
             ((props?.showMetadata && props.message.metadata) ||
               (props.message.metadata &&
                 props.configuration?.showMetadata)) && (
-              <ExpandableSection variant="footer" headerText="Metadata">
+              <ExpandableSection variant="footer" headerText="Sources">
                 <JsonView
                   shouldInitiallyExpand={(level) => level < 2}
                   data={JSON.parse(

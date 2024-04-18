@@ -9,7 +9,24 @@ import { SessionsProps } from "../chatbot/sessions";
 // add in import for the API client 
 // import { listSessionsByUserId } from '.lambda whatever' 
 import { AppContext } from "../../common/app-context";
+import { AppConfig } from "../../common/types";
+import { ContentType } from "../chatbot/types";
 
+// interface SideBarCreateButtonProps {
+//     contentType: ContentTypehasData: boolean
+// }
+// export const useChatHandler = () => {
+    
+    
+// }
+// export const SidebarCreateButton: FC<SideBarCreateButtonProps> = ({
+//     contentType,
+//     hasData
+// }) => {
+//     const { userId, selectedWorkspace} = useContext(ChatbotUIContext)
+//     const { handleNewChat } useChatHandler() 
+
+// }
 
 
 // add in looping function similar to that in the models/index.ts that maps through and pushes 
