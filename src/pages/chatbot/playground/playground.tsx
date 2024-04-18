@@ -9,6 +9,7 @@ export default function Playground() {
 
   return (
     <BaseAppLayout
+      
       info={
         <HelpPanel header={<Header variant="h3">Using the search tool</Header>}>
           <p>
