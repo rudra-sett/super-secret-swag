@@ -56,7 +56,7 @@ body.awsui-dark-mode {
     }
 
     td {
-      border: 1px solid rgb(95, 107, 122);
+      border: 1px solid rgb(0, 247, 255);
       padding: 12px;
     }
   }
@@ -64,6 +64,10 @@ body.awsui-dark-mode {
 
 .new-session-button {
  margin-left: auto; 
+}
+
+new-chat-button[data-alignment = "right"] {
+ align-items: center;
 }
 
 .new-session-button:hover {
