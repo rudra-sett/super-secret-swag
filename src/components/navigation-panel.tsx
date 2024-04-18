@@ -5,10 +5,10 @@ import {
   Button,
   SpaceBetween,
 } from "@cloudscape-design/components";
-
 import useOnFollow from "../common/hooks/use-on-follow";
 import { useNavigationPanelState } from "../common/hooks/use-navigation-panel-state";
 import { AppContext } from "../common/app-context";
+import PencilSquareIcon from "../../public/images/pencil-square.jsx"; 
 import  RouterButton from "../components/wrappers/router-button"; 
 import { useContext, useState, useEffect } from "react";
 import { ApiClient } from "../common/api-client/api-client";
@@ -45,17 +45,18 @@ export default function NavigationPanel() {
  // const [items, setItems] = useState<SideNavigationProps.Item[]>
  // const [items] = useState<SideNavigationProps.Item[]>(() => {
   const updateItems = (sessions: any[]) => {
+    console.log("hit the update button")
     const newItems: SideNavigationProps.Item[] = [
       {
         type: "link",
         text: "Home",
         href: "/",
       },
-      {
-        type: "link",
-        text: "New Session", 
-        href: `/chatbot/playground/${uuidv4()}`,
-      },
+      // {
+      //   type: "link",
+      //   text: "New Session", 
+      //   href: `/chatbot/playground/${uuidv4()}`,
+      // },
       {
         type: "section",
         text: "Chatbot",
@@ -72,9 +73,6 @@ export default function NavigationPanel() {
           { type: "link", text: "Data", href: "/admin/data" }
         ],
       },
-      // {
-      //   type: "divider"
-      // },
       {
         type: "section",
         text: "Session History",
@@ -83,7 +81,7 @@ export default function NavigationPanel() {
            text: `${session.title}`, 
            href: `/chatbot/playground/${session.session_id}`,
           })), 
-      }, // finish changing back from v2
+      }, 
     ]; 
     setItems(newItems); 
     // console.log("pong")
@@ -124,17 +122,28 @@ export default function NavigationPanel() {
 
   return (
     <div>
-     <Header> 
-       <RouterButton
-       // iconAlign="left"
-         iconName="add-plus"
-         variant="inline-link"
-         href={`/chatbot/playground/${uuidv4()}`}
+      <div style={{display: 'flex', justifyContent: 'flex-end' }}> 
+      {/* <RouterButton
+        iconAlign="right"
+        iconSvg={<PencilSquareIcon />}
+        variant="primary"
+        href={`/chatbot/playground/${uuidv4()}`}
+  >
+    New session
+  </RouterButton> */}
       
+      </div>
+     <Header > 
+       <RouterButton
+         iconAlign="right"
+         iconSvg= {<PencilSquareIcon />}
+         variant="primary"
+         href={`/chatbot/playground/${uuidv4()}`}
          >
          New session
        </RouterButton>
-     </Header>
+        
+       </Header>
     <SideNavigation
         onFollow={onFollow}
         onChange={onChange}

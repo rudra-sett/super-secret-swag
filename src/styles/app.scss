@@ -24,6 +24,13 @@ body.awsui-dark-mode {
   background-color: #0e1b2a;
 }
 
+.header-container {
+  display: flex;
+  grid-template-columns: 1fr auto;
+  justify-content: space-between;
+  align-items: center; /* Ensures vertical alignment if needed */
+}
+
 .matrix-table {
   border: 1px solid #d6d6d6;
   border-radius: 2px;
@@ -53,6 +60,14 @@ body.awsui-dark-mode {
       padding: 12px;
     }
   }
+}
+
+.new-session-button {
+ margin-left: auto; 
+}
+
+.new-session-button:hover {
+  background-color: #45a049; /* Darker green on hover */
 }
 
 .jsonContainer {
