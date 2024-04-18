@@ -393,7 +393,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             Consider using the chat history or session history, if they exist, along with the context to answer the question.  
             If you don't know the answer, just say that you don't know. Don't try to make up an answer. Do not answer beyond this context.`,
             projectId: 'smjv012345',
-            user_id : "0",
+            user_id : "29",
             session_id: props.session.id
           }
         });
