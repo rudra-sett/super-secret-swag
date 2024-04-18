@@ -36,18 +36,12 @@ import styles from "../../styles/chat.module.scss";
 // import ConfigDialog from "./config-dialog";
 // import ImageDialog from "./image-dialog";
 import {
-  ChabotInputModality,
-  ChatBotHeartbeatRequest,
-  ChatBotAction,
   ChatBotConfiguration,
   ChatBotHistoryItem,
   ChatBotMessageResponse,
   ChatBotMessageType,
-  ChatBotMode,
-  ChatBotRunRequest,
   ChatInputState,
   ImageFile,
-  ChatBotModelInterface,
 } from "./types";
 // import { sendQuery } from "../../graphql/mutations";
 import {
