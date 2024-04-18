@@ -21,6 +21,8 @@ import SessionPage from "./pages/chatbot/sessions/sessions"
 import "./styles/app.scss";
 // import SessionPage from "./pages/chatbot/sessions/sessions";
 
+// hello
+
 function App() {
   const appContext = useContext(AppContext);
   const Router = appContext?.config.privateWebsite ? HashRouter : BrowserRouter;
