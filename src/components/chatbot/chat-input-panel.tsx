@@ -444,7 +444,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         ];
 
         props.setMessageHistory(messageHistoryRef.current);
-<<<<<<< HEAD
         // if (data.data == '') {
         //   ws.close()
         // }
@@ -459,27 +458,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         // await apiClient.sessions.updateSession("0", props.session.id, messageHistoryRef.current);
         props.setRunning(false);        
         console.log('Disconnected from the WebSocket server');
-=======
-      const response = await fetch('https://sg4ozxukd5pu7nplx6gd3m64by0qslfb.lambda-url.us-east-1.on.aws/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userMessage: messageToSend,
-          chatHistory: assembleHistory(messageHistoryRef.current.slice(0,-2)),
-          systemPrompt: `You are an AI Assistant designed specifically for the MassDOT Highway Division. 
-          In this role, you provide engineers with guidance and information related to MassDOT's guidelines, standards, and specifications, 
-          ensuring they have access to accurate, relevant, and up-to-date information. 
-          Your responses should be grounded in MassDOT's official documents and best practices. 
-          When uncertain or lacking information, clearly state that you don't know, and do not attempt to fabricate or guess responses. 
-          In cases where clarification is needed, ask targeted questions to better understand the context or the 
-          specific information required by the engineer. Every response should conclude with detailed citations from MassDOT's resources or 
-          relevant engineering standards to uphold credibility and traceability. Remember, your primary function is to support engineering decisions 
-          by providing precise and contextually appropriate information within the defined scope of MassDOT operations.`,
-          projectId: 'smjv012345'
-        }),
->>>>>>> df402c8 (First commit with dot changes)
       });
 
     } catch (error) {
