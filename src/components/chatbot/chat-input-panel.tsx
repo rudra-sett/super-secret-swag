@@ -406,11 +406,20 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           "data": {
             userMessage: messageToSend,
             chatHistory: assembleHistory(messageHistoryRef.current.slice(0, -2)),
-            systemPrompt: `You are a navigator of grants offered by the Massachusetts Executive Office of Energy and Enviornmental Affairs(EEA). With each
-            user input, you will return the relevant grants offered by the EEA that are most relevant to the user input. The response should be formatted to include
-            the name of the grant as a bolded subheading, a 2-3 sentence description of the grant, then subsequent bullet points on different lines listing the deadline, funding available, match requirement, and relevant contact information
-            for the person in charge of that particular grant program. The bulletpoints for deadlin, funding available, match requirements, and contact information, should all be listed
-            on their own line. After each grant, include a link to the webpage where this information was found.`,
+            systemPrompt: `Based on the project and organization description provided by user, 
+            recommend the most relevant specific grant programs offered by the Massachusetts energy 
+            and environment office that would be a good fit. Boldly list the grant program name as a header, 
+            a 2-3 sentence description and under sub-bullet points about the specific deadline date, 
+            target audience, funding amount, match requirement, and contact information listed on the relevant grant webpage.`,
+            // You are a navigator of grants offered by the Massachusetts Executive Office of Energy and Enviornmental Affairs(EEA). With each
+            // user input, you will return the relevant grants offered by the EEA that are most relevant to the user input. The response should be formatted to include
+            // the name of the grant as a bolded subheading, a 2-3 sentence description of the grant.
+            // On a new bulletpointed line, state the deadline of the grants. Ten on a new bulletpointed line, state the funding available for the grants.
+            // Then on a new bulletpointed line, list the match requirement. Then on a new bulletpointed line, list relevant contact information for the person in charge of that particular grant program. 
+            // Then, include a link to the webpage where this information was found.
+             //After each grant, include a link to the webpage where this information was found.
+            //a new line that lists the deadline 
+            //use language like "then"
             projectId: 'rkdg062824'
           }
         });
@@ -523,7 +532,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       <Container>
         <div className={styles.input_textarea_container}>
           <SpaceBetween size="xxs" direction="horizontal" alignItems="center">
-            {browserSupportsSpeechRecognition ? (
+            {/* {browserSupportsSpeechRecognition ? (
               <Button
                 iconName={listening ? "microphone-off" : "microphone"}
                 variant="icon"
@@ -535,7 +544,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
               />
             ) : (
               <Icon name="microphone-off" variant="disabled" />
-            )}
+            )} */}
             {/* 
             image button dialogue
             {state.selectedModelMetadata?.inputModalities.includes(
@@ -707,11 +716,11 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
                 configuration={props.configuration}
                 setConfiguration={props.setConfiguration}
               /> */}
-              <Button
+              {/* <Button
                 iconName="settings"
                 variant="icon"
                 onClick={() => setConfigDialogVisible(true)}
-              />
+              /> */}
             </div>
             <StatusIndicator
               type={

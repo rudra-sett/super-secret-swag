@@ -14,19 +14,19 @@ export default function GlobalHeader() {
   const [userName, setUserName] = useState<string | null>(null);
   const [theme, setTheme] = useState<Mode>(StorageHelper.getTheme());
 
-  useEffect(() => {
-    (async () => {
-      const result = await Auth.currentUserInfo();
+  // useEffect(() => {
+  //   (async () => {
+  //     const result = await Auth.currentUserInfo();
 
-      if (!result || Object.keys(result).length === 0) {
-        Auth.signOut();
-        return;
-      }
+  //     if (!result || Object.keys(result).length === 0) {
+  //       Auth.signOut();
+  //       return;
+  //     }
 
-      const userName = result?.attributes?.email;
-      setUserName(userName);
-    })();
-  }, []);
+  //     const userName = result?.attributes?.email;
+  //     setUserName(userName);
+  //   })();
+  // }, []);
 
   const onChangeThemeClick = () => {
     if (theme === Mode.Dark) {
@@ -36,15 +36,15 @@ export default function GlobalHeader() {
     }
   };
 
-  const onUserProfileClick = ({
-    detail,
-  }: {
-    detail: ButtonDropdownProps.ItemClickDetails;
-  }) => {
-    if (detail.id === "signout") {
-      Auth.signOut();
-    }
-  };
+  // const onUserProfileClick = ({
+  //   detail,
+  // }: {
+  //   detail: ButtonDropdownProps.ItemClickDetails;
+  // }) => {
+  //   if (detail.id === "signout") {
+  //     Auth.signOut();
+  //   }
+  // };
 
   return (
     <div
@@ -55,7 +55,7 @@ export default function GlobalHeader() {
       <TopNavigation
         identity={{
           href: "/",
-          logo: { src: "/images/EEAJointLogo.png", alt: { CHATBOT_NAME } + " Logo" },
+          logo: { src: "/images/EEAJointLogo4.png", alt: { CHATBOT_NAME } + " Logo" },
         }}
         utilities={[
           {
@@ -63,19 +63,19 @@ export default function GlobalHeader() {
             text: theme === Mode.Dark ? "Light Mode" : "Dark Mode",
             onClick: onChangeThemeClick,
           },
-          {
-            type: "menu-dropdown",
-            description: userName ?? "",
-            iconName: "user-profile",
-            onItemClick: onUserProfileClick,
-            items: [
-              {
-                id: "signout",
-                text: "Sign out",
-              },
-            ],
-            onItemFollow: onFollow,
-          },
+          // {
+          //   type: "menu-dropdown",
+          //   description: userName ?? "",
+          //   iconName: "user-profile",
+          //   onItemClick: onUserProfileClick,
+          //   items: [
+          //     {
+          //       id: "signout",
+          //       text: "Sign out",
+          //     },
+          //   ],
+          //   onItemFollow: onFollow,
+          // },
         ]}
       />
     </div>

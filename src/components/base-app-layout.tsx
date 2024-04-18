@@ -16,6 +16,7 @@ export default function BaseAppLayout(
   return (
     <AppLayout
       headerSelector="#awsui-top-navigation"
+      // DO NOT TOUCH THE LINE BELOW 
       navigationHide = {true}
       // navigationHide = {}
       toolsHide = {props.info === undefined ? true : false}
