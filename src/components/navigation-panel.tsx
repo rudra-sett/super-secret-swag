@@ -30,19 +30,19 @@ export default function NavigationPanel() {
     async function loadSessions() {
       const fetchedSessions = await apiClient.sessions.getSessions("0"); 
       // console.log(fetchedSessions); 
-      setSessions(fetchedSessions); 
-      updateItems(fetchedSessions); 
+      // setSessions(fetchedSessions); 
+       updateItems(fetchedSessions); 
     }
    // hit console.log("pong"); 
 
    const interval = setInterval(loadSessions, 1000);
-   loadSessions();
+   // loadSessions();
 
     return () => clearInterval(interval);
-    loadSessions(); 
+    // loadSessions(); 
   }, [apiClient]); 
 
- // const [items, setItems] = useState<SideNavigationProps.Item[]>
+ //  const [items, setItems] = useState<SideNavigationProps.Item[]>
  // const [items] = useState<SideNavigationProps.Item[]>(() => {
   const updateItems = (sessions: any[]) => {
     console.log("hit the update button")
@@ -83,9 +83,9 @@ export default function NavigationPanel() {
           })), 
       }, 
     ]; 
-    setItems(newItems); 
+     setItems(newItems); 
     // console.log("pong")
-    //  return items; 
+   // return items; 
   };
 
 
@@ -122,32 +122,42 @@ export default function NavigationPanel() {
 
   return (
     <div>
-      <div style={{display: 'flex', justifyContent: 'flex-end' }}> 
-      {/* <RouterButton
+      <div style={{justifyContent: 'center'}}> 
+      <Header >
+        MBTA The RIDE Guide AI
+      </Header>
+      </div>
+    
+      <div style={{display: 'flex', justifyContent: 'center' }}> 
+      <RouterButton
         iconAlign="right"
         iconSvg={<PencilSquareIcon />}
         variant="primary"
         href={`/chatbot/playground/${uuidv4()}`}
   >
     New session
-  </RouterButton> */}
+  </RouterButton>
       
       </div>
-     <Header > 
+     <Header> 
        <RouterButton
          iconAlign="right"
          iconSvg= {<PencilSquareIcon />}
          variant="primary"
          href={`/chatbot/playground/${uuidv4()}`}
+         data-alignment= "right"
+         className="new-chat-button"
+         style = {{textAlign: "right"}}
          >
          New session
+         
        </RouterButton>
         
        </Header>
     <SideNavigation
         onFollow={onFollow}
         onChange={onChange}
-        header={{ href: "/", text: CHATBOT_NAME }}
+        header={{ href: "/", text: " " }}
         items = {items}
         // items={items.map((value, idx) => {
         //   if (value.type === "section") {
