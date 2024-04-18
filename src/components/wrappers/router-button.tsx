@@ -9,8 +9,8 @@ interface CustomButtonProps extends ButtonProps {
 export default function RouterButton(props: CustomButtonProps) {
   
   const onFollow = useOnFollow();
-  console.log("i hate react so much")
-  console.log(props)
+  // console.log("i hate react so much")
+  // console.log(props)
 
   return <Button {...props} onFollow={onFollow} />;
 }
