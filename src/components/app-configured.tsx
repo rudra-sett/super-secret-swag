@@ -7,7 +7,7 @@ import {
   useTheme,
 } from "@aws-amplify/ui-react";
 import App from "../app";
-import { Amplify, Auth } from "aws-amplify";
+import { Amplify, Auth, Hub } from "aws-amplify";
 import { AppConfig } from "../common/types";
 import { AppContext } from "../common/app-context";
 import { Alert, StatusIndicator } from "@cloudscape-design/components";
@@ -15,13 +15,17 @@ import { StorageHelper } from "../common/helpers/storage-helper";
 import { Mode } from "@cloudscape-design/global-styles";
 import "@aws-amplify/ui-react/styles.css";
 import { CHATBOT_NAME } from "../common/constants";
+import FederatedSignIn from "./authentication/federated-signin";
 
 export default function AppConfigured() {
   const { tokens } = useTheme();
+  const [token, setToken] = useState(null);
   const [config, setConfig] = useState<AppConfig | null>(null);
   const [error, setError] = useState<boolean | null>(null);
   const [theme, setTheme] = useState(StorageHelper.getTheme());
 
+  const federatedIdName = "us-east-1_BHned34tF";
+  
   useEffect(() => {
     (async () => {
       try {
@@ -130,6 +134,33 @@ export default function AppConfigured() {
     );
   }
 
+  function getToken() {
+    return Auth.currentSession()
+      .then(session => session.getAccessToken().getJwtToken())
+      .catch(err => console.log(err));
+  }
+
+  // useEffect(() => {
+  //   Hub.listen("auth", ({payload: {event, data}}) => {
+  //     switch (event) {
+  //       case "signIn":
+  //       case "cognitoHostedUI":
+  //         setToken("grating...");
+  //         getToken().then(userToken => setToken(userToken));
+  //         break;
+  //       case "signOut":
+  //         setToken(null);
+  //         break;
+  //       case "signIn_failure":
+  //       case "cognitoHostedUI_failure":
+  //         console.log("Sign in failure", data);
+  //         break;
+  //       default:
+  //         break;
+  //     }
+  //   });
+  // }, []);
+
   return (
     <AppContext.Provider value={config}>
       <ThemeProvider
@@ -139,7 +170,7 @@ export default function AppConfigured() {
         }}
         colorMode={theme === Mode.Dark ? "dark" : "light"}
       >
-        <Authenticator
+        {/* <Authenticator
           hideSignUp={true}
           components={{
             SignIn: {
@@ -157,7 +188,12 @@ export default function AppConfigured() {
           }}
         >
           <App />
-        </Authenticator>
+        </Authenticator> */}
+        {token ? (
+          <App/>
+        ) : (
+          <FederatedSignIn federatedIdName={federatedIdName} />
+        )}
       </ThemeProvider>
     </AppContext.Provider>
   );
