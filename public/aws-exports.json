@@ -10,9 +10,9 @@
     "userPoolWebClientId": "4qn890ga2uh7a04ia5hkqaep3b",
     "oauth": {
       "domain": "sandbox-mass-gov.auth.us-east-1.amazoncognito.com",
-      "scope": ["email", "openid", "aws.cognito.signin.user.admin", "profile"],
-      "redirectSignIn": "https://auth-testing.d3est6ae7qcmwy.amplifyapp.com/",
-      "redirectSignOut": "https://auth-testing.d3est6ae7qcmwy.amplifyapp.com/",
+      "scope": ["email", "openid", "profile"],
+      "redirectSignIn": "https://d2gm26s9pysaci.cloudfront.net",
+      "redirectSignOut": "https://myapplications.microsoft.com/",
       "responseType": "code"
     }
   },

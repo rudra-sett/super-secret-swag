@@ -23,7 +23,10 @@ function FederatedSignIn(props) {
                   // block
                   // variant="success"
                   onClick={() =>
-                    Auth.federatedSignIn({provider: props.federatedIdName})
+                    // Auth.federatedSignIn({provider: props.federatedIdName})
+                    window.location.href = 'https://sandbox-mass-gov.auth.us-east-1.amazoncognito.com/oauth2/authorize?identity_provider=AzureAD-OIDC-MassGov&redirect_uri=https://d2gm26s9pysaci.cloudfront.net&response_type=CODE&client_id=4qn890ga2uh7a04ia5hkqaep3b&state=HbWGIGW7wr7yUC7s2soOekJAdin9XYvH&code_challenge=kbTrn-hvyrAksfZeai4-G4pjepOaDBi1s9uN9cQlobg&code_challenge_method=S256&scope=email openid profile'
+                    // return null;
+                    // window.location.href='';
                   }
                 >
                   Federated Sign In
