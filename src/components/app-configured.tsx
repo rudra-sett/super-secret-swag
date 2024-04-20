@@ -24,17 +24,17 @@ export default function AppConfigured() {
   const [error, setError] = useState<boolean | null>(null);
   const [theme, setTheme] = useState(StorageHelper.getTheme());
 
-  const federatedIdName = "us-east-1_BHned34tF";
-  
+  const federatedIdName = "AzureAD-OIDC-MassGov";
+  let authenticated = false;
+
   useEffect(() => {
     (async () => {
       try {
         const result = await fetch("/aws-exports.json");
         const awsExports = await result.json();
         const currentConfig = Amplify.configure(awsExports) as AppConfig | null;
-
-        if (currentConfig?.config.auth_federated_provider?.auto_redirect) {
-          let authenticated = false;
+                        
+        if (currentConfig?.config.auth_federated_provider?.auto_redirect) {          
           try {
             const user = await Auth.currentAuthenticatedUser();
             if (user) {
@@ -45,14 +45,17 @@ export default function AppConfigured() {
           }
 
           if (!authenticated) {
-            const federatedProvider =
-              currentConfig.config.auth_federated_provider;
+            console.log('hi');
+            Auth.federatedSignIn({customProvider: federatedIdName}) 
+            // const federatedProvider =
+            //   currentConfig.config.auth_federated_provider;
 
-            if (!federatedProvider.custom) {
-              // Auth.federatedSignIn({ provider: federatedProvider.name });
-            } else {
-              // Auth.federatedSignIn({ customProvider: federatedProvider.name });
-            }
+            // if (!federatedProvider.custom) {
+            //   // Auth.federatedSignIn({ provider: federatedProvider.name });
+            // } else {
+            //   // Auth.federatedSignIn({ customProvider: federatedProvider.name });
+            //   Auth.federatedSignIn({customProvider: federatedIdName})    
+            // }
 
             return;
           }
@@ -189,10 +192,10 @@ export default function AppConfigured() {
         >
           <App />
         </Authenticator> */}
-        {token ? (
+        {authenticated ? (
           <App/>
         ) : (
-          <FederatedSignIn federatedIdName={federatedIdName} />
+          <FederatedSignIn federatedIdName={federatedIdName}/>
         )}
       </ThemeProvider>
     </AppContext.Provider>
