@@ -24,7 +24,7 @@ export default function AppConfigured() {
   const [error, setError] = useState<boolean | null>(null);
   const [theme, setTheme] = useState(StorageHelper.getTheme());
 
-  const federatedIdName = "AzureAD-OIDC-MassGov";
+  const federatedIdName : string = "AzureAD-OIDC-MassGov";
   let authenticated = false;
 
   useEffect(() => {
@@ -33,8 +33,8 @@ export default function AppConfigured() {
         const result = await fetch("/aws-exports.json");
         const awsExports = await result.json();
         const currentConfig = Amplify.configure(awsExports) as AppConfig | null;
-                        
-        if (currentConfig?.config.auth_federated_provider?.auto_redirect) {          
+        console.log("checking auth");
+        // if (currentConfig?.config.auth_federated_provider?.auto_redirect) {          
           try {
             const user = await Auth.currentAuthenticatedUser();
             if (user) {
@@ -59,7 +59,7 @@ export default function AppConfigured() {
 
             return;
           }
-        }
+        // }
 
         setConfig(currentConfig);
       } catch (e) {
@@ -195,7 +195,8 @@ export default function AppConfigured() {
         {authenticated ? (
           <App/>
         ) : (
-          <FederatedSignIn federatedIdName={federatedIdName}/>
+          // <FederatedSignIn federatedIdName={federatedIdName}/>
+          <></>
         )}
       </ThemeProvider>
     </AppContext.Provider>
