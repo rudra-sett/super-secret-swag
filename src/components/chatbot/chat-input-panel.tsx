@@ -593,7 +593,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
               }
             }}
             value={state.value}
-            placeholder={"Enter Search ex. \"Grants for farms\""}
+            placeholder={"Enter Search ex. \"Grants for new farmers\""}
           />
           <div style={{ marginLeft: "8px" }}>
             {/* {state.selectedModelMetadata?.inputModalities.includes(
