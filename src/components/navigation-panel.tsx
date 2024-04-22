@@ -3,6 +3,7 @@ import {
   SideNavigationProps,
   Header,
   Button,
+  Box,
   SpaceBetween,
 } from "@cloudscape-design/components";
 import useOnFollow from "../common/hooks/use-on-follow";
@@ -53,24 +54,24 @@ export default function NavigationPanel() {
   const updateItems = (sessions: any[]) => {
     // console.log("hit the update button")
     const newItems: SideNavigationProps.Item[] = [
-      {
-        type: "link",
-        text: "Home",
-        href: "/",
-      },
       // {
       //   type: "link",
-      //   text: "New Session", 
-      //   href: `/chatbot/playground/${uuidv4()}`,
+      //   text: "Home",
+      //   href: "/",
       // },
-      {
-        type: "section",
-        text: "Chatbot",
-        items: [
-          { type: "link", text: "Chat", href: "/chatbot/playground" },
+      // // {
+      // //   type: "link",
+      // //   text: "New Session", 
+      // //   href: `/chatbot/playground/${uuidv4()}`,
+      // // },
+      // {
+      //   type: "section",
+      //   text: "Chatbot",
+      //   items: [
+      //     { type: "link", text: "Chat", href: "/chatbot/playground" },
 
-        ],
-      },
+      //   ],
+      // },
       {
         type: "section",
         text: "Admin",
@@ -128,7 +129,7 @@ export default function NavigationPanel() {
 
   return (
     <div>
-      <div style={{ justifyContent: 'center' }}>
+      {/* <div style={{ justifyContent: 'center' }}>
         <Header >
           MBTA The RIDE Guide AI
         </Header>
@@ -159,11 +160,27 @@ export default function NavigationPanel() {
 
         </RouterButton>
 
-      </Header>
+      </Header> */}
+      {/* <SpaceBetween alignItems="center" size="s"> */}
+      <Box margin="xs" padding="xs" textAlign="center">
+        <RouterButton
+          iconAlign="right"
+          iconSvg={<PencilSquareIcon />}
+          variant="primary"
+          href={`/chatbot/playground/${uuidv4()}`}
+          data-alignment="right"
+          className="new-chat-button"
+          style={{ textAlign: "right" }}
+        >
+          New session
+
+        </RouterButton>
+        </Box>
+      {/* </SpaceBetween> */}
       <SideNavigation
         onFollow={onFollow}
         onChange={onChange}
-        header={{ href: "/", text: " " }}
+        // header={{ href: "/", text: "The Ride Guide AI" }}
         items={items}
       // items={items.map((value, idx) => {
       //   if (value.type === "section") {
