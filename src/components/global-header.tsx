@@ -16,11 +16,7 @@ export default function GlobalHeader() {
 
   useEffect(() => {
     (async () => {
-      const result = await Auth.currentAuthenticatedUser();
-      // const result2 = await Auth.
-      // console.log(result);
-      // console.log((await Auth.currentSession()).getAccessToken());
-      // console.log((await Auth.currentSession()).getAccessToken().getJwtToken());
+      const result = await Auth.currentAuthenticatedUser();      
       if (!result || Object.keys(result).length === 0) {
         console.log("Signed out!")
         Auth.signOut();

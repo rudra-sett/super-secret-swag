@@ -1,57 +1,28 @@
 import { useEffect, useState } from "react";
-import {
-  Authenticator,
-  Heading,
-  Text,
+import {  
   ThemeProvider,
   defaultDarkModeOverride,
-  useTheme,
 } from "@aws-amplify/ui-react";
 import App from "../app";
-import { Amplify, Auth, Hub } from "aws-amplify";
+import { Amplify, Auth} from "aws-amplify";
 import { AppConfig } from "../common/types";
 import { AppContext } from "../common/app-context";
-import { Alert, StatusIndicator, TextContent } from "@cloudscape-design/components";
+import { Alert, StatusIndicator } from "@cloudscape-design/components";
 import { StorageHelper } from "../common/helpers/storage-helper";
 import { Mode } from "@cloudscape-design/global-styles";
 import "@aws-amplify/ui-react/styles.css";
-import { CHATBOT_NAME } from "../common/constants";
-
-// "aws.cognito.signin.user.admin"
 
 export default function AppConfigured() {
-  const { tokens } = useTheme();
   const [config, setConfig] = useState<AppConfig | null>(null);
   const [error, setError] = useState<boolean | null>(null);
   const [authenticated, setAuthenticated] = useState<boolean>(null);
   const [theme, setTheme] = useState(StorageHelper.getTheme());
   const [configured, setConfigured] = useState<boolean>(false);  
 
-
+  // this is the authentication provider that Cognito needs
   const federatedIdName : string = "AzureAD-OIDC-MassGov";
-  // let authenticated = false;
 
-  // useEffect(() => {
-  //   const unsubscribe = Hub.listen("auth", ({ payload }) => {
-  //     console.log(payload)
-  //     switch (payload.event) {
-  //       case "signInWithRedirect":
-  //         getUser();
-  //         break;
-  //       case "signInWithRedirect_failure":
-  //         setError("An error has occurred during the OAuth flow.");
-  //         break;
-  //       case "customOAuthState":
-  //         setCustomState(payload.data); // this is the customState provided on signInWithRedirect function
-  //         break;
-  //     }
-  //   });
-
-  //   // getUser();
-
-  //   return unsubscribe;
-  // }, []);
-
+  // trigger authentication state when needed
   useEffect(() => {
     (async () => {
       try {     
@@ -71,20 +42,15 @@ export default function AppConfigured() {
     })();
   }, []);
   
-  useEffect(() => {    
-    // (async () => {
-    // console.log("Auth state changed!", authenticated)
-    //     const result = await fetch("/aws-exports.json");
-    //     const awsExports = await result.json();
-    //     Amplify.configure(awsExports);   
-    
+  // whenever the authentication state changes, if it's changed to un-authenticated, re-verify
+  useEffect(() => {  
     if (!authenticated && configured) {
       console.log("No authenticated user, initiating sign-in.");
       Auth.federatedSignIn({ customProvider: federatedIdName });
     }
-  // })
   }, [authenticated]);
 
+  // dark/light theme
   useEffect(() => {
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
@@ -115,6 +81,7 @@ export default function AppConfigured() {
     };
   }, [theme]);
 
+  // display a loading screen while waiting for the config file to load
   if (!config) {
     if (error) {
       return (
@@ -148,33 +115,12 @@ export default function AppConfigured() {
           alignItems: "center",
         }}
       >
-        <StatusIndicator type="loading">Loading</StatusIndicator>
-        {/* <TextContent>Are we authenticated: {authenticated}</TextContent> */}
+        <StatusIndicator type="loading">Loading</StatusIndicator>        
       </div>
     );
   }
 
-  // useEffect(() => {
-  //   Hub.listen("auth", ({payload: {event, data}}) => {
-  //     switch (event) {
-  //       case "signIn":
-  //       case "cognitoHostedUI":
-  //         setToken("grating...");
-  //         getToken().then(userToken => setToken(userToken));
-  //         break;
-  //       case "signOut":
-  //         setToken(null);
-  //         break;
-  //       case "signIn_failure":
-  //       case "cognitoHostedUI_failure":
-  //         console.log("Sign in failure", data);
-  //         break;
-  //       default:
-  //         break;
-  //     }
-  //   });
-  // }, []);
-
+  // the main app - only display it when authenticated
   return (
     <AppContext.Provider value={config}>
       <ThemeProvider
@@ -183,30 +129,10 @@ export default function AppConfigured() {
           overrides: [defaultDarkModeOverride],
         }}
         colorMode={theme === Mode.Dark ? "dark" : "light"}
-      >
-        {/* <Authenticator
-          hideSignUp={true}
-          components={{
-            SignIn: {
-              Header: () => {
-                return (
-                  <Heading
-                    padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
-                    level={3}
-                  >
-                    {CHATBOT_NAME}
-                  </Heading>
-                );
-              },
-            },
-          }}
-        >
-          <App />
-        </Authenticator> */}
+      >        
         {authenticated ? (
           <App/>
-        ) : (
-          // <FederatedSignIn federatedIdName={federatedIdName}/>
+        ) : (          
           // <TextContent>Are we authenticated: {authenticated}</TextContent>
           <></>
         )}

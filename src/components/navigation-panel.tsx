@@ -19,15 +19,13 @@ import { v4 as uuidv4 } from "uuid";
 
 export default function NavigationPanel() {
   const appContext = useContext(AppContext);
-  // const uid = ; 
   const apiClient = new ApiClient(appContext);
   const onFollow = useOnFollow();
   const [navigationPanelState, setNavigationPanelState] =
     useNavigationPanelState();
-
-  const [sessions, setSessions] = useState<any[]>([]);
   const [items, setItems] = useState<SideNavigationProps.Item[]>([]);
 
+  // update the list of sessions every now and then
   useEffect(() => {
     async function loadSessions() {
       let username;
@@ -36,11 +34,7 @@ export default function NavigationPanel() {
         const fetchedSessions = await apiClient.sessions.getSessions(username);
         updateItems(fetchedSessions);
       }
-      // console.log(fetchedSessions); 
-      // setSessions(fetchedSessions); 
-
     }
-    // hit console.log("pong"); 
 
     const interval = setInterval(loadSessions, 1000);
     // loadSessions();
@@ -49,10 +43,8 @@ export default function NavigationPanel() {
     // loadSessions(); 
   }, [apiClient]);
 
-  //  const [items, setItems] = useState<SideNavigationProps.Item[]>
-  // const [items] = useState<SideNavigationProps.Item[]>(() => {
+  // helper function to update items
   const updateItems = (sessions: any[]) => {
-    // console.log("hit the update button")
     const newItems: SideNavigationProps.Item[] = [
       // {
       //   type: "link",
@@ -94,23 +86,6 @@ export default function NavigationPanel() {
     // console.log("pong")
     // return items; 
   };
-
-
-  // useEffect(() => {
-  //   setItems(prevItems => {
-  //     const newItems = [...prevItems]; 
-  //     const sessionIndex = newItems.findIndex(item => item.type === "section" && item.text === "Session History");
-
-  //     if (sessionIndex !== -1 && newItems[sessionIndex].type === "section") {
-  //       newItems[sessionIndex].items = sessions.map(session => ({
-  //         type: "link",
-  //         text: `Session ${session.session_id}`,
-  //         href: `/chatbot/sessions/${session.session_id}`
-  //       }));
-  //     }
-  //     return newItems; 
-  //   }); 
-  // }, [sessions]); 
 
   const onChange = ({
     detail,
@@ -181,16 +156,7 @@ export default function NavigationPanel() {
         onFollow={onFollow}
         onChange={onChange}
         // header={{ href: "/", text: "The Ride Guide AI" }}
-        items={items}
-      // items={items.map((value, idx) => {
-      //   if (value.type === "section") {
-      //     const collapsed = navigationPanelState.collapsedSections?.[idx] === true;
-      //     value.defaultExpanded = !collapsed;
-      //   }
-
-      //   return value;
-      // })} 
-      // // items={items}
+        items={items}   
       />
     </div>
   );
