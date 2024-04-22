@@ -73,13 +73,13 @@ export default function AppConfigured() {
   
   useEffect(() => {    
     // (async () => {
-    console.log("Auth state changed!", authenticated)
+    // console.log("Auth state changed!", authenticated)
     //     const result = await fetch("/aws-exports.json");
     //     const awsExports = await result.json();
     //     Amplify.configure(awsExports);   
     
     if (!authenticated && configured) {
-      console.log("No authenticated user, initiating federated sign-in.");
+      console.log("No authenticated user, initiating sign-in.");
       Auth.federatedSignIn({ customProvider: federatedIdName });
     }
   // })
