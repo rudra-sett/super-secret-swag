@@ -5,6 +5,7 @@ import {
   ChatBotMessageType,
   FeedbackData,
 } from "./types";
+import { Auth } from "aws-amplify";
 import { SpaceBetween, StatusIndicator } from "@cloudscape-design/components";
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
@@ -24,7 +25,7 @@ export default function Chat(props: { sessionId?: string }) {
   const [configuration, setConfiguration] = useState<ChatBotConfiguration>(
     () => ({
       streaming: true,
-      showMetadata: false,
+      showMetadata: true,
       maxTokens: 512,
       temperature: 0.6,
       topP: 0.9,
@@ -50,10 +51,13 @@ export default function Chat(props: { sessionId?: string }) {
       const apiClient = new ApiClient(appContext);
       try {
         // const result = await apiClient.sessions.getSession(props.sessionId);
-        const hist = await apiClient.sessions.getSession(props.sessionId,"0");
+        let username;
+        await Auth.currentAuthenticatedUser().then((value) => username = value.username);
+        if (!username) return;
+        const hist = await apiClient.sessions.getSession(props.sessionId,username);
 
         if (hist) {
-          console.log(hist);
+          // console.log(hist);
           ChatScrollState.skipNextHistoryUpdate = true;
           ChatScrollState.skipNextScrollEvent = true;
           // console.log("History", result.data.getSession.history);
@@ -92,7 +96,7 @@ export default function Chat(props: { sessionId?: string }) {
       const completion = message.content;
       // const model = message.metadata.modelId;
       const feedbackData = {
-        sessionId: '0', //message.metadata.sessionId as string,        
+        sessionId: props.sessionId, //message.metadata.sessionId as string,        
         feedback: feedbackType,
         prompt: prompt,
         completion: completion,        
@@ -102,19 +106,9 @@ export default function Chat(props: { sessionId?: string }) {
   };
 
   const addUserFeedback = async (feedbackData) => {
-    // if (!appContext) return;
-
-    // const apiClient = new ApiClient(appContext);
-    // await apiClient.userFeedback.addUserFeedback({feedbackData});
-    // console.log("hi")
-    const response = await fetch('https://4eyjyb4lqouzyvvvs5fh6zwwse0spnhw.lambda-url.us-east-1.on.aws/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body : JSON.stringify({feedbackData})
-    });
-    console.log(response);
+    if (!appContext) return;
+    const apiClient = new ApiClient(appContext);
+    await apiClient.userFeedback.sendUserFeedback(feedbackData);
   }
 
   return (
