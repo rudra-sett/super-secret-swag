@@ -17,6 +17,8 @@ import "@aws-amplify/ui-react/styles.css";
 import { CHATBOT_NAME } from "../common/constants";
 import FederatedSignIn from "./authentication/federated-signin";
 
+// "aws.cognito.signin.user.admin"
+
 export default function AppConfigured() {
   const { tokens } = useTheme();
   const [token, setToken] = useState(null);
@@ -53,10 +55,7 @@ export default function AppConfigured() {
 
   useEffect(() => {
     (async () => {
-      try {
-        const result = await fetch("/aws-exports.json");
-        const awsExports = await result.json();
-        Amplify.configure(awsExports);
+      try {        
         const currentUser = await Auth.currentAuthenticatedUser();
         console.log("Authenticated user:", currentUser);
         setAuthenticated(true);
@@ -68,9 +67,10 @@ export default function AppConfigured() {
   }, []);
   
   useEffect(() => {
+    console.log("Auth state changed!", authenticated)
     if (!authenticated) {
       console.log("No authenticated user, initiating federated sign-in.");
-      Auth.federatedSignIn();  // Optionally pass { customProvider: federatedIdName }
+      Auth.federatedSignIn({ customProvider: federatedIdName });
     }
   }, [authenticated]);
 

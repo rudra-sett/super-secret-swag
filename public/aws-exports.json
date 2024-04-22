@@ -4,9 +4,10 @@
     "region": "us-east-1",
     "userPoolId": "us-east-1_BHned34tF",
     "userPoolWebClientId": "4qn890ga2uh7a04ia5hkqaep3b",
+    "identityPoolId": "us-east-1:ed5b1f7b-e50a-4002-b39b-ef9df3715560",
     "oauth": {
       "domain": "sandbox-mass-gov.auth.us-east-1.amazoncognito.com",
-      "scope": ["email", "openid", "profile"],
+      "scope": ["email", "openid", "profile", "aws.cognito.signin.user.admin"],
       "redirectSignIn": "https://auth-testing.d3est6ae7qcmwy.amplifyapp.com/",
       "redirectSignOut": "https://myapplications.microsoft.com/",
       "responseType": "code"
