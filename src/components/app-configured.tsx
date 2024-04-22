@@ -33,26 +33,26 @@ export default function AppConfigured() {
   const federatedIdName : string = "AzureAD-OIDC-MassGov";
   // let authenticated = false;
 
-  useEffect(() => {
-    const unsubscribe = Hub.listen("auth", ({ payload }) => {
-      console.log(payload)
-      // switch (payload.event) {
-      //   case "signInWithRedirect":
-      //     getUser();
-      //     break;
-      //   case "signInWithRedirect_failure":
-      //     setError("An error has occurred during the OAuth flow.");
-      //     break;
-      //   case "customOAuthState":
-      //     setCustomState(payload.data); // this is the customState provided on signInWithRedirect function
-      //     break;
-      // }
-    });
+  // useEffect(() => {
+  //   const unsubscribe = Hub.listen("auth", ({ payload }) => {
+  //     console.log(payload)
+  //     switch (payload.event) {
+  //       case "signInWithRedirect":
+  //         getUser();
+  //         break;
+  //       case "signInWithRedirect_failure":
+  //         setError("An error has occurred during the OAuth flow.");
+  //         break;
+  //       case "customOAuthState":
+  //         setCustomState(payload.data); // this is the customState provided on signInWithRedirect function
+  //         break;
+  //     }
+  //   });
 
-    // getUser();
+  //   // getUser();
 
-    return unsubscribe;
-  }, []);
+  //   return unsubscribe;
+  // }, []);
 
   useEffect(() => {
     (async () => {
@@ -61,7 +61,7 @@ export default function AppConfigured() {
         const awsExports = await result.json();
         Amplify.configure(awsExports);   
         const currentUser = await Auth.currentAuthenticatedUser();
-        console.log("Authenticated user:", currentUser);
+        // console.log("Authenticated user:", currentUser);
         setAuthenticated(true);
         console.log(authenticated);
         setConfig(awsExports);
@@ -149,15 +149,9 @@ export default function AppConfigured() {
         }}
       >
         <StatusIndicator type="loading">Loading</StatusIndicator>
-        <TextContent>Are we authenticated: {authenticated}</TextContent>
+        {/* <TextContent>Are we authenticated: {authenticated}</TextContent> */}
       </div>
     );
-  }
-
-  function getToken() {
-    return Auth.currentSession()
-      .then(session => session.getAccessToken().getJwtToken())
-      .catch(err => console.log(err));
   }
 
   // useEffect(() => {
@@ -213,7 +207,8 @@ export default function AppConfigured() {
           <App/>
         ) : (
           // <FederatedSignIn federatedIdName={federatedIdName}/>
-          <TextContent>Are we authenticated: {authenticated}</TextContent>
+          // <TextContent>Are we authenticated: {authenticated}</TextContent>
+          <></>
         )}
       </ThemeProvider>
     </AppContext.Provider>
