@@ -90,19 +90,19 @@ export default function ChatMessage(props: ChatMessageProps) {
                   ))}
                   </ul>
                 )}
-                {/* Optionally using JsonView to display the Sources in JSON format for detailed inspection */}
-                <JsonView
-                shouldInitiallyExpand={(level) => level < 2}
-                data={JSON.parse(JSON.stringify(props.message.metadata.Sources))}
-                style={{
-                  ...darkStyles,
-                  stringValue: "jsonStrings",
-                  numberValue: "jsonNumbers",
-                  booleanValue: "jsonBool",
-                  nullValue: "jsonNull",
-                  container: "jsonContainer",
-                }}
-                />
+  {/* Optionally using JsonView to display the Sources in JSON format for detailed inspection */}
+  <JsonView
+    shouldInitiallyExpand={(level) => level < 2}
+    data={JSON.parse(JSON.stringify(props.message.metadata.Sources))}
+    style={{
+      ...darkStyles,
+      stringValue: "jsonStrings",
+      numberValue: "jsonNumbers",
+      booleanValue: "jsonBool",
+      nullValue: "jsonNull",
+      container: "jsonContainer",
+    }}
+  />
                 {/* <JsonView
                   shouldInitiallyExpand={(level) => level < 2}
                   // parse metadata
