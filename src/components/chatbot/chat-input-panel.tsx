@@ -344,9 +344,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     if (readyState !== ReadyState.OPEN) return;
     ChatScrollState.userHasScrolled = false;
 
-    let username;
-    await Auth.currentAuthenticatedUser().then((value) => username = value.username);
-    if (!username) return;
+    // let username;
+    // await Auth.currentAuthenticatedUser().then((value) => username = value.username);
+    // if (!username) return;
     // const readline = require('readline').createInterface({
     //   input: process.stdin,
     //   output: process.stdout
@@ -431,8 +431,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           sources = {"Sources" : JSON.parse(data.data)}
           console.log(sources);
         }
-        
-        
 
         // console.log(data.data);
         // Update the chat history state with the new message        
