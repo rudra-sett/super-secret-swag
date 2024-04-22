@@ -5,7 +5,7 @@ import {
   ChatBotMessageType,
   FeedbackData,
 } from "./types";
-import { Auth } from "aws-amplify";
+// import { Auth } from "aws-amplify";
 import { SpaceBetween, StatusIndicator } from "@cloudscape-design/components";
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
