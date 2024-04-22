@@ -64,6 +64,7 @@ export default function AppConfigured() {
         console.log("Authenticated user:", currentUser);
         setAuthenticated(true);
         console.log(authenticated);
+        setConfig(awsExports);
       } catch (e) {
         console.error("Authentication check error:", e);
         setAuthenticated(false);
@@ -148,7 +149,7 @@ export default function AppConfigured() {
         }}
       >
         <StatusIndicator type="loading">Loading</StatusIndicator>
-        <TextContent>{authenticated}</TextContent>
+        <TextContent>Are we authenticated: {authenticated}</TextContent>
       </div>
     );
   }
