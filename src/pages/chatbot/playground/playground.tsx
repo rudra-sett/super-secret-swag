@@ -17,7 +17,11 @@ export default function Playground() {
           </p>
           <h3>More resources</h3>
           <p>
-            Discover more about the grant programs offered by the EOEEA here!
+            Discover more about the grant programs offered by the EOEEA <a href="https://www.mass.gov/orgs/eea-office-of-grants-and-technical-assistance">here</a>.
+            <br></br>
+            Explore the EOEEA Homepage <a href="https://www.mass.gov/orgs/executive-office-of-energy-and-environmental-affairs">here</a>.
+            <br></br>
+            Learn more about the developers o the EOEEA Grants Navigator here <a href="https://burnes.northeastern.edu/ai-for-impact-coop/">here</a>.
           </p>
         
         </HelpPanel>
