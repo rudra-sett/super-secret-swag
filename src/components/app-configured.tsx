@@ -22,10 +22,34 @@ export default function AppConfigured() {
   const [token, setToken] = useState(null);
   const [config, setConfig] = useState<AppConfig | null>(null);
   const [error, setError] = useState<boolean | null>(null);
+  const [authenticated, setAuthenticated] = useState<boolean>(false);
   const [theme, setTheme] = useState(StorageHelper.getTheme());
+  const [user, setUser] = useState<any | null>(null);
+
 
   const federatedIdName : string = "AzureAD-OIDC-MassGov";
-  let authenticated = false;
+  // let authenticated = false;
+
+  useEffect(() => {
+    const unsubscribe = Hub.listen("auth", ({ payload }) => {
+      console.log(payload)
+      // switch (payload.event) {
+      //   case "signInWithRedirect":
+      //     getUser();
+      //     break;
+      //   case "signInWithRedirect_failure":
+      //     setError("An error has occurred during the OAuth flow.");
+      //     break;
+      //   case "customOAuthState":
+      //     setCustomState(payload.data); // this is the customState provided on signInWithRedirect function
+      //     break;
+      // }
+    });
+
+    // getUser();
+
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -39,14 +63,16 @@ export default function AppConfigured() {
             const user = await Auth.currentAuthenticatedUser();
             console.log(user);
             if (user) {
-              authenticated = true;
+              console.log("authed!")
+              setAuthenticated(true);
             }
           } catch (e) {
-            authenticated = false;
+            console.log(e)
+            setAuthenticated(false);
           }
 
           if (!authenticated) {           
-            Auth.federatedSignIn({customProvider: federatedIdName}) 
+            Auth.federatedSignIn()//{customProvider: federatedIdName}) 
             // const federatedProvider =
             //   currentConfig.config.auth_federated_provider;
 
@@ -57,7 +83,7 @@ export default function AppConfigured() {
             //   Auth.federatedSignIn({customProvider: federatedIdName})    
             // }
 
-            return;
+            // return;
           }
         // }
 
@@ -67,6 +93,7 @@ export default function AppConfigured() {
         setError(true);
       }
     })();
+    console.log(authenticated);
   }, []);
 
   useEffect(() => {

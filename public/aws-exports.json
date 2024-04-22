@@ -1,9 +1,5 @@
 {
-  "aws_project_region": "us-east-1",
-  "aws_cognito_region": "us-east-1",
-  "aws_user_pools_id": "us-east-1_twERFlF8i",
-  "aws_user_pools_web_client_id": "43fv9t3v6n40u3pqlm0j3khulj",
-  "aws_cognito_identity_pool_id": "us-east-1:1cfd3f71-1cb5-4072-aff1-a80b07fb6f87",
+
   "Auth": {
     "region": "us-east-1",
     "userPoolId": "us-east-1_BHned34tF",
@@ -15,6 +11,7 @@
       "redirectSignOut": "https://myapplications.microsoft.com/",
       "responseType": "code"
     }
+    
   },
   "aws_appsync_graphqlEndpoint": "https://kein73egq5bcdc2q5jo2w27czi.appsync-api.us-east-1.amazonaws.com/graphql",
   "aws_appsync_region": "us-east-1",
