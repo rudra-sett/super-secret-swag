@@ -5,6 +5,7 @@ import {
   ChatBotMessageType,
   FeedbackData,
 } from "./types";
+import { Auth } from "aws-amplify";
 import { SpaceBetween, StatusIndicator } from "@cloudscape-design/components";
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
@@ -50,10 +51,13 @@ export default function Chat(props: { sessionId?: string }) {
       const apiClient = new ApiClient(appContext);
       try {
         // const result = await apiClient.sessions.getSession(props.sessionId);
-        const hist = await apiClient.sessions.getSession(props.sessionId,"29");
+        let username;
+        await Auth.currentAuthenticatedUser().then((value) => username = value.username);
+        if (!username) return;
+        const hist = await apiClient.sessions.getSession(props.sessionId,username);
 
         if (hist) {
-          console.log(hist);
+          // console.log(hist);
           ChatScrollState.skipNextHistoryUpdate = true;
           ChatScrollState.skipNextScrollEvent = true;
           // console.log("History", result.data.getSession.history);

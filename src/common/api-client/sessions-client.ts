@@ -91,15 +91,15 @@ export class SessionsClient {
     // console.log(decoder.decode(value));    
     const output = JSON.parse(decoder.decode(value)).chat_history! as any[];
     let history: ChatBotHistoryItem[] = [];
-    console.log(output);
+    // console.log(output);
     if (output === undefined) {
       return history;
     }
     output.forEach(function (value) {
       let metadata = {}
       if (value.metadata) {
-        metadata = JSON.parse(value.metadata)
-      }
+        metadata = {"Sources" : JSON.parse(value.metadata)}
+      }      
       history.push({
         type: ChatBotMessageType.Human,
         content: value.user,
@@ -107,14 +107,14 @@ export class SessionsClient {
         },
         tokens: [],
       },
-        {
-          type: ChatBotMessageType.AI,
-          tokens: [],
-          content: value.chatbot,
-          metadata: metadata,
-        },)
+      {
+        type: ChatBotMessageType.AI,
+        tokens: [],
+        content: value.chatbot,
+        metadata: metadata,
+      },)
     })
-
+    // console.log(history);
     return history;
   }
 
