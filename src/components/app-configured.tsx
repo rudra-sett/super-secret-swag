@@ -16,7 +16,6 @@ import { StorageHelper } from "../common/helpers/storage-helper";
 import { Mode } from "@cloudscape-design/global-styles";
 import "@aws-amplify/ui-react/styles.css";
 import { CHATBOT_NAME } from "../common/constants";
-import FederatedSignIn from "./authentication/federated-signin";
 
 // "aws.cognito.signin.user.admin"
 
