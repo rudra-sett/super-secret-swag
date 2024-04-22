@@ -21,12 +21,11 @@ import { CHATBOT_NAME } from "../common/constants";
 
 export default function AppConfigured() {
   const { tokens } = useTheme();
-  const [token, setToken] = useState(null);
   const [config, setConfig] = useState<AppConfig | null>(null);
   const [error, setError] = useState<boolean | null>(null);
   const [authenticated, setAuthenticated] = useState<boolean>(null);
   const [theme, setTheme] = useState(StorageHelper.getTheme());
-  const [user, setUser] = useState<any | null>(null);
+  const [configured, setConfigured] = useState<boolean>(false);  
 
 
   const federatedIdName : string = "AzureAD-OIDC-MassGov";
@@ -59,10 +58,11 @@ export default function AppConfigured() {
         const result = await fetch("/aws-exports.json");
         const awsExports = await result.json();
         Amplify.configure(awsExports);   
+        setConfigured(true);
         const currentUser = await Auth.currentAuthenticatedUser();
         // console.log("Authenticated user:", currentUser);
         setAuthenticated(true);
-        console.log(authenticated);
+        // console.log(authenticated);
         setConfig(awsExports);
       } catch (e) {
         console.error("Authentication check error:", e);
@@ -77,7 +77,8 @@ export default function AppConfigured() {
     //     const result = await fetch("/aws-exports.json");
     //     const awsExports = await result.json();
     //     Amplify.configure(awsExports);   
-    if (!authenticated) {
+    
+    if (!authenticated && configured) {
       console.log("No authenticated user, initiating federated sign-in.");
       Auth.federatedSignIn({ customProvider: federatedIdName });
     }
