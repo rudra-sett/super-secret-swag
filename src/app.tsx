@@ -67,7 +67,7 @@ function App() {
               />
               <Route path="workspaces/add-data" element={<AddData />} />
             </Route> */}
-            {/* <Route path="*" element={<Navigate to={`/chatbot/playground/${uuidv4()}`} replace />} /> */}
+            <Route path="*" element={<Navigate to={`/chatbot/playground/${uuidv4()}`} replace />} />
           </Routes>
         </div>
       </Router>
