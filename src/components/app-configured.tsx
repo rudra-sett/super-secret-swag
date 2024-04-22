@@ -70,15 +70,16 @@ export default function AppConfigured() {
   }, []);
   
   useEffect(() => {    
-    (async () => {
-      console.log("Auth state changed!", authenticated)
-        const result = await fetch("/aws-exports.json");
-        const awsExports = await result.json();
-        Amplify.configure(awsExports);   
+    // (async () => {
+    //   console.log("Auth state changed!", authenticated)
+    //     const result = await fetch("/aws-exports.json");
+    //     const awsExports = await result.json();
+    //     Amplify.configure(awsExports);   
     if (!authenticated) {
       console.log("No authenticated user, initiating federated sign-in.");
       Auth.federatedSignIn({ customProvider: federatedIdName });
-    }})
+    }
+  // })
   }, [authenticated]);
 
   useEffect(() => {
