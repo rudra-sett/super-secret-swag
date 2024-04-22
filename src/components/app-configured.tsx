@@ -62,6 +62,7 @@ export default function AppConfigured() {
         const currentUser = await Auth.currentAuthenticatedUser();
         console.log("Authenticated user:", currentUser);
         setAuthenticated(true);
+        console.log(authenticated);
       } catch (e) {
         console.error("Authentication check error:", e);
         setAuthenticated(false);
@@ -71,7 +72,7 @@ export default function AppConfigured() {
   
   useEffect(() => {    
     // (async () => {
-    //   console.log("Auth state changed!", authenticated)
+    console.log("Auth state changed!", authenticated)
     //     const result = await fetch("/aws-exports.json");
     //     const awsExports = await result.json();
     //     Amplify.configure(awsExports);   
