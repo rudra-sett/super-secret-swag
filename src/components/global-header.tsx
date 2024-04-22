@@ -20,7 +20,7 @@ export default function GlobalHeader() {
       console.log((await Auth.currentSession()).getAccessToken());
       console.log((await Auth.currentSession()).getAccessToken().getJwtToken());
       if (!result || Object.keys(result).length === 0) {
-        Auth.signOut();
+        // Auth.signOut();
         return;
       }
 
