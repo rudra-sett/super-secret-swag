@@ -37,7 +37,6 @@ export interface AppConfig {
 // }
 
 export type LoadingStatus = "pending" | "loading" | "finished" | "error";
-export type ModelProvider = "sagemaker" | "bedrock" | "openai";
 export type RagDocumentType =
   | "file"
   | "text"
@@ -45,46 +44,3 @@ export type RagDocumentType =
   | "website"
   | "rssfeed"
   | "rsspost";
-export type Modality = "TEXT" | "IMAGE";
-export type ModelInterface = "langchain" | "multimodal";
-
-export interface DocumentSubscriptionToggleResult {
-  id: string;
-  workspaceId: string;
-  status: string;
-}
-
-export enum DocumentSubscriptionStatus {
-  ENABLED = "enabled",
-  DISABLED = "disabled",
-  UNKNOWN = "unknown",
-  DEFAULT = UNKNOWN,
-}
-
-export interface AuroraWorkspaceCreateInput {
-  name: string;
-  embeddingsModel: SelectProps.Option | null;
-  crossEncoderModel: SelectProps.Option | null;
-  languages: readonly SelectProps.Option[];
-  metric: string;
-  index: boolean;
-  hybridSearch: boolean;
-  chunkSize: number;
-  chunkOverlap: number;
-}
-
-export interface OpenSearchWorkspaceCreateInput {
-  name: string;
-  embeddingsModel: SelectProps.Option | null;
-  languages: readonly SelectProps.Option[];
-  crossEncoderModel: SelectProps.Option | null;
-  hybridSearch: boolean;
-  chunkSize: number;
-  chunkOverlap: number;
-}
-
-export interface KendraWorkspaceCreateInput {
-  name: string;
-  kendraIndex: SelectProps.Option | null;
-  useAllData: boolean;
-}

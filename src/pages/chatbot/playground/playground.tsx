@@ -2,7 +2,7 @@ import BaseAppLayout from "../../../components/base-app-layout";
 import Chat from "../../../components/chatbot/chat";
 
 import { Link, useParams } from "react-router-dom";
-import { Header, HelpPanel } from "@cloudscape-design/components";
+import { Alert, Header, HelpPanel } from "@cloudscape-design/components";
 import "../../../styles/chat.module.scss"; 
 export default function Playground() {
   const { sessionId } = useParams();

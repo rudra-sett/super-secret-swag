@@ -5,12 +5,15 @@ import {
   Outlet,
   Route,
   Routes,
+  Navigate,
 } from "react-router-dom";
 import { AppContext } from "./common/app-context";
 import GlobalHeader from "./components/global-header";
 import Playground from "./pages/chatbot/playground/playground";
 import NotFound from "./pages/not-found";
-// import SessionPage from "./pages/chatbot/sessions/sessions"
+import WorkspacePane from "./pages/admin/workspace";
+import SessionPage from "./pages/chatbot/sessions/sessions"
+import { v4 as uuidv4 } from "uuid";
 // import CreateWorkspace from "./pages/rag/create-workspace/create-workspace";
 // import Dashboard from "./pages/rag/dashboard/dashboard";
 // import RssFeed from "./pages/rag/workspace/rss-feed";
@@ -30,7 +33,14 @@ function App() {
         <div style={{ height: "56px", backgroundColor: "#000716" }}>&nbsp;</div>
         <div>
           <Routes>
-            <Route index path="/" element={<Playground />} />
+            {/* <Route index path="/" element={<Playground />} /> */}
+            {/* <Route index path="/" element={<Playground />} /> */}
+            <Route
+                index
+                path="/"
+                element={<Navigate to={`/chatbot/playground/${uuidv4()}`} replace />}
+            />
+            {/* <Redirect from="/" to={`/chatbot/playground/${uuidv4()}`} /> */}
             <Route path="/chatbot" element={<Outlet />}>
               <Route path="playground" element={<Playground />} />
               <Route path="playground/:sessionId" element={<Playground />} />
@@ -55,7 +65,7 @@ function App() {
               />
               <Route path="workspaces/add-data" element={<AddData />} />
             </Route> */}
-            <Route path="*" element={<NotFound />} />
+            <Route path="*" element={<Navigate to={`/chatbot/playground/${uuidv4()}`} replace />} />
           </Routes>
         </div>
       </Router>

@@ -5,6 +5,7 @@ import {
   ChatBotMessageType,
   FeedbackData,
 } from "./types";
+import { Auth } from "aws-amplify";
 import { SpaceBetween, StatusIndicator } from "@cloudscape-design/components";
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
@@ -24,7 +25,7 @@ export default function Chat(props: { sessionId?: string }) {
   const [configuration, setConfiguration] = useState<ChatBotConfiguration>(
     () => ({
       streaming: true,
-      showMetadata: false,
+      showMetadata: true,
       maxTokens: 512,
       temperature: 0.6,
       topP: 0.9,
@@ -53,7 +54,7 @@ export default function Chat(props: { sessionId?: string }) {
         const hist = await apiClient.sessions.getSession(props.sessionId,"11");
 
         if (hist) {
-          console.log(hist);
+          // console.log(hist);
           ChatScrollState.skipNextHistoryUpdate = true;
           ChatScrollState.skipNextScrollEvent = true;
           // console.log("History", result.data.getSession.history);
@@ -92,7 +93,7 @@ export default function Chat(props: { sessionId?: string }) {
       const completion = message.content;
       // const model = message.metadata.modelId;
       const feedbackData = {
-        sessionId: '0', //message.metadata.sessionId as string,        
+        sessionId: props.sessionId, //message.metadata.sessionId as string,        
         feedback: feedbackType,
         prompt: prompt,
         completion: completion,        

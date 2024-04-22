@@ -196,6 +196,27 @@ export function updateMessageHistoryRef(
   }
 }
 
+function pairwise(arr: ChatBotHistoryItem[], func) {
+  for (var i = 0; i < arr.length - 1; i++) {
+    func(arr[i], arr[i + 1])
+  }
+}
+
+export function assembleHistory(history: ChatBotHistoryItem[]) {
+  var hist: Object[] = [];
+  for (var i = 0; i < history.length - 1; i++) {
+    if (history[i].type == ChatBotMessageType.Human) {
+      hist.push({ "user": history[i].content, "chatbot": history[i+1].content, "metadata" : JSON.stringify(history[i+1].metadata)})
+    }
+  }
+  
+  // pairwise(history, function (current: ChatBotHistoryItem, next: ChatBotHistoryItem) {
+  //   hist.push({ "user": current.content, "chatbot": next.content })
+  // })
+  
+  return hist;
+}
+
 // export function updateChatSessions(
 //   chatSession: ChatSession,
 //   response: ChatBotMessageResponse

@@ -83,7 +83,7 @@ export default function Sessions(props: SessionsProps) {
     setIsLoading(true);
     const apiClient = new ApiClient(appContext);
     await Promise.all(
-      selectedItems.map((s) => apiClient.sessions.deleteSession(s.id))
+      selectedItems.map((s) => apiClient.sessions.deleteSession(s.session_id,s.user_id))
     );
     await getSessions();
     setIsLoading(false);
@@ -121,7 +121,7 @@ export default function Sessions(props: SessionsProps) {
       >
         Do you want to delete{" "}
         {selectedItems.length == 1
-          ? `session ${selectedItems[0].id}?`
+          ? `session ${selectedItems[0].session_id}?`
           : `${selectedItems.length} sessions?`}
       </Modal>
       <Modal
@@ -157,7 +157,7 @@ export default function Sessions(props: SessionsProps) {
         }}
         selectedItems={selectedItems}
         selectionType="multi"
-        trackBy="id"
+        trackBy="Key"
         empty={
           <Box margin={{ vertical: "xs" }} textAlign="center" color="inherit">
             <SpaceBetween size="m">
@@ -207,7 +207,7 @@ export default function Sessions(props: SessionsProps) {
                   iconName="add-plus"
                   href={`/chatbot/playground/${uuidv4()}`}
                   variant="inline-link"
-//                   onClick={() => getSessions()}
+                  onClick={() => getSessions()}
                 >
                   New session
                 </RouterButton>
