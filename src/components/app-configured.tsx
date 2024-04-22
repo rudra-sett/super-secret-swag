@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   Authenticator,
   Heading,
+  Text,
   ThemeProvider,
   defaultDarkModeOverride,
   useTheme,
@@ -10,7 +11,7 @@ import App from "../app";
 import { Amplify, Auth, Hub } from "aws-amplify";
 import { AppConfig } from "../common/types";
 import { AppContext } from "../common/app-context";
-import { Alert, StatusIndicator } from "@cloudscape-design/components";
+import { Alert, StatusIndicator, TextContent } from "@cloudscape-design/components";
 import { StorageHelper } from "../common/helpers/storage-helper";
 import { Mode } from "@cloudscape-design/global-styles";
 import "@aws-amplify/ui-react/styles.css";
@@ -147,6 +148,7 @@ export default function AppConfigured() {
         }}
       >
         <StatusIndicator type="loading">Loading</StatusIndicator>
+        <TextContent>{authenticated}</TextContent>
       </div>
     );
   }
@@ -210,7 +212,7 @@ export default function AppConfigured() {
           <App/>
         ) : (
           // <FederatedSignIn federatedIdName={federatedIdName}/>
-          <></>
+          <TextContent>Are we authenticated: {authenticated}</TextContent>
         )}
       </ThemeProvider>
     </AppContext.Provider>
