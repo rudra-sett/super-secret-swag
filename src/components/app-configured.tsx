@@ -37,6 +37,7 @@ export default function AppConfigured() {
         // if (currentConfig?.config.auth_federated_provider?.auto_redirect) {          
           try {
             const user = await Auth.currentAuthenticatedUser();
+            console.log(user);
             if (user) {
               authenticated = true;
             }
@@ -44,8 +45,7 @@ export default function AppConfigured() {
             authenticated = false;
           }
 
-          if (!authenticated) {
-            console.log('hi');
+          if (!authenticated) {           
             Auth.federatedSignIn({customProvider: federatedIdName}) 
             // const federatedProvider =
             //   currentConfig.config.auth_federated_provider;
