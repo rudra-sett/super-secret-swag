@@ -22,7 +22,7 @@ export default function AppConfigured() {
   const [token, setToken] = useState(null);
   const [config, setConfig] = useState<AppConfig | null>(null);
   const [error, setError] = useState<boolean | null>(null);
-  const [authenticated, setAuthenticated] = useState<boolean>(false);
+  const [authenticated, setAuthenticated] = useState<boolean>(null);
   const [theme, setTheme] = useState(StorageHelper.getTheme());
   const [user, setUser] = useState<any | null>(null);
 
@@ -56,45 +56,23 @@ export default function AppConfigured() {
       try {
         const result = await fetch("/aws-exports.json");
         const awsExports = await result.json();
-        const currentConfig = Amplify.configure(awsExports) as AppConfig | null;
-        console.log("checking auth");
-        // if (currentConfig?.config.auth_federated_provider?.auto_redirect) {          
-          try {
-            const user = await Auth.currentAuthenticatedUser();
-            console.log(user);
-            if (user) {
-              console.log("authed!")
-              setAuthenticated(true);
-            }
-          } catch (e) {
-            console.log(e)
-            setAuthenticated(false);
-          }
-
-          if (!authenticated) {           
-            Auth.federatedSignIn()//{customProvider: federatedIdName}) 
-            // const federatedProvider =
-            //   currentConfig.config.auth_federated_provider;
-
-            // if (!federatedProvider.custom) {
-            //   // Auth.federatedSignIn({ provider: federatedProvider.name });
-            // } else {
-            //   // Auth.federatedSignIn({ customProvider: federatedProvider.name });
-            //   Auth.federatedSignIn({customProvider: federatedIdName})    
-            // }
-
-            // return;
-          }
-        // }
-
-        setConfig(currentConfig);
+        Amplify.configure(awsExports);
+        const currentUser = await Auth.currentAuthenticatedUser();
+        console.log("Authenticated user:", currentUser);
+        setAuthenticated(true);
       } catch (e) {
-        console.error(e);
-        setError(true);
+        console.error("Authentication check error:", e);
+        setAuthenticated(false);
       }
     })();
-    console.log(authenticated);
   }, []);
+  
+  useEffect(() => {
+    if (!authenticated) {
+      console.log("No authenticated user, initiating federated sign-in.");
+      Auth.federatedSignIn();  // Optionally pass { customProvider: federatedIdName }
+    }
+  }, [authenticated]);
 
   useEffect(() => {
     const observer = new MutationObserver((mutations) => {
