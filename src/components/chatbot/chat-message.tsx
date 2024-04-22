@@ -81,52 +81,15 @@ export default function ChatMessage(props: ChatMessageProps) {
             ((props?.showMetadata && props.message.metadata) ||
               (props.message.metadata &&
                 props.configuration?.showMetadata)) && (
-              <ExpandableSection variant="footer" headerText="Sources">
-                 {props.message.metadata?.Sources && (
-                 <ul>
-                  {props.message.metadata.Sources.map((source, index) => (
-                  <li key={index}>
-                    <a href={source} target="_blank" rel="noopener noreferrer">{source}</a>
-                    </li>
-                  ))}
-                  </ul>
-                )}
-  {/* Optionally using JsonView to display the Sources in JSON format for detailed inspection */}
-  <JsonView
-    shouldInitiallyExpand={(level) => level < 2}
-    data={JSON.parse(JSON.stringify(props.message.metadata.Sources))}
-    style={{
-      ...darkStyles,
-      stringValue: "jsonStrings",
-      numberValue: "jsonNumbers",
-      booleanValue: "jsonBool",
-      nullValue: "jsonNull",
-      container: "jsonContainer",
-    }}
-  />
-                {/* <JsonView
+              <ExpandableSection variant="footer" headerText="Metadata">
+                <JsonView
                   shouldInitiallyExpand={(level) => level < 2}
-                  // parse metadata
                   data={JSON.parse(
                     JSON.stringify(props.message.metadata).replace(
                       /\\n/g,
                       "\\\\n"
                     )
                   )}
-                    // const sources = {JSON.stringify(props.message.metadata.Sources)};
-                    // return (
-                    //   <div style={{ margin: '20px' }}>
-                    //       <h3>Useful Links</h3>
-                    //       <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
-                    //           {sources.map((link, index) => (
-                    //               <li key={index} style={{ marginBottom: '10px' }}>
-                    //                   <a href={link} target="_blank" rel="noopener noreferrer">{link}</a>
-                    //               </li>
-                    //           ))}
-                    //       </ul>
-                    //   </div>
-                    //   )
-                  
                   style={{
                     ...darkStyles,
                     stringValue: "jsonStrings",
@@ -134,8 +97,8 @@ export default function ChatMessage(props: ChatMessageProps) {
                     booleanValue: "jsonBool",
                     nullValue: "jsonNull",
                     container: "jsonContainer",
-                  }} */}
-                {/* /> */}
+                  }}
+                />
                 {props.message.metadata.documents && (
                   <>
                     <div className={styles.btn_chabot_metadata_copy}>

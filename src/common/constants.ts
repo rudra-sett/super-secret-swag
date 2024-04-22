@@ -106,4 +106,4 @@ export abstract class Labels {
   // }
 }
 
-export const CHATBOT_NAME = "EEA Grants Navigator";
+export const CHATBOT_NAME = "EOEEA Grants Navigator";

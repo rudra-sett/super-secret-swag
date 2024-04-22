@@ -17,14 +17,12 @@ export default function Playground() {
           </p>
           <h3>More resources</h3>
           <p>
-            Discover more about the grant programs offered by the EOEEA here!
-            <link>https://www.mass.gov/orgs/eea-office-of-grants-and-technical-assistance</link>
-            EOEEA Homepage:
-            <link>https://www.mass.gov/orgs/executive-office-of-energy-and-environmental-affairs?_gl=1*1gw6mwb*_ga*NjY1OTYwNjM1LjE3MTI3ODIyNDI.*_ga_MCLPEGW7WM*MTcxMzQ3MzM2OC4xLjEuMTcxMzQ3NDU1OC4wLjAuMA..</link>
-            Learn more about the developers:
-            <link>https://burnes.northeastern.edu/ai-for-impact-coop/</link>
+            Discover more about the grant programs offered by the EOEEA <a href="https://www.mass.gov/orgs/eea-office-of-grants-and-technical-assistance">here</a>.
+            <br></br>
+            Explore the EOEEA Homepage <a href="https://www.mass.gov/orgs/executive-office-of-energy-and-environmental-affairs">here</a>.
+            <br></br>
+            Learn more about the developers o the EOEEA Grants Navigator here <a href="https://burnes.northeastern.edu/ai-for-impact-coop/">here</a>.
           </p>
-          
         
         </HelpPanel>
       }
