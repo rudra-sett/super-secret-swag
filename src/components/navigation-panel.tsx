@@ -52,11 +52,11 @@ export default function NavigationPanel() {
       //   text: "Home",
       //   href: "/",
       // },
-      {
-        type: "link",
-        text: "New Session", 
-        href: `/chatbot/playground/${uuidv4()}`,
-      },
+      // {
+      //   type: "link",
+      //   text: "New Session", 
+      //   href: `/chatbot/playground/${uuidv4()}`,
+      // },
       {
         type: "section",
         text: "Session History",
