@@ -47,24 +47,24 @@ export default function NavigationPanel() {
   const updateItems = (sessions: any[]) => {
     // console.log("hit the update button")
     const newItems: SideNavigationProps.Item[] = [
-      {
-        type: "link",
-        text: "Home",
-        href: "/",
-      },
+      // {
+      //   type: "link",
+      //   text: "Home",
+      //   href: "/",
+      // },
       // {
       //   type: "link",
       //   text: "New Session", 
       //   href: `/chatbot/playground/${uuidv4()}`,
       // },
-      {
-        type: "section",
-        text: "Chatbot",
-        items: [
-          { type: "link", text: "Chat", href: "/chatbot/playground" },
+      // {
+      //   type: "section",
+      //   text: "Chatbot",
+      //   items: [
+      //     { type: "link", text: "Chat", href: "/chatbot/playground" },
 
-        ],
-      },
+      //   ],
+      // },
       // {
       //   type: "section",
       //   text: "Admin",
