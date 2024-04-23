@@ -21,7 +21,9 @@ export default function Playground() {
             <br></br>
             Explore the EOEEA Homepage <a href="https://www.mass.gov/orgs/executive-office-of-energy-and-environmental-affairs">here</a>.
             <br></br>
-            Learn more about the developers o the EOEEA Grants Navigator here <a href="https://burnes.northeastern.edu/ai-for-impact-coop/">here</a>.
+            Learn more about the developers of the EOEEA Grants Navigator here <a href="https://burnes.northeastern.edu/ai-for-impact-coop/">here</a>.
+            <br></br>
+            Feedback? Please visit our form here to provide our team feedback. here <a href="https://burnes.northeastern.edu/ai-for-impact-coop/">here</a>.
           </p>
         
         </HelpPanel>

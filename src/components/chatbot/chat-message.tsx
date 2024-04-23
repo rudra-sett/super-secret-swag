@@ -10,6 +10,10 @@ import {
   Tabs,
   TextContent,
   Textarea,
+  Cards,
+  SpaceBetween,
+  Header,
+  Link
 } from "@cloudscape-design/components";
 import { useEffect, useState } from "react";
 import { JsonView, darkStyles } from "react-json-view-lite";
@@ -50,7 +54,6 @@ export default function ChatMessage(props: ChatMessageProps) {
       setLoading(true);
       if (message.metadata?.files as ImageFile[]) {
         const files: ImageFile[] = [];
-        console.log(message.metadata.RagDocument)
         for await (const file of message.metadata?.files as ImageFile[]) {
           const signedUrl = await getSignedUrl(file.key);
           files.push({
@@ -59,7 +62,7 @@ export default function ChatMessage(props: ChatMessageProps) {
           });
         }
 
-        setLoading(false); //WS CHECK HERE
+        setLoading(false);
         setFiles(files);
       }
     };
@@ -72,61 +75,7 @@ export default function ChatMessage(props: ChatMessageProps) {
   const content =
     props.message.content && props.message.content.length > 0
       ? props.message.content
-      : props.message.tokens?.map((v) => v.value).join("")
-      //const jsonSources = JSON.stringify(props.message.metadata, null, 2).replace(/\\n/g, "\\\\n");
-    //   const jsonSources = JSON.stringify(props.message.metadata, null, 2)
-    // .replace(/\\n/g, "\\\\n")
-    // .replace(/^(\s*".+":)/gm, "$1 link");
-    const jsonSources = JSON.stringify(props.message.metadata, null, 2)
-    .replace(/"(https:\/\/[^"]+)"/g, '"Link: $1"');
-
-    interface Props {
-      message: {
-        metadata: {
-          Sources: string[];
-        };
-      };
-    }
-    
-    const formatReadableLinks = (props: Props): string => {
-      // Extract the Sources array from the metadata
-      const sources: string[] = props.message.metadata.Sources;
-    
-      // Format each URL by stripping the "Link: " prefix and other potential formatting needs
-      const formattedSources: string[] = sources.map(source => {
-        // Optionally remove the "Link: " prefix if present
-        const cleanSource = source.replace(/^Link: /, '');
-        // Return the cleaned source
-        return cleanSource;
-      });
-    
-      // Join all sources into a single string, separated by new lines for readability
-      return formattedSources.join('\n');
-    };
-    //const pathJ = JSON.parse(prop)
-    // gives just the links and a string
-   // const jsonSources3 = (props.message.metadata.Sources as string[][]).map(source => `<a href="${source.trim().replace(/"/g, '')}" target="_blank">${source.trim().replace(/"/g, '')}</a>`)
-    //.join('<br/>');
-    // .map(source => `<a href="${source.trim().replace(/"/g, '')}" target="_blank">${source.trim().replace(/"/g, '')}</a>`));
-    // const jsonSources2 = JSON.stringify(props.message.metadata.Sources as string[][])
-    const jsonSources2 = (props.message.metadata.Sources as string[][])
-    // const jsonSources3 = (jsonSources2 as string[][])
-    // do as string[][] first and then map and then full stringify
-    // use a reviewer if we figure it out
-    // if that doesn't work take in jsonSources as an array of strings and map to it
-  //   const formattedSources = jsonSources.replace(/^\[\n/, '')  // Remove the opening bracket and newline
-  // .replace(/\n\]$/, '')  // Remove the closing bracket and newline
-  // .replace(/\n {2}"/g, '"\n') // Remove leading spaces on each line and format
-  // .replace(/",\n/g, '",\n\n'); // Double newlines for clearer separation
-
- // console.log(formattedSources);
-    //console.log(jsonSources2)
-      //as string[]).map(source => `<a href="${source.trim().replace(/"/g, '')}" target="_blank">${source.trim().replace(/"/g, '')}</a>`);
-    //.map(source => `<a href="${source.trim().replace(/"/g, '')}" target="_blank">${source.trim().replace(/"/g, '')}</a>`)
-    //.join('<br/>');
-    
-
-    //const jsonParsed = JSON.parse(JSON.stringify(props.message.metadata)).map(url => 'Link: ${url}').join('\n');
+      : props.message.tokens?.map((v) => v.value).join("");
 
   return (
     <div>
@@ -137,24 +86,14 @@ export default function ChatMessage(props: ChatMessageProps) {
               (props.message.metadata &&
                 props.configuration?.showMetadata)) && (
               <ExpandableSection variant="footer" headerText="Sources">
-                  <textarea
-                    style={{
-                      width: '100%',  // Make the textarea full-width
-                      height: '200px',  // Set a fixed height
-                      backgroundColor: '#333',  // Dark background for the text area
-                      color: '#fff',  // Light text color for readability
-                      fontFamily: 'monospace',  // Monospace font for better JSON structure visibility
-                      padding: '10px',  // Padding inside the textarea
-                      border: 'none',  // No border for a cleaner look
-                      borderRadius: '4px',  // Slightly rounded corners
-                      resize: 'none'  // Disable resizing of the textarea
-                    }}
-                    value={jsonSources}  // Set the content of the textarea to the JSON string
-                    readOnly  // Make the textarea read-only if editing is not required
-                  />
-                <JsonView
+                {/* <JsonView
                   shouldInitiallyExpand={(level) => level < 2}
-                  data={jsonSources.split(",")}
+                  data={JSON.parse(
+                    JSON.stringify(props.message.metadata).replace(
+                      /\\n/g,
+                      "\\\\n"
+                    )
+                  )}
                   style={{
                     ...darkStyles,
                     stringValue: "jsonStrings",
@@ -163,6 +102,45 @@ export default function ChatMessage(props: ChatMessageProps) {
                     nullValue: "jsonNull",
                     container: "jsonContainer",
                   }}
+                /> */}
+                <Cards
+                  // ariaLabels={{
+                  //   itemSelectionLabel: (e, t) => `select ${t.name}`,
+                  //   selectionGroupLabel: "Item selection"
+                  // }}
+                  cardDefinition={{
+                    header: item => (
+                      <Link href={item} fontSize="body-s">
+                        {item}
+                      </Link>
+                    ),
+                    // sections: [
+                    //   {
+                    //     id: "date",
+                    //     header: "Date",
+                    //     content: item => item.date
+                    //   },                      
+                    // ]
+                  }}
+                  cardsPerRow={[
+                    { cards: 1 },
+                    { minWidth: 500, cards: 3 }
+                  ]}
+                  items={props.message.metadata.Sources as string[]}
+                  loadingText="Loading sources..."
+                  empty={
+                    <Box
+                      margin={{ vertical: "xs" }}
+                      textAlign="center"
+                      color="inherit"
+                    >
+                      <SpaceBetween size="m">
+                        <b>No resources</b>
+                        <Button>Create resource</Button>
+                      </SpaceBetween>
+                    </Box>
+                  }
+                  // header={<Header>Example Cards</Header>}
                 />
                 {props.message.metadata.documents && (
                   <>
@@ -202,8 +180,7 @@ export default function ChatMessage(props: ChatMessageProps) {
                           content: (
                             <>
                               <Textarea
-                                value={p.metadata.path}
-                               // value={label}
+                                value={p.page_content}
                                 readOnly={true}
                                 rows={8}
                               />
@@ -238,7 +215,7 @@ export default function ChatMessage(props: ChatMessageProps) {
                           onClick={() => {
                             navigator.clipboard.writeText(
                               (props.message.metadata.prompts as string[][])[
-                                parseInt(promptIndex)
+                              parseInt(promptIndex)
                               ][0]
                             );
                           }}
@@ -250,12 +227,11 @@ export default function ChatMessage(props: ChatMessageProps) {
                         (p, i) => {
                           return {
                             id: `${i}`,
-                            label: `Prompt ${
-                              (props.message.metadata.prompts as string[][])
+                            label: `Prompt ${(props.message.metadata.prompts as string[][])
                                 .length > 1
                                 ? i + 1
                                 : ""
-                            }`,
+                              }`,
                             content: (
                               <>
                                 <Textarea
@@ -346,7 +322,7 @@ export default function ChatMessage(props: ChatMessageProps) {
             }}
           />
           <div className={styles.thumbsContainer}>
-            {(selectedIcon === 1 || selectedIcon === null) && (
+            {/* {(selectedIcon === 1 || selectedIcon === null) && (
               <Button
                 variant="icon"
                 iconName={selectedIcon === 1 ? "thumbs-up-filled" : "thumbs-up"}
@@ -356,8 +332,8 @@ export default function ChatMessage(props: ChatMessageProps) {
                   setSelectedIcon(1);
                 }}
               />
-            )}
-            {(selectedIcon === 0 || selectedIcon === null) && (
+            )} */}
+            {/* {(selectedIcon === 0 || selectedIcon === null) && (
               <Button
                 iconName={
                   selectedIcon === 0 ? "thumbs-down-filled" : "thumbs-down"
@@ -368,7 +344,7 @@ export default function ChatMessage(props: ChatMessageProps) {
                   setSelectedIcon(0);
                 }}
               />
-            )}
+            )} */}
           </div>
         </Container>
       )}
@@ -398,9 +374,12 @@ export default function ChatMessage(props: ChatMessageProps) {
       {props.message?.type === ChatBotMessageType.Human && (
         <TextContent>
           <strong>{props.message.content}</strong>
-        
         </TextContent>
       )}
     </div>
   );
 }
+
+
+
+
