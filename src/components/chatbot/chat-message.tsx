@@ -50,6 +50,7 @@ export default function ChatMessage(props: ChatMessageProps) {
       setLoading(true);
       if (message.metadata?.files as ImageFile[]) {
         const files: ImageFile[] = [];
+        console.log(message.metadata.RagDocument)
         for await (const file of message.metadata?.files as ImageFile[]) {
           const signedUrl = await getSignedUrl(file.key);
           files.push({
@@ -58,7 +59,7 @@ export default function ChatMessage(props: ChatMessageProps) {
           });
         }
 
-        setLoading(false);
+        setLoading(false); //WS CHECK HERE
         setFiles(files);
       }
     };
@@ -71,7 +72,61 @@ export default function ChatMessage(props: ChatMessageProps) {
   const content =
     props.message.content && props.message.content.length > 0
       ? props.message.content
-      : props.message.tokens?.map((v) => v.value).join("");
+      : props.message.tokens?.map((v) => v.value).join("")
+      //const jsonSources = JSON.stringify(props.message.metadata, null, 2).replace(/\\n/g, "\\\\n");
+    //   const jsonSources = JSON.stringify(props.message.metadata, null, 2)
+    // .replace(/\\n/g, "\\\\n")
+    // .replace(/^(\s*".+":)/gm, "$1 link");
+    const jsonSources = JSON.stringify(props.message.metadata, null, 2)
+    .replace(/"(https:\/\/[^"]+)"/g, '"Link: $1"');
+
+    interface Props {
+      message: {
+        metadata: {
+          Sources: string[];
+        };
+      };
+    }
+    
+    const formatReadableLinks = (props: Props): string => {
+      // Extract the Sources array from the metadata
+      const sources: string[] = props.message.metadata.Sources;
+    
+      // Format each URL by stripping the "Link: " prefix and other potential formatting needs
+      const formattedSources: string[] = sources.map(source => {
+        // Optionally remove the "Link: " prefix if present
+        const cleanSource = source.replace(/^Link: /, '');
+        // Return the cleaned source
+        return cleanSource;
+      });
+    
+      // Join all sources into a single string, separated by new lines for readability
+      return formattedSources.join('\n');
+    };
+    //const pathJ = JSON.parse(prop)
+    // gives just the links and a string
+   // const jsonSources3 = (props.message.metadata.Sources as string[][]).map(source => `<a href="${source.trim().replace(/"/g, '')}" target="_blank">${source.trim().replace(/"/g, '')}</a>`)
+    //.join('<br/>');
+    // .map(source => `<a href="${source.trim().replace(/"/g, '')}" target="_blank">${source.trim().replace(/"/g, '')}</a>`));
+    // const jsonSources2 = JSON.stringify(props.message.metadata.Sources as string[][])
+    const jsonSources2 = (props.message.metadata.Sources as string[][])
+    // const jsonSources3 = (jsonSources2 as string[][])
+    // do as string[][] first and then map and then full stringify
+    // use a reviewer if we figure it out
+    // if that doesn't work take in jsonSources as an array of strings and map to it
+  //   const formattedSources = jsonSources.replace(/^\[\n/, '')  // Remove the opening bracket and newline
+  // .replace(/\n\]$/, '')  // Remove the closing bracket and newline
+  // .replace(/\n {2}"/g, '"\n') // Remove leading spaces on each line and format
+  // .replace(/",\n/g, '",\n\n'); // Double newlines for clearer separation
+
+ // console.log(formattedSources);
+    //console.log(jsonSources2)
+      //as string[]).map(source => `<a href="${source.trim().replace(/"/g, '')}" target="_blank">${source.trim().replace(/"/g, '')}</a>`);
+    //.map(source => `<a href="${source.trim().replace(/"/g, '')}" target="_blank">${source.trim().replace(/"/g, '')}</a>`)
+    //.join('<br/>');
+    
+
+    //const jsonParsed = JSON.parse(JSON.stringify(props.message.metadata)).map(url => 'Link: ${url}').join('\n');
 
   return (
     <div>
@@ -81,15 +136,25 @@ export default function ChatMessage(props: ChatMessageProps) {
             ((props?.showMetadata && props.message.metadata) ||
               (props.message.metadata &&
                 props.configuration?.showMetadata)) && (
-              <ExpandableSection variant="footer" headerText="Metadata">
+              <ExpandableSection variant="footer" headerText="Sources">
+                  <textarea
+                    style={{
+                      width: '100%',  // Make the textarea full-width
+                      height: '200px',  // Set a fixed height
+                      backgroundColor: '#333',  // Dark background for the text area
+                      color: '#fff',  // Light text color for readability
+                      fontFamily: 'monospace',  // Monospace font for better JSON structure visibility
+                      padding: '10px',  // Padding inside the textarea
+                      border: 'none',  // No border for a cleaner look
+                      borderRadius: '4px',  // Slightly rounded corners
+                      resize: 'none'  // Disable resizing of the textarea
+                    }}
+                    value={jsonSources}  // Set the content of the textarea to the JSON string
+                    readOnly  // Make the textarea read-only if editing is not required
+                  />
                 <JsonView
                   shouldInitiallyExpand={(level) => level < 2}
-                  data={JSON.parse(
-                    JSON.stringify(props.message.metadata).replace(
-                      /\\n/g,
-                      "\\\\n"
-                    )
-                  )}
+                  data={jsonSources.split(",")}
                   style={{
                     ...darkStyles,
                     stringValue: "jsonStrings",
@@ -137,7 +202,8 @@ export default function ChatMessage(props: ChatMessageProps) {
                           content: (
                             <>
                               <Textarea
-                                value={p.page_content}
+                                value={p.metadata.path}
+                               // value={label}
                                 readOnly={true}
                                 rows={8}
                               />
@@ -332,6 +398,7 @@ export default function ChatMessage(props: ChatMessageProps) {
       {props.message?.type === ChatBotMessageType.Human && (
         <TextContent>
           <strong>{props.message.content}</strong>
+        
         </TextContent>
       )}
     </div>
