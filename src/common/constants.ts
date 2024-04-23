@@ -106,4 +106,4 @@ export abstract class Labels {
   // }
 }
 
-export const CHATBOT_NAME = "MBTA The RIDE Guide AI";
+export const CHATBOT_NAME = "MEC Knowledge Tool";
