@@ -52,27 +52,11 @@ export default function NavigationPanel() {
       //   text: "Home",
       //   href: "/",
       // },
-      // {
-      //   type: "link",
-      //   text: "New Session", 
-      //   href: `/chatbot/playground/${uuidv4()}`,
-      // },
-      // {
-      //   type: "section",
-      //   text: "Chatbot",
-      //   items: [
-      //     { type: "link", text: "Chat", href: "/chatbot/playground" },
-
-      //   ],
-      // },
-      // {
-      //   type: "section",
-      //   text: "Admin",
-      //   items: [
-      //     { type: "link", text: "Update Data", href: "/admin/add-data" },
-      //     { type: "link", text: "Data", href: "/admin/data" }
-      //   ],
-      // },
+      {
+        type: "link",
+        text: "New Session", 
+        href: `/chatbot/playground/${uuidv4()}`,
+      },
       {
         type: "section",
         text: "Session History",
