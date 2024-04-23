@@ -36,18 +36,12 @@ import styles from "../../styles/chat.module.scss";
 // import ConfigDialog from "./config-dialog";
 // import ImageDialog from "./image-dialog";
 import {
-  ChabotInputModality,
-  ChatBotHeartbeatRequest,
-  ChatBotAction,
   ChatBotConfiguration,
   ChatBotHistoryItem,
   ChatBotMessageResponse,
   ChatBotMessageType,
-  ChatBotMode,
-  ChatBotRunRequest,
   ChatInputState,
   ImageFile,
-  ChatBotModelInterface,
 } from "./types";
 // import { sendQuery } from "../../graphql/mutations";
 import {
@@ -383,6 +377,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       const wsUrl = 'wss://ngdpdxffy0.execute-api.us-east-1.amazonaws.com/test/';
       // Create a new WebSocket connection
       const ws = new WebSocket(wsUrl);
+
+      let incomingMetadata : boolean = false;
+      let sources = {};
       // Event listener for when the connection is open
       ws.addEventListener('open', function open() {
         console.log('Connected to the WebSocket server');
@@ -392,15 +389,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           "data": {
             userMessage: messageToSend,
             chatHistory: assembleHistory(messageHistoryRef.current.slice(0, -2)),
-            systemPrompt: `You are an AI chatbot for the RIDE, an MBTA paratransit service. You will help customer service representatives respond to user complaints and queries.
-          Answer questions based on your knowledge and nothing more. If you are unable to decisively answer a question, direct them to customer service. Do not make up information outside of your given information.
-          Customer service is needed if it is something you cannot answer. Requests for fare history require customer service, as do service complaints like a rude driver or late pickup.
-          Highly-specific situations will also require customer service to step in. Remember that RIDE Flex and RIDE are not the same service. 
-          Phone numbers:
-          TRAC (handles scheduling/booking, trip changes/cancellations, anything time-sensitive): 844-427-7433 (voice/relay) 857-206-6569 (TTY)
-          Mobility Center (handles eligibility questions, renewals, and changes to mobility status): 617-337-2727 (voice/relay)
-          MBTA Customer support (handles all other queries): 617-222-3200 (voice/relay)`,
-            projectId: 'rsrs111111',
+            systemPrompt: `You are an AI chatbot for the MassHealth Enrollment Center. You will help customer service representatives respond to user complaints and queries.
+          Answer questions based on your knowledge and nothing more. If you are unable to decisively answer a question, say that you do not have the neccessary information to answer the question. Do not make up information outside of your given information and provide citations of where you got said information.`,
+            projectId: 'vgbt420420',
             user_id : "0",
             session_id: props.session.id
           }
@@ -413,13 +404,23 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       });
       // Event listener for incoming messages
       ws.addEventListener('message', async function incoming(data) {
-        // console.log(data);
-        receivedData += data.data;
+        console.log(data);        
         if (data.data == '!<|EOF_STREAM|>!') {
           // await apiClient.sessions.updateSession(props.session.id, "0", messageHistoryRef.current);
-          ws.close();
+          // ws.close();
+          incomingMetadata = true;
           return;
+          // return;
         }
+        if (!incomingMetadata) {
+          receivedData += data.data;
+        } else {
+          sources = {"Sources" : JSON.parse(data.data)}
+          console.log(sources);
+        }
+        
+        
+
         // console.log(data.data);
         // Update the chat history state with the new message        
         messageHistoryRef.current = [
@@ -437,10 +438,10 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             type: ChatBotMessageType.AI,
             tokens: [],
             content: receivedData,
-            metadata: {},
+            metadata: sources,
           },
         ];
-
+        console.log(messageHistoryRef.current)
         props.setMessageHistory(messageHistoryRef.current);
         // if (data.data == '') {
         //   ws.close()

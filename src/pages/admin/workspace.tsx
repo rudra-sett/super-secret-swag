@@ -103,7 +103,7 @@ export default function WorkspacePane() {
                   >
                     Semantic search
                   </RouterButton> */}
-                  <RouterButtonDropdown
+                  {/* <RouterButtonDropdown
                     items={[
                       {
                         id: "upload-file",
@@ -133,7 +133,7 @@ export default function WorkspacePane() {
                     ]}
                   >
                     Add data
-                  </RouterButtonDropdown>
+                  </RouterButtonDropdown> */}
                 </SpaceBetween>
               }
             >

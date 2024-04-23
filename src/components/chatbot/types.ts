@@ -1,5 +1,5 @@
 // import { Model, Workspace } from "../../API";
-import { LoadingStatus, ModelInterface } from "../../common/types";
+// import { LoadingStatus, ModelInterface } from "../../common/types";
 import { SelectProps } from "@cloudscape-design/components";
 
 export interface ChatBotConfiguration {
@@ -21,6 +21,16 @@ export interface ChatInputState {
   // modelsStatus: LoadingStatus;
   // workspacesStatus: LoadingStatus;
 }
+
+export type ContentType =
+| "chats"
+| "presets"
+| "prompts" 
+| "filed"
+| "collections"
+| "assistants"
+| "tools"
+| "models"
 
 export enum ChatBotMessageType {
   AI = "ai",
@@ -54,28 +64,28 @@ export interface ImageFile {
   url: string;
 }
 
-export interface ChatBotHeartbeatRequest {
-  action: ChatBotAction.Heartbeat;
-  modelInterface: ModelInterface;
-  data: {
-    sessionId: string;
-  };
-}
+// export interface ChatBotHeartbeatRequest {
+//   action: ChatBotAction.Heartbeat;
+//   modelInterface: ModelInterface;
+//   data: {
+//     sessionId: string;
+//   };
+// }
 
-export interface ChatBotRunRequest {
-  action: ChatBotAction.Run;
-  modelInterface: ModelInterface;
-  data: {
-    modelName: string;
-    provider: string;
-    sessionId: string;
-    files: ImageFile[] | null;
-    text: string;
-    mode: string;
-    workspaceId?: string;
-    modelKwargs?: Record<string, string | boolean | number>;
-  };
-}
+// export interface ChatBotRunRequest {
+//   action: ChatBotAction.Run;
+//   modelInterface: ModelInterface;
+//   data: {
+//     modelName: string;
+//     provider: string;
+//     sessionId: string;
+//     files: ImageFile[] | null;
+//     text: string;
+//     mode: string;
+//     workspaceId?: string;
+//     modelKwargs?: Record<string, string | boolean | number>;
+//   };
+// }
 
 export interface ChatBotToken {
   sequenceNumber: number;
