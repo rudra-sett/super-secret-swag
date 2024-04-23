@@ -17,7 +17,6 @@ import { ContentType } from "../chatbot/types";
 // }
 // export const useChatHandler = () => {
     
-    
 // }
 // export const SidebarCreateButton: FC<SideBarCreateButtonProps> = ({
 //     contentType,
@@ -27,6 +26,5 @@ import { ContentType } from "../chatbot/types";
 //     const { handleNewChat } useChatHandler() 
 
 // }
-
 
 // add in looping function similar to that in the models/index.ts that maps through and pushes 
