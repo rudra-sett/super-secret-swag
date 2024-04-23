@@ -106,4 +106,4 @@ export abstract class Labels {
   // }
 }
 
-export const CHATBOT_NAME = "MassHealth Enrollment Center Tool";
+export const CHATBOT_NAME = "MEC Knowledge Tool";
