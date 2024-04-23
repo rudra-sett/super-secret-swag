@@ -14,6 +14,7 @@ import { useContext, useState, useEffect } from "react";
 import { ApiClient } from "../common/api-client/api-client";
 import { CHATBOT_NAME } from "../common/constants";
 import { v4 as uuidv4 } from "uuid";
+import { Auth } from "aws-amplify";
 
 export default function NavigationPanel() {
   const appContext = useContext(AppContext);
@@ -28,7 +29,14 @@ export default function NavigationPanel() {
 
   useEffect(() => {
     async function loadSessions() {
-      const fetchedSessions = await apiClient.sessions.getSessions("29"); 
+      let username;
+      await Auth.currentAuthenticatedUser().then(user => {
+        username = user.username;
+      });
+      if (username === undefined) {
+        return;
+      }
+      const fetchedSessions = await apiClient.sessions.getSessions(username); 
       // console.log(fetchedSessions); 
       setSessions(fetchedSessions); 
       updateItems(fetchedSessions); 
