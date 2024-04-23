@@ -1,3 +1,5 @@
+import { Auth } from "aws-amplify";
+
 import {
   ChatBotHistoryItem,
   ChatBotMessageType,
@@ -52,10 +54,12 @@ export class SessionsClient {
   async getSessions(
     userId: string
   ) {
+    const auth = await this.authenticate();
     const response = await fetch('https://bu4z2a26c7.execute-api.us-east-1.amazonaws.com/user_session_handler', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'authorizationToken': auth, 
       },
       body: JSON.stringify({ "operation": "list_sessions_by_user_id", "user_id": userId })
     });
@@ -73,10 +77,12 @@ export class SessionsClient {
     sessionId: string,
     userId: string,
   ) : Promise<ChatBotHistoryItem[]> {
+    const auth = await this.authenticate();
     const response = await fetch("https://bu4z2a26c7.execute-api.us-east-1.amazonaws.com/user_session_handler", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'authorizationToken': auth, 
       },
       body: JSON.stringify({
         "operation": "get_session", "session_id": sessionId,
@@ -138,6 +144,17 @@ export class SessionsClient {
       return "FAILED";
     }
     return "DONE";
+  }
+
+  private async authenticate(): Promise<string> {
+    try {
+      const currentSession = await Auth.currentSession();
+      console.log('Auth token:', currentSession.getIdToken().getJwtToken());
+      return currentSession.getIdToken().getJwtToken();
+    } catch (error) {
+      console.error('Error getting current user session:', error);
+      throw new Error('Authentication failed');
+    }
   }
 
 }
