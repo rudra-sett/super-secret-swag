@@ -87,25 +87,9 @@ export default function ChatMessage(props: ChatMessageProps) {
         };
       };
     }
-    
-    const formatReadableLinks = (props: Props): string => {
-      // Extract the Sources array from the metadata
-      const sources: string[] = props.message.metadata.Sources;
-    
-      // Format each URL by stripping the "Link: " prefix and other potential formatting needs
-      const formattedSources: string[] = sources.map(source => {
-        // Optionally remove the "Link: " prefix if present
-        const cleanSource = source.replace(/^Link: /, '');
-        // Return the cleaned source
-        return cleanSource;
-      });
-    
-      // Join all sources into a single string, separated by new lines for readability
-      return formattedSources.join('\n');
-    };
     //const pathJ = JSON.parse(prop)
     // gives just the links and a string
-   // const jsonSources3 = (props.message.metadata.Sources as string[][]).map(source => `<a href="${source.trim().replace(/"/g, '')}" target="_blank">${source.trim().replace(/"/g, '')}</a>`)
+    // const jsonSources3 = (props.message.metadata.Sources as string[][]).map(source => `<a href="${source.trim().replace(/"/g, '')}" target="_blank">${source.trim().replace(/"/g, '')}</a>`)
     //.join('<br/>');
     // .map(source => `<a href="${source.trim().replace(/"/g, '')}" target="_blank">${source.trim().replace(/"/g, '')}</a>`));
     // const jsonSources2 = JSON.stringify(props.message.metadata.Sources as string[][])
