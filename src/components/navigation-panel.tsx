@@ -70,6 +70,7 @@ export default function NavigationPanel() {
       //   items: [
       //     { type: "link", text: "Chat", href: "/chatbot/playground" },
 
+<<<<<<< HEAD
       //   ],
       // },
       {
@@ -80,6 +81,18 @@ export default function NavigationPanel() {
           { type: "link", text: "Data", href: "/admin/data" }
         ],
       },
+=======
+        ],
+      },
+      // {
+      //   type: "section",
+      //   text: "Admin",
+      //   items: [
+      //     { type: "link", text: "Update Data", href: "/admin/add-data" },
+      //     { type: "link", text: "Data", href: "/admin/data" }
+      //   ],
+      // },
+>>>>>>> af7476b (removed admin & changed system prompt)
       {
         type: "section",
         text: "Session History",
