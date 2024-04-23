@@ -400,7 +400,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             5. **Diverse Functionality**: Beyond MassDOT-specific queries, you're equipped to handle generic tasks such as writing emails, summarizing information, creating checklists, and serving as a comprehensive knowledge hub.
             `,
             projectId: 'smjv012345',
-            user_id : "29",
+            user_id : username,
             session_id: props.session.id
           }
         });
