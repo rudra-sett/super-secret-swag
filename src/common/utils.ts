@@ -141,7 +141,7 @@ export class Utils {
       console.log(currentUser);
       console.log(currentSession);
       // token = 'Bearer ' + currentUser.signInUserSession.idToken.jwtToken
-      token = currentUser.idToken.jwtToken //currentSession.getAccessToken().getJwtToken(); 
+      token = currentUser.signInUserSession.idToken.jwtToken //currentSession.getAccessToken().getJwtToken(); 
 
       // currentUser.idToken.jwtToken
       
