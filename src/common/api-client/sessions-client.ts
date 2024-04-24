@@ -94,4 +94,26 @@ export class SessionsClient {
     return history;
   }
 
+  async deleteSession(
+    sessionId: string,
+    userId: string,
+  ) {
+    try {
+      const auth = await Utils.authenticate();
+      const response = await fetch(API + '/user_session_handler', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization' : auth
+        },
+        body: JSON.stringify({
+          "operation": "delete_session", "session_id": sessionId,
+          "user_id": userId
+        })
+      });
+    } catch {
+      return "FAILED";
+    }
+    return "DONE";
+  }
 }
