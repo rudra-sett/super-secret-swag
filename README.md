@@ -6,6 +6,11 @@ This repository serves as a base chatbot application that uses AWS products. The
 - MBTA
 - EEA
 
+# To run the app
+In the terminal
+- npm install
+- npm run dev
+
 ## Front-end
 The front-end of the base application is located in this repository. 
 To edit the user interface explore the /src/components and /src/pages/chatbot folders.
@@ -19,7 +24,6 @@ AWS Amplify
 - Connects to Github repository (Super-Secret-Swag), agency specific branches
 Cloudscape Design System
 - Front-end components to be used with the AWS suite of products
-
 
 ## Back-end
 The back-end code is a series of AWS lambda functions that serve as connectors between AWS services.
