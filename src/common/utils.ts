@@ -136,9 +136,11 @@ export class Utils {
       // console.log('ID token:', currentSession.getAccessToken().getJwtToken());
       console.log(Auth.currentSession())
       // console.log(Auth.currentSession())
-      // const currentUser = await Auth.currentAuthenticatedUser()
+      const currentUser = await Auth.currentAuthenticatedUser()
       // currentUser.
-      await Auth.currentAuthenticatedUser().then((value) => token = value.signInUserSession.idToken.jwtToken)
+      token = currentUser.signInUserSession.idToken.jwtToken
+
+      console.log("new token:", token)
       // return currentSession.getAccessToken().getJwtToken();
       return token
     } catch (error) {
