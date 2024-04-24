@@ -9,7 +9,7 @@ export class KnowledgeManagementClient {
     }
 
     // TODO: switch to API Gateway, add JWT
-    const lambdaUrl = 'https://rwhdthjaixihb3kmxcnpojeuli0giqhi.lambda-url.us-east-1.on.aws/';
+    const lambdaUrl = 'https://jv6j53ch22.execute-api.us-east-1.amazonaws.com/';
     try {
       const response = await fetch(lambdaUrl, {
         method: 'POST',
@@ -35,7 +35,7 @@ export class KnowledgeManagementClient {
   async getDocuments(continuationToken?: string, pageIndex?: number) {
 
     // TODO: switch to API Gateway
-    const response = await fetch('https://slyk7uahobntca2ysqvhgumsi40zmwsn.lambda-url.us-east-1.on.aws/', {
+    const response = await fetch('https://gmbr9qg0zk.execute-api.us-east-1.amazonaws.com/get-s3-bucket-data', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
