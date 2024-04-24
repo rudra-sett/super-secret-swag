@@ -131,9 +131,16 @@ export class Utils {
   static async authenticate(): Promise<string> {
     try {
       const currentSession = await Auth.currentSession();
-      console.log('Auth token:', currentSession.getAccessToken().getJwtToken());
-      console.log('ID token:', currentSession.getAccessToken().getJwtToken());
-      return currentSession.getAccessToken().getJwtToken();
+      let token = '';
+      // console.log('Auth token:', currentSession.getAccessToken().getJwtToken());
+      // console.log('ID token:', currentSession.getAccessToken().getJwtToken());
+      console.log(Auth.currentSession())
+      // console.log(Auth.currentSession())
+      // const currentUser = await Auth.currentAuthenticatedUser()
+      // currentUser.
+      await Auth.currentAuthenticatedUser().then((value) => token = value.signInUserSession.idToken.jwtToken)
+      // return currentSession.getAccessToken().getJwtToken();
+      return token
     } catch (error) {
       console.error('Error getting current user session:', error);
       throw new Error('Authentication failed');
