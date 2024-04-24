@@ -138,7 +138,8 @@ export class Utils {
       // console.log(Auth.currentSession())
       const currentUser = await Auth.currentAuthenticatedUser()
       // currentUser.
-      token = 'Bearer ' + currentUser.signInUserSession.idToken.jwtToken
+      // token = 'Bearer ' + currentUser.signInUserSession.idToken.jwtToken
+      token = (await Auth.currentSession()).getAccessToken().getJwtToken(); 
       // console.log("new token:", token)
       // return currentSession.getAccessToken().getJwtToken();
       return token
