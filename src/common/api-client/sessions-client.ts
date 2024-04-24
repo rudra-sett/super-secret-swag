@@ -29,7 +29,7 @@ export class SessionsClient {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': auth,
+        'Authorization': 'Bearer ' + auth,
       },
       body: JSON.stringify({ "operation": "list_sessions_by_user_id", "user_id": userId })
     });
@@ -52,7 +52,7 @@ export class SessionsClient {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': auth,
+        'Authorization': 'Bearer ' + auth,
       },
       body: JSON.stringify({
         "operation": "get_session", "session_id": sessionId,
@@ -104,7 +104,7 @@ export class SessionsClient {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': auth
+          'Authorization': 'Bearer ' + auth,
         },
         body: JSON.stringify({
           "operation": "delete_session", "session_id": sessionId,
