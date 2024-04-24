@@ -52,7 +52,7 @@ import {
   assembleHistory
 } from "./utils";
 // import { receiveMessages } from "../../graphql/subscriptions";
-// import { Utils } from "../../common/utils";
+import { Utils } from "../../common/utils";
 
 export interface ChatInputPanelProps {
   running: boolean;
@@ -381,7 +381,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       const TEST_URL = 'wss://caoyb4x42c.execute-api.us-east-1.amazonaws.com/test/';
 
       // Create a new WebSocket connection
-      const TOKEN = (await Auth.currentSession()).getAccessToken().getJwtToken()      
+      const TOKEN = Utils.authenticate();   
       // console.log(TOKEN)
       const wsUrl = TEST_URL+'?Authorization='+TOKEN;
       const ws = new WebSocket(wsUrl);

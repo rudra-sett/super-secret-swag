@@ -10,56 +10,21 @@ import {
 } from "../../components/chatbot/utils"
 
 import {
+  Utils
+} from "../utils"
+
+import {
   API
 } from "../constants"
 
 export class SessionsClient {
-
-  // Adds a new session (NOT USED)
-  async addSession(userId: string, sessionId: string, chatHistory: ChatBotHistoryItem[]) {
-    await fetch('https://bu4z2a26c7.execute-api.us-east-1.amazonaws.com/user_session_handler', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        "operation": "add_session",
-        "user_id": userId,
-        "session_id": sessionId,
-        "chat_history": assembleHistory(chatHistory)
-      })
-    });
-  }
-
-  // Updates the current session (NOT USED)
-  async updateSession(userId: string, sessionId: string, chatHistory: ChatBotHistoryItem[]) {
-    console.log("updating session...")
-    const response = await fetch('https://bu4z2a26c7.execute-api.us-east-1.amazonaws.com/user_session_handler', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        "operation": "update_session",
-        "user_id": userId,
-        "session_id": sessionId,
-        "chat_history": assembleHistory(chatHistory)
-      })
-    });
-    const reader = response.body.getReader();
-    const { value, done } = await reader.read();
-    const decoder = new TextDecoder();
-    const output = decoder.decode(value);
-    // console.log(JSON.parse(output));
-    // return JSON.parse(output);
-  }
 
   // Gets all sessions tied to a given user ID
   // Return format: [{"session_id" : "string", "user_id" : "string", "time_stamp" : "dd/mm/yy", "title" : "string"}...]
   async getSessions(
     userId: string
   ) {
-    const auth = await this.authenticate();
+    const auth = await Utils.authenticate();
     const response = await fetch(API + '/user-session', {
       method: 'POST',
       headers: {
@@ -82,7 +47,7 @@ export class SessionsClient {
     sessionId: string,
     userId: string,
   ) : Promise<ChatBotHistoryItem[]> {
-    const auth = await this.authenticate();
+    const auth = await Utils.authenticate();
     const response = await fetch(API + '/user-session', {
       method: 'POST',
       headers: {
@@ -127,39 +92,6 @@ export class SessionsClient {
     })
     // console.log(history);
     return history;
-  }
-
-  // Deletes a given session based on session ID and user ID (NOT USED)
-  async deleteSession(
-    sessionId: string,
-    userId: string,
-  ) {
-    try {
-      const response = await fetch('https://bu4z2a26c7.execute-api.us-east-1.amazonaws.com/user_session_handler', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          "operation": "delete_session", "session_id": sessionId,
-          "user_id": userId
-        })
-      });
-    } catch {
-      return "FAILED";
-    }
-    return "DONE";
-  }
-
-  private async authenticate(): Promise<string> {
-    try {
-      const currentSession = await Auth.currentSession();
-      console.log('Auth token:', currentSession.getAccessToken().getJwtToken());
-      return currentSession.getIdToken().getJwtToken();
-    } catch (error) {
-      console.error('Error getting current user session:', error);
-      throw new Error('Authentication failed');
-    }
   }
 
 }

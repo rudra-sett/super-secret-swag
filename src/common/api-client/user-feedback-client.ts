@@ -1,4 +1,5 @@
-import { Auth } from "aws-amplify";
+import {Utils} from "../utils"
+import {API} from "../constants"
 
 export class UserFeedbackClient {
 
@@ -6,25 +7,15 @@ export class UserFeedbackClient {
   async sendUserFeedback(feedbackData) {
 
     // TODO: use API Gateway
-    const auth = await this.authenticate();
-    const response = await fetch('https://4eyjyb4lqouzyvvvs5fh6zwwse0spnhw.lambda-url.us-east-1.on.aws/', {
+    const auth = await Utils.authenticate();
+    const response = await fetch(API + '/user-feedback', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'authorizationToken': auth, 
+        'Authorization': auth, 
       },
       body: JSON.stringify({ feedbackData })
     });
   }
 
-  private async authenticate(): Promise<string> {
-    try {
-      const currentSession = await Auth.currentSession();
-      console.log('Auth token:', currentSession.getIdToken().getJwtToken());
-      return currentSession.getIdToken().getJwtToken();
-    } catch (error) {
-      console.error('Error getting current user session:', error);
-      throw new Error('Authentication failed');
-    }
-  }
 }

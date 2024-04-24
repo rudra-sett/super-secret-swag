@@ -1,3 +1,4 @@
+import {Auth} from 'aws-amplify'
 export class Utils {
   // static isDevelopment() {
   //   return import.meta.env.MODE === "development";
@@ -125,5 +126,16 @@ export class Utils {
     );
 
     return result !== null;
+  }
+
+  static async authenticate(): Promise<string> {
+    try {
+      const currentSession = await Auth.currentSession();
+      console.log('Auth token:', currentSession.getAccessToken().getJwtToken());
+      return currentSession.getIdToken().getJwtToken();
+    } catch (error) {
+      console.error('Error getting current user session:', error);
+      throw new Error('Authentication failed');
+    }
   }
 }
