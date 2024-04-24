@@ -134,12 +134,11 @@ export class Utils {
       let token = '';
       // console.log('Auth token:', currentSession.getAccessToken().getJwtToken());
       // console.log('ID token:', currentSession.getAccessToken().getJwtToken());
-      console.log(Auth.currentSession())
+      // console.log(Auth.currentSession())
       // console.log(Auth.currentSession())
       const currentUser = await Auth.currentAuthenticatedUser()
       // currentUser.
-      token = currentUser.signInUserSession.idToken.jwtToken
-
+      token = 'Bearer ' + currentUser.signInUserSession.idToken.jwtToken
       console.log("new token:", token)
       // return currentSession.getAccessToken().getJwtToken();
       return token
