@@ -381,7 +381,8 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       const TEST_URL = 'wss://caoyb4x42c.execute-api.us-east-1.amazonaws.com/test/';
 
       // Create a new WebSocket connection
-      const TOKEN = Utils.authenticate();   
+      const TOKEN = (await Auth.currentSession()).getAccessToken().getJwtToken()  
+          
       // console.log(TOKEN)
       const wsUrl = TEST_URL+'?Authorization='+TOKEN;
       const ws = new WebSocket(wsUrl);
