@@ -130,7 +130,7 @@ export class Utils {
 
   static async authenticate(): Promise<string> {
     try {
-      const currentSession = await Auth.currentSession();
+      // const currentSession = await Auth.currentSession();
       let token = '';
       // console.log('Auth token:', currentSession.getAccessToken().getJwtToken());
       // console.log('ID token:', currentSession.getAccessToken().getJwtToken());
@@ -138,9 +138,11 @@ export class Utils {
       // console.log(await Auth.currentSession())
       const currentUser = await Auth.currentAuthenticatedUser()
       // currentUser.
-      console.log(currentUser);
-      console.log(currentSession);
+      // console.log(currentUser);
+      // console.log(currentSession);
       // token = 'Bearer ' + currentUser.signInUserSession.idToken.jwtToken
+      
+      // for some reason
       token = currentUser.signInUserSession.idToken.jwtToken //currentSession.getAccessToken().getJwtToken(); 
 
       // currentUser.idToken.jwtToken
