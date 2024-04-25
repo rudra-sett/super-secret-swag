@@ -6,7 +6,7 @@ import {
   FeedbackData,
 } from "./types";
 import { Auth } from "aws-amplify";
-import { SpaceBetween, StatusIndicator } from "@cloudscape-design/components";
+import { SpaceBetween, StatusIndicator, Alert } from "@cloudscape-design/components";
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
@@ -112,8 +112,14 @@ export default function Chat(props: { sessionId?: string }) {
   }
 
   return (
-    <div className={styles.chat_container}>
+    <div className={styles.chat_container}>      
       <SpaceBetween direction="vertical" size="m">
+      <Alert
+          statusIconAriaLabel="Info"
+          header=""
+       >
+        AI Models can make mistakes. Be mindful in validating important information.
+      </Alert>
         {messageHistory.map((message, idx) => (
           <ChatMessage
             key={idx}
