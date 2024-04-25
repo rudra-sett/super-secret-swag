@@ -1,8 +1,8 @@
 
-  export class ComprehendMedicalClient {
-    async redactText(userInput: string) {
-        try
-    {    console.log("inside the comprehend medical client")
+export class ComprehendMedicalClient {
+  async redactText(userInput: string) {
+    try {
+      console.log("inside the comprehend medical client")
       const response = await fetch('https://e19sa7nke1.execute-api.us-east-1.amazonaws.com/default/', {
         method: 'POST',
         headers: {

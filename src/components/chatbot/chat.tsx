@@ -5,7 +5,8 @@ import {
   ChatBotMessageType,
   FeedbackData,
 } from "./types";
-import { SpaceBetween, StatusIndicator } from "@cloudscape-design/components";
+import { Auth } from "aws-amplify";
+import { SpaceBetween, StatusIndicator, Alert } from "@cloudscape-design/components";
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
@@ -50,10 +51,13 @@ export default function Chat(props: { sessionId?: string }) {
       const apiClient = new ApiClient(appContext);
       try {
         // const result = await apiClient.sessions.getSession(props.sessionId);
-        const hist = await apiClient.sessions.getSession(props.sessionId,"0");
+        let username;
+        await Auth.currentAuthenticatedUser().then((value) => username = value.username);
+        if (!username) return;
+        const hist = await apiClient.sessions.getSession(props.sessionId,username);
 
         if (hist) {
-          console.log(hist);
+          // console.log(hist);
           ChatScrollState.skipNextHistoryUpdate = true;
           ChatScrollState.skipNextScrollEvent = true;
           // console.log("History", result.data.getSession.history);
@@ -62,7 +66,7 @@ export default function Chat(props: { sessionId?: string }) {
               .filter((x) => x !== null)
               .map((x) => ({
                 type: x!.type as ChatBotMessageType,
-                metadata: {}, //JSON.parse(x!.metadata!),
+                metadata: x!.metadata!,
                 content: x!.content,
               }))
           );
@@ -108,8 +112,14 @@ export default function Chat(props: { sessionId?: string }) {
   }
 
   return (
-    <div className={styles.chat_container}>
+    <div className={styles.chat_container}>      
       <SpaceBetween direction="vertical" size="m">
+      <Alert
+          statusIconAriaLabel="Info"
+          header=""
+       >
+        AI Models can make mistakes. Be mindful in validating important information.
+      </Alert>
         {messageHistory.map((message, idx) => (
           <ChatMessage
             key={idx}

@@ -10,6 +10,10 @@ import {
   Tabs,
   TextContent,
   Textarea,
+  Cards,
+  SpaceBetween,
+  Header,
+  Link
 } from "@cloudscape-design/components";
 import { useEffect, useState } from "react";
 import { JsonView, darkStyles } from "react-json-view-lite";
@@ -82,7 +86,7 @@ export default function ChatMessage(props: ChatMessageProps) {
               (props.message.metadata &&
                 props.configuration?.showMetadata)) && (
               <ExpandableSection variant="footer" headerText="Sources">
-                <JsonView
+                {/* <JsonView
                   shouldInitiallyExpand={(level) => level < 2}
                   data={JSON.parse(
                     JSON.stringify(props.message.metadata).replace(
@@ -98,6 +102,45 @@ export default function ChatMessage(props: ChatMessageProps) {
                     nullValue: "jsonNull",
                     container: "jsonContainer",
                   }}
+                /> */}
+                <Cards
+                  // ariaLabels={{
+                  //   itemSelectionLabel: (e, t) => `select ${t.name}`,
+                  //   selectionGroupLabel: "Item selection"
+                  // }}
+                  cardDefinition={{
+                    header: item => (
+                      <Link href={item.uri} fontSize="body-s">
+                        {item.title}
+                      </Link>
+                    ),
+                    // sections: [
+                    //   {
+                    //     id: "date",
+                    //     header: "Date",
+                    //     content: item => item.date
+                    //   },                      
+                    // ]
+                  }}
+                  cardsPerRow={[
+                    { cards: 1 },
+                    { minWidth: 500, cards: 3 }
+                  ]}
+                  items={props.message.metadata.Sources as any[]}
+                  loadingText="Loading sources..."
+                  empty={
+                    <Box
+                      margin={{ vertical: "xs" }}
+                      textAlign="center"
+                      color="inherit"
+                    >
+                      <SpaceBetween size="m">
+                        <b>No resources</b>
+                        <Button>Create resource</Button>
+                      </SpaceBetween>
+                    </Box>
+                  }
+                  // header={<Header>Example Cards</Header>}
                 />
                 {props.message.metadata.documents && (
                   <>
@@ -172,7 +215,7 @@ export default function ChatMessage(props: ChatMessageProps) {
                           onClick={() => {
                             navigator.clipboard.writeText(
                               (props.message.metadata.prompts as string[][])[
-                                parseInt(promptIndex)
+                              parseInt(promptIndex)
                               ][0]
                             );
                           }}
@@ -184,12 +227,11 @@ export default function ChatMessage(props: ChatMessageProps) {
                         (p, i) => {
                           return {
                             id: `${i}`,
-                            label: `Prompt ${
-                              (props.message.metadata.prompts as string[][])
+                            label: `Prompt ${(props.message.metadata.prompts as string[][])
                                 .length > 1
                                 ? i + 1
                                 : ""
-                            }`,
+                              }`,
                             content: (
                               <>
                                 <Textarea

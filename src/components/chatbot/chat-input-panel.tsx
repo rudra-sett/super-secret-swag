@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
+import { Auth } from "aws-amplify";
 import TextareaAutosize from "react-textarea-autosize";
 import { ReadyState } from "react-use-websocket";
 // import WebSocket from 'ws';
@@ -51,7 +52,9 @@ import {
   assembleHistory
 } from "./utils";
 // import { receiveMessages } from "../../graphql/subscriptions";
-// import { Utils } from "../../common/utils";
+import { Utils } from "../../common/utils";
+
+
 
 export interface ChatInputPanelProps {
   running: boolean;
@@ -343,7 +346,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     if (readyState !== ReadyState.OPEN) return;
     ChatScrollState.userHasScrolled = false;
 
-
+    let username;
+    await Auth.currentAuthenticatedUser().then((value) => username = value.username);
+    if (!username) return;
     // const readline = require('readline').createInterface({
     //   input: process.stdin,
     //   output: process.stdout
@@ -351,8 +356,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
 
     let messageToSend = state.value.trim();
     console.log(messageToSend);
-    messageToSend  = await apiClient.comprehendMedical.redactText(messageToSend);
-    console.log(messageToSend);
+    messageToSend  = await apiClient.comprehendMedicalClient.redactText(messageToSend);
+
+    
     setState({ value: "" });
     try {
       props.setRunning(true);
@@ -377,8 +383,14 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       ];
       props.setMessageHistory(messageHistoryRef.current);
 
-      const wsUrl = 'wss://ngdpdxffy0.execute-api.us-east-1.amazonaws.com/test/';
+      // const wsUrl = 'wss://ngdpdxffy0.execute-api.us-east-1.amazonaws.com/test/';      
+      const TEST_URL = 'wss://caoyb4x42c.execute-api.us-east-1.amazonaws.com/test/';
+
       // Create a new WebSocket connection
+      const TOKEN = (await Auth.currentSession()).getAccessToken().getJwtToken()  
+          
+      // console.log(TOKEN)
+      const wsUrl = TEST_URL+'?Authorization='+TOKEN;
       const ws = new WebSocket(wsUrl);
 
       let incomingMetadata : boolean = false;
@@ -396,7 +408,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           Answer questions based on your knowledge and nothing more. If you are unable to decisively answer a question, say that you do not have the neccessary information to answer the question.
           Do not make up information outside of your given information. If asked a question that hase multiple information sources, provide the lastest and most up to date information`,
             projectId: 'vgbt420420',
-            user_id : "0",
+            user_id : username,
             session_id: props.session.id
           }
         });
@@ -445,7 +457,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             metadata: sources,
           },
         ];
-        console.log(messageHistoryRef.current)
+        // console.log(messageHistoryRef.current)
         props.setMessageHistory(messageHistoryRef.current);
         // if (data.data == '') {
         //   ws.close()

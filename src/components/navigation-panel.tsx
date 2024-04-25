@@ -3,68 +3,67 @@ import {
   SideNavigationProps,
   Header,
   Button,
+  Box,
   SpaceBetween,
 } from "@cloudscape-design/components";
 import useOnFollow from "../common/hooks/use-on-follow";
 import { useNavigationPanelState } from "../common/hooks/use-navigation-panel-state";
 import { AppContext } from "../common/app-context";
-import PencilSquareIcon from "../../public/images/pencil-square.jsx"; 
-import  RouterButton from "../components/wrappers/router-button"; 
+import PencilSquareIcon from "../../public/images/pencil-square.jsx";
+import RouterButton from "../components/wrappers/router-button";
 import { useContext, useState, useEffect } from "react";
 import { ApiClient } from "../common/api-client/api-client";
 import { CHATBOT_NAME } from "../common/constants";
+import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
 
 export default function NavigationPanel() {
   const appContext = useContext(AppContext);
-  // const uid = ; 
-  const apiClient = new ApiClient(appContext); 
+  const apiClient = new ApiClient(appContext);
   const onFollow = useOnFollow();
   const [navigationPanelState, setNavigationPanelState] =
     useNavigationPanelState();
+  const [items, setItems] = useState<SideNavigationProps.Item[]>([]);
 
-  const [sessions, setSessions] = useState<any[]>([]);
-  const[items, setItems] = useState<SideNavigationProps.Item[]>([]); 
-
+  // update the list of sessions every now and then
   useEffect(() => {
     async function loadSessions() {
-      const fetchedSessions = await apiClient.sessions.getSessions("0"); 
-      // console.log(fetchedSessions); 
-      // setSessions(fetchedSessions); 
-       updateItems(fetchedSessions); 
+      let username;
+      await Auth.currentAuthenticatedUser().then((value) => username = value.username);
+      if (username) {
+        const fetchedSessions = await apiClient.sessions.getSessions(username);
+        updateItems(fetchedSessions);
+      }
     }
-   // hit console.log("pong"); 
 
-   const interval = setInterval(loadSessions, 1000);
-   // loadSessions();
+    const interval = setInterval(loadSessions, 1000);
+    // loadSessions();
 
     return () => clearInterval(interval);
     // loadSessions(); 
-  }, [apiClient]); 
+  }, [apiClient]);
 
- //  const [items, setItems] = useState<SideNavigationProps.Item[]>
- // const [items] = useState<SideNavigationProps.Item[]>(() => {
+  // helper function to update items
   const updateItems = (sessions: any[]) => {
-    // console.log("hit the update button")
     const newItems: SideNavigationProps.Item[] = [
-      {
-        type: "link",
-        text: "Home",
-        href: "/",
-      },
       // {
       //   type: "link",
-      //   text: "New Session", 
-      //   href: `/chatbot/playground/${uuidv4()}`,
+      //   text: "Home",
+      //   href: "/",
       // },
-      {
-        type: "section",
-        text: "Chatbot",
-        items: [
-          { type: "link", text: "Chat", href: "/chatbot/playground" },
+      // // {
+      // //   type: "link",
+      // //   text: "New Session", 
+      // //   href: `/chatbot/playground/${uuidv4()}`,
+      // // },
+      // {
+      //   type: "section",
+      //   text: "Chatbot",
+      //   items: [
+      //     { type: "link", text: "Chat", href: "/chatbot/playground" },
 
-        ],
-      },
+      //   ],
+      // },
       {
         type: "section",
         text: "Admin",
@@ -76,41 +75,24 @@ export default function NavigationPanel() {
       {
         type: "section",
         text: "Session History",
-        items: sessions.map(session => ({ 
-           type: "link", 
-           text: `${session.title}`, 
-           href: `/chatbot/playground/${session.session_id}`,
-          })), 
-      }, 
-    ]; 
-     setItems(newItems); 
+        items: sessions.map(session => ({
+          type: "link",
+          text: `${session.title}`,
+          href: `/chatbot/playground/${session.session_id}`,
+        })),
+      },
+    ];
+    setItems(newItems);
     // console.log("pong")
-   // return items; 
+    // return items; 
   };
-
-
-  // useEffect(() => {
-  //   setItems(prevItems => {
-  //     const newItems = [...prevItems]; 
-  //     const sessionIndex = newItems.findIndex(item => item.type === "section" && item.text === "Session History");
-
-  //     if (sessionIndex !== -1 && newItems[sessionIndex].type === "section") {
-  //       newItems[sessionIndex].items = sessions.map(session => ({
-  //         type: "link",
-  //         text: `Session ${session.session_id}`,
-  //         href: `/chatbot/sessions/${session.session_id}`
-  //       }));
-  //     }
-  //     return newItems; 
-  //   }); 
-  // }, [sessions]); 
 
   const onChange = ({
     detail,
   }: {
     detail: SideNavigationProps.ChangeDetail;
   }) => {
-   // const sectionIndex = items.findIndex(detail.item);
+    // const sectionIndex = items.findIndex(detail.item);
     const sectionIndex = items.indexOf(detail.item);
     setNavigationPanelState({
       collapsedSections: {
@@ -122,54 +104,61 @@ export default function NavigationPanel() {
 
   return (
     <div>
-      <div style={{justifyContent: 'center'}}> 
-      <Header >
-        MEC Knowledge Tool
-      </Header>
+      {/* <div style={{ justifyContent: 'center' }}>
+        <Header >
+          MBTA The RIDE Guide AI
+        </Header>
       </div>
-    
-      <div style={{display: 'flex', justifyContent: 'center' }}> 
-      <RouterButton
-        iconAlign="right"
-        iconSvg={<PencilSquareIcon />}
-        variant="primary"
-        href={`/chatbot/playground/${uuidv4()}`}
-  >
-    New session
-  </RouterButton>
-      
+
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <RouterButton
+          iconAlign="right"
+          iconSvg={<PencilSquareIcon />}
+          variant="primary"
+          href={`/chatbot/playground/${uuidv4()}`}
+        >
+          New session
+        </RouterButton>
+
       </div>
-     <Header> 
-       <RouterButton
-         iconAlign="right"
-         iconSvg= {<PencilSquareIcon />}
-         variant="primary"
-         href={`/chatbot/playground/${uuidv4()}`}
-         data-alignment= "right"
-         className="new-chat-button"
-         style = {{textAlign: "right"}}
-         >
-         New session
-         
-       </RouterButton>
-        
-       </Header>
-    <SideNavigation
+      <Header>
+        <RouterButton
+          iconAlign="right"
+          iconSvg={<PencilSquareIcon />}
+          variant="primary"
+          href={`/chatbot/playground/${uuidv4()}`}
+          data-alignment="right"
+          className="new-chat-button"
+          style={{ textAlign: "right" }}
+        >
+          New session
+
+        </RouterButton>
+
+      </Header> */}
+      {/* <SpaceBetween alignItems="center" size="s"> */}
+      <Box margin="xs" padding="xs" textAlign="center">
+        <RouterButton
+          iconAlign="right"
+          iconSvg={<PencilSquareIcon />}
+          variant="primary"
+          href={`/chatbot/playground/${uuidv4()}`}
+          data-alignment="right"
+          className="new-chat-button"
+          style={{ textAlign: "right" }}
+        >
+          New session
+
+        </RouterButton>
+        </Box>
+      {/* </SpaceBetween> */}
+      <SideNavigation
         onFollow={onFollow}
         onChange={onChange}
-        header={{ href: "/", text: " " }}
-        items = {items}
-        // items={items.map((value, idx) => {
-        //   if (value.type === "section") {
-        //     const collapsed = navigationPanelState.collapsedSections?.[idx] === true;
-        //     value.defaultExpanded = !collapsed;
-        //   }
-
-        //   return value;
-        // })} 
-        // // items={items}
-        />
-        </div>
+        // header={{ href: "/", text: "The Ride Guide AI" }}
+        items={items}   
+      />
+    </div>
   );
 }
 
