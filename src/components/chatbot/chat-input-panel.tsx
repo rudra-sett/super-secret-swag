@@ -54,6 +54,8 @@ import {
 // import { receiveMessages } from "../../graphql/subscriptions";
 import { Utils } from "../../common/utils";
 
+
+
 export interface ChatInputPanelProps {
   running: boolean;
   setRunning: Dispatch<SetStateAction<boolean>>;
@@ -352,7 +354,11 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     //   output: process.stdout
     // });    
 
-    const messageToSend = state.value.trim();
+    let messageToSend = state.value.trim();
+    console.log(messageToSend);
+    messageToSend  = await apiClient.comprehendMedicalClient.redactText(messageToSend);
+
+    
     setState({ value: "" });
     try {
       props.setRunning(true);
@@ -398,15 +404,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           "data": {
             userMessage: messageToSend,
             chatHistory: assembleHistory(messageHistoryRef.current.slice(0, -2)),
-            systemPrompt: `You are an AI chatbot for the RIDE, an MBTA paratransit service. You will help customer service representatives respond to user complaints and queries.
-          Answer questions based on your knowledge and nothing more. If you are unable to decisively answer a question, direct them to customer service. Do not make up information outside of your given information.
-          Customer service is needed if it is something you cannot answer. Requests for fare history require customer service, as do service complaints like a rude driver or late pickup.
-          Highly-specific situations will also require customer service to step in. Remember that RIDE Flex and RIDE are not the same service. 
-          Phone numbers:
-          TRAC (handles scheduling/booking, trip changes/cancellations, anything time-sensitive): 844-427-7433 (voice/relay) 857-206-6569 (TTY)
-          Mobility Center (handles eligibility questions, renewals, and changes to mobility status): 617-337-2727 (voice/relay)
-          MBTA Customer support (handles all other queries): 617-222-3200 (voice/relay)`,
-            projectId: 'rsrs111111',
+            systemPrompt: `You are an AI chatbot for the MassHealth Enrollment Center. You will help customer service representatives respond to user complaints and queries.
+          Answer questions based on your knowledge and nothing more. If you are unable to decisively answer a question, say that you do not have the neccessary information to answer the question. Do not make up information outside of your given information and provide citations of where you got said information.`,
+            projectId: 'vgbt420420',
             user_id : username,
             session_id: props.session.id
           }
@@ -419,7 +419,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       });
       // Event listener for incoming messages
       ws.addEventListener('message', async function incoming(data) {
-        // console.log(data);        
+        console.log(data);        
         if (data.data == '!<|EOF_STREAM|>!') {
           // await apiClient.sessions.updateSession(props.session.id, "0", messageHistoryRef.current);
           // ws.close();

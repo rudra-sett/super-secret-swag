@@ -15,7 +15,6 @@ export class KnowledgeManagementClient {
       alert('Must have valid file type!');
       return;
     }
-
     try {
       const auth = await Utils.authenticate();
       const response = await fetch(API + '/signed-url', {
