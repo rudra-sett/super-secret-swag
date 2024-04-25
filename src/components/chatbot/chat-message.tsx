@@ -110,8 +110,8 @@ export default function ChatMessage(props: ChatMessageProps) {
                   // }}
                   cardDefinition={{
                     header: item => (
-                      <Link href={item} fontSize="body-s">
-                        {item}
+                      <Link href={item.uri} fontSize="body-s">
+                        {item.title}
                       </Link>
                     ),
                     // sections: [
@@ -126,7 +126,7 @@ export default function ChatMessage(props: ChatMessageProps) {
                     { cards: 1 },
                     { minWidth: 500, cards: 3 }
                   ]}
-                  items={props.message.metadata.Sources as string[]}
+                  items={props.message.metadata.Sources as any[]}
                   loadingText="Loading sources..."
                   empty={
                     <Box

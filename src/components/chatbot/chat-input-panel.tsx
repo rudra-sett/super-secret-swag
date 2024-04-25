@@ -52,7 +52,7 @@ import {
   assembleHistory
 } from "./utils";
 // import { receiveMessages } from "../../graphql/subscriptions";
-// import { Utils } from "../../common/utils";
+import { Utils } from "../../common/utils";
 
 
 
@@ -383,8 +383,14 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       ];
       props.setMessageHistory(messageHistoryRef.current);
 
-      const wsUrl = 'wss://ngdpdxffy0.execute-api.us-east-1.amazonaws.com/test/';
+      // const wsUrl = 'wss://ngdpdxffy0.execute-api.us-east-1.amazonaws.com/test/';      
+      const TEST_URL = 'wss://caoyb4x42c.execute-api.us-east-1.amazonaws.com/test/';
+
       // Create a new WebSocket connection
+      const TOKEN = (await Auth.currentSession()).getAccessToken().getJwtToken()  
+          
+      // console.log(TOKEN)
+      const wsUrl = TEST_URL+'?Authorization='+TOKEN;
       const ws = new WebSocket(wsUrl);
 
       let incomingMetadata : boolean = false;
