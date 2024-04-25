@@ -114,37 +114,39 @@ export default function NavigationPanel() {
 
   return (
     <div>
-      <Box margin="xs" padding={{ top: "l" }} textAlign="center">
-        <RouterButton
-          iconAlign="right"
-          iconSvg={<PencilSquareIcon />}
-          variant="primary"
-          href={`/chatbot/playground/${uuidv4()}`}
-          data-alignment="right"
-          className="new-chat-button"
-          style={{ textAlign: "right"}}
-        >
-          New session
-        </RouterButton>
-      </Box>
-      {/* <SpaceBetween alignItems="center" size="s"> */}
-      <Box margin="xs" padding="xs" textAlign="center">
-        <RouterButton
-          iconAlign="right"
-          iconSvg={<PencilSquareIcon />}
-          variant="primary"
-          href={`/chatbot/playground/${uuidv4()}`}
-          data-alignment="right"
-          className="new-chat-button"
-          style={{ textAlign: "right" }}
-        >
-          New session
-
-        </RouterButton>
-        </Box>
-      {/* </SpaceBetween> */}
-      {loaded ?
-      <SideNavigation
+      <div style={{justifyContent: 'center'}}> 
+      <Header >
+        MEC Knowledge Tool
+      </Header>
+      </div>
+    
+      <div style={{display: 'flex', justifyContent: 'center' }}> 
+      <RouterButton
+        iconAlign="right"
+        iconSvg={<PencilSquareIcon />}
+        variant="primary"
+        href={`/chatbot/playground/${uuidv4()}`}
+  >
+    New session
+  </RouterButton>
+      
+      </div>
+     <Header> 
+       <RouterButton
+         iconAlign="right"
+         iconSvg= {<PencilSquareIcon />}
+         variant="primary"
+         href={`/chatbot/playground/${uuidv4()}`}
+         data-alignment= "right"
+         className="new-chat-button"
+         style = {{textAlign: "right"}}
+         >
+         New session
+         
+       </RouterButton>
+        
+       </Header>
+    <SideNavigation
         onFollow={onFollow}
         onChange={onChange}
         // header={{ href: "/", text: "The Ride Guide AI" }}
