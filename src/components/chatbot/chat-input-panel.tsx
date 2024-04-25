@@ -349,7 +349,10 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     //   output: process.stdout
     // });    
 
-    const messageToSend = state.value.trim();
+    let messageToSend = state.value.trim();
+    console.log(messageToSend);
+    messageToSend  = await apiClient.comprehendMedical.redactText(messageToSend);
+    console.log(messageToSend);
     setState({ value: "" });
     try {
       props.setRunning(true);
@@ -390,7 +393,8 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             userMessage: messageToSend,
             chatHistory: assembleHistory(messageHistoryRef.current.slice(0, -2)),
             systemPrompt: `You are an AI chatbot for the MassHealth Enrollment Center. You will help customer service representatives respond to user complaints and queries.
-          Answer questions based on your knowledge and nothing more. If you are unable to decisively answer a question, say that you do not have the neccessary information to answer the question. Do not make up information outside of your given information and provide citations of where you got said information.`,
+          Answer questions based on your knowledge and nothing more. If you are unable to decisively answer a question, say that you do not have the neccessary information to answer the question.
+          Do not make up information outside of your given information. If asked a question that hase multiple information sources, provide the lastest and most up to date information`,
             projectId: 'vgbt420420',
             user_id : "0",
             session_id: props.session.id

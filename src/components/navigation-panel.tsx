@@ -124,7 +124,7 @@ export default function NavigationPanel() {
     <div>
       <div style={{justifyContent: 'center'}}> 
       <Header >
-        MBTA The RIDE Guide AI
+        MEC Knowledge Tool
       </Header>
       </div>
     
