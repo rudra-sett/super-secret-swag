@@ -44,14 +44,14 @@ export default function Playground() {
       
       <Chat sessionId={sessionId} />
       </div>
-    </div>
+    }/>
   );
 
-  return (
-    <BaseAppLayout
-      content={mainContent}  // Passing the new main content structure
-    />
-  );
+  // return (
+  //   <BaseAppLayout
+  //     content={mainContent}  // Passing the new main content structure
+  //   />
+  // );
 }
 
 //   return (
