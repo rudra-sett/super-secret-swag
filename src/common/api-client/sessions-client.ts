@@ -91,7 +91,7 @@ export class SessionsClient {
     // console.log(decoder.decode(value));    
     const output = JSON.parse(decoder.decode(value)).chat_history! as any[];
     let history: ChatBotHistoryItem[] = [];
-    console.log(output);
+    // console.log(output);
     if (output === undefined) {
       return history;
     }
@@ -114,7 +114,7 @@ export class SessionsClient {
         metadata: metadata,
       },)
     })
-    console.log(history);
+    // console.log(history);
     return history;
   }
 

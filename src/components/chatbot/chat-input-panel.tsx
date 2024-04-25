@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
+import { Auth } from "aws-amplify";
 import TextareaAutosize from "react-textarea-autosize";
 import { ReadyState } from "react-use-websocket";
 // import WebSocket from 'ws';
@@ -343,13 +344,16 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     if (readyState !== ReadyState.OPEN) return;
     ChatScrollState.userHasScrolled = false;
 
-
+    let username;
+    await Auth.currentAuthenticatedUser().then((value) => username = value.username);
+    if (!username) return;
     // const readline = require('readline').createInterface({
     //   input: process.stdin,
     //   output: process.stdout
     // });    
 
-    const messageToSend = state.value.trim();
+  
+    
     setState({ value: "" });
     try {
       props.setRunning(true);
@@ -441,7 +445,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             metadata: sources,
           },
         ];
-        console.log(messageHistoryRef.current)
+        // console.log(messageHistoryRef.current)
         props.setMessageHistory(messageHistoryRef.current);
         // if (data.data == '') {
         //   ws.close()
