@@ -5,6 +5,7 @@ import {
   Button,
   Box,
   SpaceBetween,
+  StatusIndicator
 } from "@cloudscape-design/components";
 import useOnFollow from "../common/hooks/use-on-follow";
 import { useNavigationPanelState } from "../common/hooks/use-navigation-panel-state";
@@ -24,6 +25,7 @@ export default function NavigationPanel() {
   const [navigationPanelState, setNavigationPanelState] =
     useNavigationPanelState();
   const [items, setItems] = useState<SideNavigationProps.Item[]>([]);
+  const [loaded,setLoaded] = useState<boolean>(false);
 
   // update the list of sessions every now and then
   useEffect(() => {
@@ -33,6 +35,9 @@ export default function NavigationPanel() {
       if (username) {
         const fetchedSessions = await apiClient.sessions.getSessions(username);
         updateItems(fetchedSessions);
+        if (!loaded) {
+          setLoaded(true);
+        }
       }
     }
 
@@ -152,12 +157,13 @@ export default function NavigationPanel() {
         </RouterButton>
         </Box>
       {/* </SpaceBetween> */}
+      {loaded ?
       <SideNavigation
         onFollow={onFollow}
         onChange={onChange}
         // header={{ href: "/", text: "The Ride Guide AI" }}
         items={items}   
-      />
+      /> : <StatusIndicator type="loading">Loading</StatusIndicator>}
     </div>
   );
 }
