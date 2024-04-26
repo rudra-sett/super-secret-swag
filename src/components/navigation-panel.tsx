@@ -163,7 +163,10 @@ export default function NavigationPanel() {
         onChange={onChange}
         // header={{ href: "/", text: "The Ride Guide AI" }}
         items={items}   
-      /> : <StatusIndicator type="loading">Loading</StatusIndicator>}
+      /> : 
+      <Box margin="xs" padding="xs" textAlign="center">
+        <StatusIndicator type="loading">Loading sessions...</StatusIndicator>
+      </Box>}
     </div>
   );
 }
