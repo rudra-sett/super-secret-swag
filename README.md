@@ -5,8 +5,9 @@ This repository serves as a base chatbot application that uses AWS products. The
 - MassHealth
 - MBTA
 - EEA
+Created with tools from the AWS suite, the project references a custom Kendra database along with a specified prompt fed through a LLM from AWS Bedrock to produce chat responses. Features include logging of session history which can be managed on the left side navigation panel. Additionally the right side navigation panel allows for sharing additional information, relevant links, and disclosures. Under each chat response a dropdown includes sources which appear as cards of clickable links and thumbs-up and thumbs-down buttons to allow for intaking user feedback. The app includes a light and dark mode as well as compatability with single sign on processes. 
 
-# To run the app
+### To run the app
 In the terminal
 - npm install
 - npm run dev
@@ -19,7 +20,7 @@ Quick customizations:
 - /src/common/constants.ts change the name of the project on line 109.
 - /src/components/chatbot/chat-input-panel.tsx customize the system prompt on line 395 and input the kendra project id on line 403.
 
-# AWS Tools Used
+### AWS Tools Used
 AWS Amplify
 - Connects to Github repository (Super-Secret-Swag), agency specific branches
 Cloudscape Design System
@@ -28,7 +29,7 @@ Cloudscape Design System
 ## Back-end
 The back-end code is a series of AWS lambda functions that serve as connectors between AWS services.
 
-# AWS Tools 
+### AWS Tools 
 AWS API GATEWAY (Websocket, REST, HTTP)
 AWS Lambda
 AWS Kendra
