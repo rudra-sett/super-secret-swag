@@ -72,7 +72,7 @@ export class SessionsClient {
   async getSession(
     sessionId: string,
     userId: string,
-  ) : Promise<ChatBotHistoryItem[]> {
+  ): Promise<ChatBotHistoryItem[]> {
     const response = await fetch("https://bu4z2a26c7.execute-api.us-east-1.amazonaws.com/user_session_handler", {
       method: 'POST',
       headers: {
@@ -98,8 +98,8 @@ export class SessionsClient {
     output.forEach(function (value) {
       let metadata = {}
       if (value.metadata) {
-        metadata = {"Sources" : JSON.parse(value.metadata)}
-      }      
+        metadata = { "Sources": JSON.parse(value.metadata) }
+      }
       history.push({
         type: ChatBotMessageType.Human,
         content: value.user,
@@ -107,12 +107,12 @@ export class SessionsClient {
         },
         tokens: [],
       },
-      {
-        type: ChatBotMessageType.AI,
-        tokens: [],
-        content: value.chatbot,
-        metadata: metadata,
-      },)
+        {
+          type: ChatBotMessageType.AI,
+          tokens: [],
+          content: value.chatbot,
+          metadata: metadata,
+        },)
     })
     // console.log(history);
     return history;

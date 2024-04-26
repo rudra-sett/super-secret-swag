@@ -140,7 +140,7 @@ export default function ChatMessage(props: ChatMessageProps) {
                       </SpaceBetween>
                     </Box>
                   }
-                  // header={<Header>Example Cards</Header>}
+                // header={<Header>Example Cards</Header>}
                 />
                 {props.message.metadata.documents && (
                   <>
@@ -228,9 +228,9 @@ export default function ChatMessage(props: ChatMessageProps) {
                           return {
                             id: `${i}`,
                             label: `Prompt ${(props.message.metadata.prompts as string[][])
-                                .length > 1
-                                ? i + 1
-                                : ""
+                              .length > 1
+                              ? i + 1
+                              : ""
                               }`,
                             content: (
                               <>
