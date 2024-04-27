@@ -6,7 +6,7 @@ import {
   FeedbackData,
 } from "./types";
 import { Auth } from "aws-amplify";
-import { SpaceBetween, StatusIndicator, Alert } from "@cloudscape-design/components";
+import { SpaceBetween, StatusIndicator, Alert, AlertProps, Link, Button } from "@cloudscape-design/components";
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
@@ -36,6 +36,10 @@ export default function Chat(props: { sessionId?: string }) {
   const [messageHistory, setMessageHistory] = useState<ChatBotHistoryItem[]>(
     []
   );
+  const [alert, setAlert] = useState<string>("AI Models can make mistakes. Be mindful in validating important information and do not input ");
+  const [alertColor, setAlertColor] = useState<string>("info")
+  const [alertText, setAlertText] = useState<boolean>(false);
+  
 
   useEffect(() => {
     if (!appContext) return;
@@ -111,15 +115,29 @@ export default function Chat(props: { sessionId?: string }) {
     await apiClient.userFeedback.sendUserFeedback(feedbackData);
   }
 
+  const changeAlert = async (newAlert, newColor) => {
+    setAlert(newAlert);
+    setAlertColor(newColor);
+  }
+
+  const showAlert = async (newAlert) => {
+    setAlertText(newAlert);
+ 
+  }
+ // <Link to= "link"> PII/PHI  </Link>
   return (
     <div className={styles.chat_container}>      
       <SpaceBetween direction="vertical" size="m">
+        <div className={styles.alert_text} > 
       <Alert
-          statusIconAriaLabel="Info"
-          header=""
+          type={alertColor as AlertProps.Type}
+          header="" 
        >
-        AI Models can make mistakes. Be mindful in validating important information.
+        {alert} 
+        <Link href= "https://www.dol.gov/general/ppii"> Personal Identifiable Information.</Link> 
+      
       </Alert>
+       </div>
         {messageHistory.map((message, idx) => (
           <ChatMessage
             key={idx}
@@ -127,8 +145,18 @@ export default function Chat(props: { sessionId?: string }) {
             showMetadata={configuration.showMetadata}
             onThumbsUp={() => handleFeedback(1,idx, message)}
             onThumbsDown={() => handleFeedback(0,idx, message)}
+            
           />
         ))}
+
+      {alertText && (
+          <div className={styles.alert_text}>
+            <Alert type="error">
+              {alert}
+              <Link href="https://www.dol.gov/general/ppii">Personal Identifiable Information.</Link>
+            </Alert>
+          </div>
+        )}
       </SpaceBetween>
       <div className={styles.welcome_text}>
         {messageHistory.length == 0 && !session?.loading && (
@@ -149,6 +177,9 @@ export default function Chat(props: { sessionId?: string }) {
           setMessageHistory={(history) => setMessageHistory(history)}
           configuration={configuration}
           setConfiguration={setConfiguration}
+          alertFunction={changeAlert}
+          bottomAlertFunction={showAlert}
+          
         />
       </div>
     </div>

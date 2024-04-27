@@ -7,6 +7,7 @@ import {
   SpaceBetween,
   Spinner,
   StatusIndicator,
+  Link,
 } from "@cloudscape-design/components";
 import {
   Dispatch,
@@ -64,6 +65,8 @@ export interface ChatInputPanelProps {
   setMessageHistory: (history: ChatBotHistoryItem[]) => void;
   configuration: ChatBotConfiguration;
   setConfiguration: Dispatch<React.SetStateAction<ChatBotConfiguration>>;
+  alertFunction: (newAlert: string, newColor : string) => void;
+  bottomAlertFunction: (piiDetected: boolean) => void
 }
 
 export abstract class ChatScrollState {
@@ -78,7 +81,7 @@ export abstract class ChatScrollState {
 //   //   value: "",
 //   //   iconName: "close",
 //   // },
-//   {
+//   
 //     label: "Create new workspace",
 //     value: "__create__",
 //     iconName: "add-plus",
@@ -294,7 +297,8 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       return;
     }
 
-    if (!ChatScrollState.userHasScrolled && props.messageHistory.length > 0) {
+    
+    (!ChatScrollState.userHasScrolled && props.messageHistory.length > 0) ;{
       ChatScrollState.skipNextScrollEvent = true;
       window.scrollTo({
         top: document.documentElement.scrollHeight + 1000,
@@ -353,11 +357,32 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     //   input: process.stdin,
     //   output: process.stdout
     // });    
-
     let messageToSend = state.value.trim();
-    console.log(messageToSend);
-    messageToSend  = await apiClient.comprehendMedicalClient.redactText(messageToSend);
+    console.log("Original Message: ", messageToSend);
+    
+    // Save original message for comparison
+    const originalMessage = messageToSend;
+    
+    // API call to redact text
+    messageToSend = await apiClient.comprehendMedicalClient.redactText(messageToSend);
+    console.log("new Message: ", messageToSend);
 
+    if (messageToSend !== originalMessage) {
+      props.alertFunction("Please do not input ","error")
+      props.bottomAlertFunction(true)
+  } else {
+      props.alertFunction("AI Models can make mistakes. Be mindful in validating important information and do not input ","info");
+      props.bottomAlertFunction(false)
+
+  }
+
+
+
+
+
+    
+
+    
     
     setState({ value: "" });
     try {
@@ -532,9 +557,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     <SpaceBetween direction="vertical" size="l">
       <Container>
         <div className={styles.input_textarea_container}>
-          <SpaceBetween size="xxs" direction="horizontal" alignItems="center">
-            {browserSupportsSpeechRecognition ? (
-              <Button
+           <SpaceBetween size="xxs" direction="horizontal" alignItems="center">
+            {/* {browserSupportsSpeechRecognition ? (
+             <Button
                 iconName={listening ? "microphone-off" : "microphone"}
                 variant="icon"
                 onClick={() =>
@@ -545,8 +570,8 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
               />
             ) : (
               <Icon name="microphone-off" variant="disabled" />
-            )}
-            {/* 
+            )} */}
+            {/*
             image button dialogue
             {state.selectedModelMetadata?.inputModalities.includes(
               ChabotInputModality.Image

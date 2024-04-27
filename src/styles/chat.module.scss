@@ -6,6 +6,14 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: sticky
+}
+
+.alert_text {
+  // display: fl;
+  //position: sticky; 
+  container-type: inline-size;
+  container-name: input_container;                                                                     
 }
 
 @media (min-width: 466px) {

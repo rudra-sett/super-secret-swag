@@ -7,7 +7,7 @@
     "oauth": {
       "domain": "sandbox-mass-gov.auth.us-east-1.amazoncognito.com",
       "scope": ["email", "openid", "profile"],
-      "redirectSignIn": "https://super-secret-swag-masshealth.d18ozc9uoej4m2.amplifyapp.com/",
+      "redirectSignIn": "http://localhost:3000/",
       "redirectSignOut": "https://myapplications.microsoft.com/",
       "responseType": "code"
     }
