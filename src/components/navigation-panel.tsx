@@ -102,18 +102,16 @@ export default function NavigationPanel() {
   //   }); 
   // }, [sessions]); 
 
-  const onChange = ({
-    detail,
-  }: {
-    detail: SideNavigationProps.ChangeDetail;
-  }) => {
-    // const sectionIndex = items.findIndex(detail.item);
-    const sectionIndex = items.indexOf(detail.item);
+  const onChange = ({ detail }) => {
+    const sectionIndex = items.findIndex(item => item.text === detail.item.text);
+    // Toggle the collapsed state in a new object to trigger re-render
+    const newCollapsedSections = {
+      ...navigationPanelState.collapsedSections,
+      [sectionIndex]: !navigationPanelState.collapsedSections[sectionIndex]
+    };
     setNavigationPanelState({
-      collapsedSections: {
-        ...navigationPanelState.collapsedSections,
-        [sectionIndex]: !detail.expanded,
-      },
+      ...navigationPanelState,
+      collapsedSections: newCollapsedSections
     });
   };
 
@@ -132,23 +130,18 @@ export default function NavigationPanel() {
           New session
 
         </RouterButton>
-        <Button onClick={onReloadClick} iconName="refresh">Reload Sessions</Button>
       </Box>
-      {/* </SpaceBetween> */}
       <SideNavigation
         onFollow={onFollow}
         onChange={onChange}
-        items={items}
-      // items={items.map((value, idx) => {
-      //   if (value.type === "section") {
-      //     const collapsed = navigationPanelState.collapsedSections?.[idx] === true;
-      //     value.defaultExpanded = !collapsed;
-      //   }
-
-      //   return value;
-      // })} 
-      // // items={items}
+        items={items.map((item, idx) => ({
+          ...item,
+          defaultExpanded: !navigationPanelState.collapsedSections[idx]
+        }))}
       />
+       <Box margin="xs" padding="xs" textAlign="center">
+        <Button onClick={onReloadClick} iconName="refresh">Reload Sessions</Button>
+      </Box>
     </div>
   );
 }
