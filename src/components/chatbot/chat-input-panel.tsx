@@ -354,9 +354,12 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
 
     const messageToSend = state.value.trim();
     setState({ value: "" });
+    // let start = new Date().getTime() / 1000;
+    
     try {
       props.setRunning(true);
-      let receivedData = '';
+      let receivedData = '';      
+      
       messageHistoryRef.current = [
         ...messageHistoryRef.current,
 
@@ -389,6 +392,18 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
 
       let incomingMetadata : boolean = false;
       let sources = {};
+
+      setTimeout(() => {if (receivedData == '') {
+        ws.close()
+        messageHistoryRef.current.pop();
+        messageHistoryRef.current.push({
+          type: ChatBotMessageType.AI,
+          tokens: [],
+          content: 'Response timed out!',
+          metadata: {},
+        })
+      }},60000)
+
       // Event listener for when the connection is open
       ws.addEventListener('open', function open() {
         console.log('Connected to the WebSocket server');
