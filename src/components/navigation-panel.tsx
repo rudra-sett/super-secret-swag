@@ -28,58 +28,43 @@ export default function NavigationPanel() {
   const [sessions, setSessions] = useState<any[]>([]);
   const [items, setItems] = useState<SideNavigationProps.Item[]>([]);
 
-  useEffect(() => {
-    async function loadSessions() {
+  const loadSessions = async () => {
+    try {
       let username;
       await Auth.currentAuthenticatedUser().then((value) => username = value.username);
       if (username) {
         const fetchedSessions = await apiClient.sessions.getAllSessions(username);
         updateItems(fetchedSessions);
       }
-      // console.log(fetchedSessions); 
-      // setSessions(fetchedSessions); 
-
+    } catch (error) {
+      console.error("Failed to load sessions:", error);
+      // update UI here to show an error message
     }
-    // hit console.log("pong"); 
+  };
 
-    const interval = setInterval(loadSessions, 1000);
-    // loadSessions();
+  // Reload button click handler
+  const onReloadClick = () => {
+    loadSessions().catch(error => {
+      console.error("Failed to reload sessions manually:", error);
+      // Optionally, update the UI here to show an error message
+    });
+  };
+
+  useEffect(() => {
+    // loads sessions on initial render
+    
+    loadSessions();
+
+    // refreshes sessions every minute
+    const interval = setInterval(loadSessions, 60000);
 
     return () => clearInterval(interval);
-    // loadSessions(); 
   }, [apiClient]);
 
   //  const [items, setItems] = useState<SideNavigationProps.Item[]>
   // const [items] = useState<SideNavigationProps.Item[]>(() => {
   const updateItems = (sessions: any[]) => {
-    // console.log("hit the update button")
     const newItems: SideNavigationProps.Item[] = [
-      // {
-      //   type: "link",
-      //   text: "Home",
-      //   href: "/",
-      // },
-      // // {
-      // //   type: "link",
-      // //   text: "New Session", 
-      // //   href: `/chatbot/playground/${uuidv4()}`,
-      // // },
-      // {
-      //   type: "section",
-      //   text: "Chatbot",
-      //   items: [
-      //     { type: "link", text: "Chat", href: "/chatbot/playground" },
-
-      //   ],
-      // },
-      {
-        type: "section",
-        text: "Admin",
-        items: [
-          { type: "link", text: "Update Data", href: "/admin/add-data" },
-          { type: "link", text: "Data", href: "/admin/data" }
-        ],
-      },
       {
         type: "section",
         text: "Session History",
@@ -89,12 +74,17 @@ export default function NavigationPanel() {
           href: `/chatbot/playground/${session.session_id}`,
         })),
       },
+      {
+        type: "section",
+        text: "Admin",
+        items: [
+          { type: "link", text: "Update Data", href: "/admin/add-data" },
+          { type: "link", text: "Data", href: "/admin/data" }
+        ],
+      },
     ];
     setItems(newItems);
-    // console.log("pong")
-    // return items; 
   };
-
 
   // useEffect(() => {
   //   setItems(prevItems => {
@@ -129,39 +119,6 @@ export default function NavigationPanel() {
 
   return (
     <div>
-      {/* <div style={{ justifyContent: 'center' }}>
-        <Header >
-          MBTA The RIDE Guide AI
-        </Header>
-      </div>
-
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <RouterButton
-          iconAlign="right"
-          iconSvg={<PencilSquareIcon />}
-          variant="primary"
-          href={`/chatbot/playground/${uuidv4()}`}
-        >
-          New session
-        </RouterButton>
-
-      </div>
-      <Header>
-        <RouterButton
-          iconAlign="right"
-          iconSvg={<PencilSquareIcon />}
-          variant="primary"
-          href={`/chatbot/playground/${uuidv4()}`}
-          data-alignment="right"
-          className="new-chat-button"
-          style={{ textAlign: "right" }}
-        >
-          New session
-
-        </RouterButton>
-
-      </Header> */}
-      {/* <SpaceBetween alignItems="center" size="s"> */}
       <Box margin="xs" padding="xs" textAlign="center">
         <RouterButton
           iconAlign="right"
@@ -170,17 +127,17 @@ export default function NavigationPanel() {
           href={`/chatbot/playground/${uuidv4()}`}
           data-alignment="right"
           className="new-chat-button"
-          style={{ textAlign: "right" }}
+          style={{ textAlign: "right"}}
         >
           New session
 
         </RouterButton>
+        <Button onClick={onReloadClick} iconName="refresh">Reload Sessions</Button>
       </Box>
       {/* </SpaceBetween> */}
       <SideNavigation
         onFollow={onFollow}
         onChange={onChange}
-        // header={{ href: "/", text: "The Ride Guide AI" }}
         items={items}
       // items={items.map((value, idx) => {
       //   if (value.type === "section") {
