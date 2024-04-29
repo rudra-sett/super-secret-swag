@@ -33,7 +33,7 @@ export default function NavigationPanel() {
       let username;
       await Auth.currentAuthenticatedUser().then((value) => username = value.username);
       if (username) {
-        const fetchedSessions = await apiClient.sessions.getSessions(username);
+        const fetchedSessions = await apiClient.sessions.getAllSessions(username);
         updateItems(fetchedSessions);
       }
       // console.log(fetchedSessions); 
@@ -175,7 +175,7 @@ export default function NavigationPanel() {
           New session
 
         </RouterButton>
-        </Box>
+      </Box>
       {/* </SpaceBetween> */}
       <SideNavigation
         onFollow={onFollow}
