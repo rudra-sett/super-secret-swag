@@ -27,8 +27,10 @@ export default function NavigationPanel() {
 
   const [sessions, setSessions] = useState<any[]>([]);
   const [items, setItems] = useState<SideNavigationProps.Item[]>([]);
+  const [loadingSessions, setLoadingSessions] = useState(false);
 
   const loadSessions = async () => {
+    setLoadingSessions(true);
     try {
       let username;
       await Auth.currentAuthenticatedUser().then((value) => username = value.username);
@@ -39,26 +41,34 @@ export default function NavigationPanel() {
     } catch (error) {
       console.error("Failed to load sessions:", error);
       // update UI here to show an error message
+    } finally {
+      setLoadingSessions(false);
     }
   };
 
   // Reload button click handler
   const onReloadClick = () => {
+    console.log("Reload button clicked");
     loadSessions().catch(error => {
       console.error("Failed to reload sessions manually:", error);
       // Optionally, update the UI here to show an error message
     });
+    console.log("Reload button done");
   };
 
   useEffect(() => {
-    // loads sessions on initial render
-    
-    loadSessions();
+    // loadSessions();
+  }, [apiClient]);
 
-    // refreshes sessions every minute
-    const interval = setInterval(loadSessions, 60000);
+  useEffect(() => {
+    const handleSessionUpdate = () => {
+      loadSessions();
+    };
 
-    return () => clearInterval(interval);
+    window.addEventListener('sessionCreated', handleSessionUpdate);
+    return () => {
+      window.removeEventListener('sessionCreated', handleSessionUpdate);
+    };
   }, [apiClient]);
 
   //  const [items, setItems] = useState<SideNavigationProps.Item[]>
@@ -72,7 +82,10 @@ export default function NavigationPanel() {
           type: "link",
           text: `${session.title}`,
           href: `/chatbot/playground/${session.session_id}`,
-        })),
+        })).concat([{
+          type: "link",
+          info: <Button onClick={onReloadClick} iconName="refresh" loading={loadingSessions} variant="link">Reload Sessions</Button>
+        }]),
       },
       {
         type: "section",
@@ -117,7 +130,7 @@ export default function NavigationPanel() {
 
   return (
     <div>
-      <Box margin="xs" padding="xs" textAlign="center">
+      <Box margin="xs" padding={{ top: "l" }} textAlign="center">
         <RouterButton
           iconAlign="right"
           iconSvg={<PencilSquareIcon />}
@@ -139,9 +152,6 @@ export default function NavigationPanel() {
           defaultExpanded: !navigationPanelState.collapsedSections[idx]
         }))}
       />
-       <Box margin="xs" padding="xs" textAlign="center">
-        <Button onClick={onReloadClick} iconName="refresh">Reload Sessions</Button>
-      </Box>
     </div>
   );
 }
