@@ -13,17 +13,17 @@ export default function Playground() {
       info={
         <HelpPanel header={<Header variant="h3">Using the search tool</Header>}>
           <p>
-            This enhanced search application helps people discover grant opportunities from the State of Massachusetts Executive Office of Energy and Environmental Affairs (EEOEA)
+            This enhanced search application helps people discover grant opportunities from the State of Massachusetts Executive Office of Energy and Environmental Affairs (EEA)
           </p>
           <h3>More resources</h3>
           <p>
-            Discover more about the grant programs offered by the EOEEA <a href="https://www.mass.gov/orgs/eea-office-of-grants-and-technical-assistance">here</a>.
+            Discover more about grant programs offered <a href="https://www.mass.gov/orgs/eea-office-of-grants-and-technical-assistance">here</a>.
             <br></br>
-            Explore the EOEEA Homepage <a href="https://www.mass.gov/orgs/executive-office-of-energy-and-environmental-affairs">here</a>.
+            Explore the EEA Homepage <a href="https://www.mass.gov/orgs/executive-office-of-energy-and-environmental-affairs">here</a>.
             <br></br>
-            Learn more about the developers of the EOEEA Grants Navigator here <a href="https://burnes.northeastern.edu/ai-for-impact-coop/">here</a>.
+            Learn more about the developers <a href="https://burnes.northeastern.edu/ai-for-impact-coop/">here</a>.
             <br></br>
-            Feedback? Please visit our form here to provide our team feedback. here <a href="https://burnes.northeastern.edu/ai-for-impact-coop/">here</a>.
+            Feedback? Please visit our form to provide our team feedback <a href="https://docs.google.com/forms/d/e/1FAIpQLSfR2SQ5OP4m9P6ALUmMhz3Lf-eZsPvG_BZzGCKTIa6OVPylqg/viewform?usp=sf_link">here</a>.
           </p>
         
         </HelpPanel>

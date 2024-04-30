@@ -6,7 +6,7 @@ import {
   FeedbackData,
 } from "./types";
 // import { Auth } from "aws-amplify";
-import { Alert, SpaceBetween, StatusIndicator } from "@cloudscape-design/components";
+import { Alert, Flashbar, SpaceBetween, StatusIndicator } from "@cloudscape-design/components";
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
@@ -14,6 +14,7 @@ import ChatMessage from "./chat-message";
 import ChatInputPanel, { ChatScrollState } from "./chat-input-panel";
 import styles from "../../styles/chat.module.scss";
 import { CHATBOT_NAME } from "../../common/constants";
+import React from "react";
 
 
 export default function Chat(props: { sessionId?: string }) {
@@ -104,6 +105,30 @@ export default function Chat(props: { sessionId?: string }) {
     // }
   };
 
+  const [items, setItems] = React.useState([
+    {
+      type: "info",
+      dismissible: true,
+      dismissLabel: "Dismiss message",
+      content: "The 'EEA Grants Navigator' only assists with finding not applying for grant opportunities.",
+      id: "message_5",
+      onDismiss: () =>
+         setItems(items =>
+          items.filter(item => item.id !== "message_5")
+        )
+    },
+    {
+      type: "info",
+      dismissible: false,
+      content: "AI Models can make mistakes. Be mindful in validating important information. Please refrain from including any personal information.",
+      id: "message_4",
+      onDismiss: () =>
+        setItems(items =>
+          items.filter(item => item.id !== "message_4")
+        )
+    },
+  ]);
+
   const addUserFeedback = async (feedbackData) => {
     // if (!appContext) return;
 
@@ -137,17 +162,33 @@ export default function Chat(props: { sessionId?: string }) {
         )}
       </div>
       <div className={styles.input_container}>
-        <SpaceBetween direction="vertical" size="m">
-        <Alert
+      <SpaceBetween direction="vertical" size="m">
+        <Flashbar
+          items={items}
+          i18nStrings={{
+            ariaLabel: "Notifications",
+            notificationBarAriaLabel:
+             "View all notifications",
+            notificationBarText: "Notifications",
+            errorIconAriaLabel: "Error",
+            warningIconAriaLabel: "Warning",
+            successIconAriaLabel: "Success",
+            infoIconAriaLabel: "Info",
+            inProgressIconAriaLabel: "In progress"
+          }}
+          />
+          </SpaceBetween>
+        <SpaceBetween direction="vertical" size="l">
+        {/* <Alert
           dismissible
           statusIconAriaLabel="info"
           type="warning"
           header=""
           >
             AI Models can make mistakes. Be mindful in validating important information.
-            Please refrain from including any personal information such as name, address, or birthday. 
+            Please refrain from including any personal information. 
             The 'EEA Grants Navigator' only assists with finding not applying for grant opportunities.
-            </Alert>
+            </Alert> */}
             
           <ChatInputPanel
             session={session}
