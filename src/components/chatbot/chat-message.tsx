@@ -13,7 +13,8 @@ import {
   Cards,
   SpaceBetween,
   Header,
-  Link
+  Link,
+  ButtonDropdown
 } from "@cloudscape-design/components";
 import { useEffect, useState } from "react";
 import { JsonView, darkStyles } from "react-json-view-lite";
@@ -84,37 +85,41 @@ export default function ChatMessage(props: ChatMessageProps) {
       {props.message?.type === ChatBotMessageType.AI && (
         <Container
           footer={
-            showSources && (
-              <ExpandableSection variant="footer" headerText="Sources">
-                <Cards
-                  cardDefinition={{
-                    header: item => (
-                      <Link href={item.uri} fontSize="body-s">
-                        {item.title}
-                      </Link>
-                    ),
-                  }}
-                  cardsPerRow={[
-                    { cards: 1 },
-                    { minWidth: 500, cards: 3 }
-                  ]}
-                  items={props.message.metadata.Sources as any[]}
-                  loadingText="Loading sources..."
-                  empty={
-                    <Box
-                      margin={{ vertical: "xs" }}
-                      textAlign="center"
-                      color="inherit"
-                    >
-                      <SpaceBetween size="m">
-                        <b>No resources</b>
-                        <Button>Create resource</Button>
-                      </SpaceBetween>
-                    </Box>
-                  }
-                />
-              </ExpandableSection>
-            )
+            showSources && props.message.metadata.Sources? (
+              // <ExpandableSection variant="footer" headerText="Sources">
+              //   <Cards
+              //     cardDefinition={{
+              //       header: item => (
+              //         <Link href={item.uri} fontSize="body-s">
+              //           {item.title}
+              //         </Link>
+              //       ),
+              //     }}
+              //     cardsPerRow={[
+              //       { cards: 1 },
+              //       { minWidth: 500, cards: 3 }
+              //     ]}
+              //     items={props.message.metadata.Sources as any[]}
+              //     loadingText="Loading sources..."
+              //     empty={
+              //       <Box
+              //         margin={{ vertical: "xs" }}
+              //         textAlign="center"
+              //         color="inherit"
+              //       >
+              //         <SpaceBetween size="m">
+              //           <b>No resources</b>
+              //           <Button>Create resource</Button>
+              //         </SpaceBetween>
+              //       </Box>
+              //     }
+              //   />
+              // </ExpandableSection>
+              <ButtonDropdown
+              items={(props.message.metadata.Sources as any[]).map((item) => { return {id: "id", disabled: false, text : item.title, href : item.uri, external : true, externalIconAriaLabel: "(opens in new tab)"}})}
+        
+              >Sources</ButtonDropdown>
+            ) : <> </>
           }
         >
           {content?.length === 0 ? (
