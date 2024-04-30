@@ -502,8 +502,8 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         // await apiClient.sessions.updateSession("0", props.session.id, messageHistoryRef.current);
         if (firstTime) {   
           // console.log("first time!", firstTime)
-          // console.log("did we also need a refresh?", needsRefresh)                   
-          setNeedsRefresh(true);            
+          // console.log("did we also need a refresh?", needsRefresh)
+          Utils.delay(1500).then(() => setNeedsRefresh(true));
         }
         props.setRunning(false);        
         console.log('Disconnected from the WebSocket server');

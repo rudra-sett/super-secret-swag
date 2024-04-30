@@ -39,9 +39,7 @@ export default function NavigationPanel() {
     try {
     await Auth.currentAuthenticatedUser().then((value) => username = value.username);
     if (username && needsRefresh) {
-      // let's wait for about half a second before refreshing the sessions
-      const delay = ms => new Promise(res => setTimeout(res, ms));
-      await delay(1500);
+      // let's wait for about half a second before refreshing the sessions      
       const fetchedSessions = await apiClient.sessions.getSessions(username);  
       updateItems(fetchedSessions);
       console.log("fetched sessions")
@@ -90,7 +88,7 @@ export default function NavigationPanel() {
           href: `/chatbot/playground/${session.session_id}`,
         })).concat([{
           type: "link",
-          info: <Box margin="xs" padding={{ top: "xs" }} textAlign="center" ><Button onClick={onReloadClick} iconName="refresh" loading={loadingSessions} variant="link">Reload Sessions</Button></Box>
+          info: <Box margin="xxs" textAlign="center" ><Button onClick={onReloadClick} iconName="refresh" loading={loadingSessions} variant="link">Reload Sessions</Button></Box>
         }]),
       },
       {
