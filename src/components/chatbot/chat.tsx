@@ -35,7 +35,7 @@ export default function Chat(props: { sessionId?: string }) {
     })
   );
 
-  const { notifications } = useNotifications();
+  const { notifications, addNotification } = useNotifications();
 
   const [messageHistory, setMessageHistory] = useState<ChatBotHistoryItem[]>(
     []
@@ -91,6 +91,7 @@ export default function Chat(props: { sessionId?: string }) {
         }
       } catch (error) {
         console.log(error);
+        addNotification("error","Could not load session, please try again")
       }
 
       setSession({ id: props.sessionId, loading: false });

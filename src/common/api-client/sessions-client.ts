@@ -39,20 +39,26 @@ export class SessionsClient {
         },
         body: JSON.stringify({ "operation": "list_sessions_by_user_id", "user_id": userId })
       });
+      if (response.status != 200) {
+        validData = false;
+        break;
+      }
       const reader = response.body.getReader();
       const { value, done } = await reader.read();
       const decoder = new TextDecoder();
+      const parsed = decoder.decode(value)
+      console.log(parsed)
       try{
-        output = JSON.parse(decoder.decode(value));
+        output = JSON.parse(parsed);
         validData = true;
       } catch (e) {
         console.log(e);
       }
     }
-    // if (!validData) {
-    //   throw new Error("Could not load sessions");
-    // }
-    // console.log(output);
+    if (!validData) {
+      throw new Error("Could not load sessions");
+    }
+    console.log(output);
     return output;
   }
 
@@ -81,6 +87,10 @@ export class SessionsClient {
         })
       });
       // console.log(response.body);
+      if (response.status != 200) {
+        validData = false;
+        break;
+      }
       const reader = response.body.getReader();
       const { value, done } = await reader.read();
       // console.log(value);
@@ -92,6 +102,9 @@ export class SessionsClient {
       } catch (e) {
         console.log(e);
       }
+    }
+    if (!validData) {
+      throw new Error("Could not load session!")      
     }
     let history: ChatBotHistoryItem[] = [];
     // console.log(output);
