@@ -53,6 +53,7 @@ import {
 } from "./utils";
 // import { receiveMessages } from "../../graphql/subscriptions";
 import { Utils } from "../../common/utils";
+import {SessionRefreshContext} from "../../common/session-refresh-context"
 
 export interface ChatInputPanelProps {
   running: boolean;
@@ -85,6 +86,7 @@ export abstract class ChatScrollState {
 
 export default function ChatInputPanel(props: ChatInputPanelProps) {
   const appContext = useContext(AppContext);
+  const {needsRefresh, setNeedsRefresh} = useContext(SessionRefreshContext);
   const apiClient = new ApiClient(appContext);
   const navigate = useNavigate();
   const { transcript, listening, browserSupportsSpeechRecognition } =
@@ -103,11 +105,17 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
   const [readyState, setReadyState] = useState<ReadyState>(
     ReadyState.OPEN
   );
-
+  // const [firstTime, setFirstTime] = useState<boolean>(false);
   const messageHistoryRef = useRef<ChatBotHistoryItem[]>([]);
 
   useEffect(() => {
     messageHistoryRef.current = props.messageHistory;
+    // // console.log(messageHistoryRef.current.length)
+    // if (messageHistoryRef.current.length < 3) {
+    //   setFirstTime(true);
+    // } else {
+    //   setFirstTime(false);
+    // }
   }, [props.messageHistory]);
 
   // THIS PART OF THE CODE HANDLES READY STATE
@@ -380,6 +388,10 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       ];
       props.setMessageHistory(messageHistoryRef.current);
 
+      let firstTime = false;
+      if (messageHistoryRef.current.length < 3) {
+        firstTime = true;
+      }
       // const wsUrl = 'wss://ngdpdxffy0.execute-api.us-east-1.amazonaws.com/test/';      
       const TEST_URL = 'wss://caoyb4x42c.execute-api.us-east-1.amazonaws.com/test/';
 
@@ -438,6 +450,13 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         if (data.data == '!<|EOF_STREAM|>!') {
           // await apiClient.sessions.updateSession(props.session.id, "0", messageHistoryRef.current);
           // ws.close();
+          // appContext.config.api_endpoint = "hi"
+          // console.log(appContext);
+          if (firstTime) {   
+            // console.log("first time!", firstTime)
+            // console.log("did we also need a refresh?", needsRefresh)                   
+            setNeedsRefresh(true);            
+          }
           incomingMetadata = true;
           return;
           // return;

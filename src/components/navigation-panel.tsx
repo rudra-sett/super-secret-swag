@@ -17,6 +17,7 @@ import { ApiClient } from "../common/api-client/api-client";
 import { CHATBOT_NAME } from "../common/constants";
 import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
+import {SessionRefreshContext} from "../common/session-refresh-context"
 
 export default function NavigationPanel() {
   const appContext = useContext(AppContext);
@@ -26,27 +27,35 @@ export default function NavigationPanel() {
     useNavigationPanelState();
   const [items, setItems] = useState<SideNavigationProps.Item[]>([]);
   const [loaded,setLoaded] = useState<boolean>(false);
+  const {needsRefresh, setNeedsRefresh} = useContext(SessionRefreshContext);
+
 
   // update the list of sessions every now and then
   useEffect(() => {
     async function loadSessions() {
       let username;
       await Auth.currentAuthenticatedUser().then((value) => username = value.username);
-      if (username) {
+      if (username && needsRefresh) {
+        // let's wait for about half a second before refreshing the sessions
+        const delay = ms => new Promise(res => setTimeout(res, ms));
+        await delay(1000);
         const fetchedSessions = await apiClient.sessions.getSessions(username);
         updateItems(fetchedSessions);
+        console.log("fetched sessions")
+        // console.log(fetchedSessions);
         if (!loaded) {
           setLoaded(true);
         }
+        setNeedsRefresh(false);
       }
     }
 
-    const interval = setInterval(loadSessions, 1000);
+    // const interval = setInterval(loadSessions, 1000);
     // loadSessions();
 
-    return () => clearInterval(interval);
-    // loadSessions(); 
-  }, [apiClient]);
+    // return () => clearInterval(interval);
+    loadSessions(); 
+  }, [needsRefresh]);
 
   // helper function to update items
   const updateItems = (sessions: any[]) => {
