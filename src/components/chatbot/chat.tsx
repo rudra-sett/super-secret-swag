@@ -63,7 +63,7 @@ export default function Chat(props: { sessionId?: string }) {
               .filter((x) => x !== null)
               .map((x) => ({
                 type: x!.type as ChatBotMessageType,
-                metadata: {}, //JSON.parse(x!.metadata!),
+                metadata: x!.metadata!,
                 content: x!.content,
               }))
           );
