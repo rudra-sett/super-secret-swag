@@ -49,9 +49,9 @@ export class SessionsClient {
         console.log(e);
       }
     }
-    if (!validData) {
-      throw new Error("Could not load sessions");
-    }
+    // if (!validData) {
+    //   throw new Error("Could not load sessions");
+    // }
     // console.log(output);
     return output;
   }

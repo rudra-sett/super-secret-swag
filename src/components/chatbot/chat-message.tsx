@@ -81,14 +81,14 @@ export default function ChatMessage(props: ChatMessageProps) {
       ? props.message.content
       : props.message.tokens?.map((v) => v.value).join("");
 
-  const showSources = props.message.metadata?.Sources && (props.message.metadata.Sources as string[]).length > 0;
+  const showSources = props.message.metadata?.Sources && (props.message.metadata.Sources as any[]).length > 0;
 
   return (
     <div>
       {props.message?.type === ChatBotMessageType.AI && (
         <Container
           footer={
-            showSources && props.message.metadata.Sources? (
+            showSources && (
               // <ExpandableSection variant="footer" headerText="Sources">
               //   <Cards
               //     cardDefinition={{
@@ -122,7 +122,7 @@ export default function ChatMessage(props: ChatMessageProps) {
               items={(props.message.metadata.Sources as any[]).map((item) => { return {id: "id", disabled: false, text : item.title, href : item.uri, external : true, externalIconAriaLabel: "(opens in new tab)"}})}
         
               >Sources</ButtonDropdown>
-            ) : <> </>
+            )
           }
         >
           {content?.length === 0 ? (
