@@ -1,4 +1,3 @@
-
 export class ComprehendMedicalClient {
   async redactText(userInput: string) {
     try {
@@ -12,13 +11,13 @@ export class ComprehendMedicalClient {
           "content": userInput,
         })
       });
-      console.log(response); 
-      return (await response.json()).redacted_text;}
-      catch (err) {
-        console.log(err);
-        return userInput;
-      }
-    } 
-   
+      console.log(response);
+      return (await response.json()).redacted_text;
+    }
+    catch (err) {
+      console.log(err);
+      return userInput;
+    }
   }
-  
+
+}

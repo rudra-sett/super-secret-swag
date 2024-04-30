@@ -1,5 +1,4 @@
 import {Auth} from 'aws-amplify'
-import {Auth} from 'aws-amplify'
 export class Utils {
   // static isDevelopment() {
   //   return import.meta.env.MODE === "development";

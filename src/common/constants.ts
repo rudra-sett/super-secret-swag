@@ -109,6 +109,3 @@ export abstract class Labels {
 export const API = "https://u95wm1svh0.execute-api.us-east-1.amazonaws.com/test"
 
 export const CHATBOT_NAME = "MEC Knowledge Tool";
-=======
-export const CHATBOT_NAME = "MassHealth Enrollment Center Tool";
->>>>>>> 40685c9 (masshealth logo and customization)

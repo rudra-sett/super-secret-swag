@@ -68,10 +68,6 @@ export default function Chat(props: { sessionId?: string }) {
         await Auth.currentAuthenticatedUser().then((value) => username = value.username);
         if (!username) return;
         const hist = await apiClient.sessions.getSession(props.sessionId,username);
-        let username;
-        await Auth.currentAuthenticatedUser().then((value) => username = value.username);
-        if (!username) return;
-        const hist = await apiClient.sessions.getSession(props.sessionId,username);
 
         if (hist) {
           // console.log(hist);

@@ -22,7 +22,6 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import { Auth } from "aws-amplify";
-import { Auth } from "aws-amplify";
 import TextareaAutosize from "react-textarea-autosize";
 import { ReadyState } from "react-use-websocket";
 // import WebSocket from 'ws';
@@ -55,6 +54,8 @@ import {
 // import { receiveMessages } from "../../graphql/subscriptions";
 import { Utils } from "../../common/utils";
 import {SessionRefreshContext} from "../../common/session-refresh-context"
+
+
 
 export interface ChatInputPanelProps {
   running: boolean;
