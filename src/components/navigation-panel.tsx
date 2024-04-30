@@ -103,8 +103,12 @@ export default function NavigationPanel() {
     setItems(newItems);
   };
 
-  const onChange = ({ detail }) => {
-    const sectionIndex = items.findIndex((item : SideNavigationProps.Item) => (item as SideNavigationProps.Section).text === detail.item.text);
+  const onChange = ({
+    detail,
+  }: {
+    detail: SideNavigationProps.ChangeDetail;
+  }) => {
+    const sectionIndex = items.indexOf(detail.item);//items.findIndex((item) => (item as SideNavigationProps.Section).text === detail.item.text);
     const newCollapsedSections = {
       ...navigationPanelState.collapsedSections,
       [sectionIndex]: !navigationPanelState.collapsedSections[sectionIndex]
@@ -135,14 +139,14 @@ export default function NavigationPanel() {
         onFollow={onFollow}
         onChange={onChange}
         // header={{ href: "/", text: "The Ride Guide AI" }}
-        // items={items.map((item, idx) => ({
-        //   ...item,
-        //   defaultExpanded: !navigationPanelState.collapsedSections[idx]
-        // }))}  
-        items={Array.isArray(items) ? items.map((item, idx) => ({
+        items={items.map((item, idx) => ({
           ...item,
           defaultExpanded: !navigationPanelState.collapsedSections[idx]
-        })) : []}
+        }))}  
+        // items={Array.isArray(items) ? items.map((item, idx) => ({
+        //   ...item,
+        //   defaultExpanded: !navigationPanelState.collapsedSections[idx]
+        // })) : []}
         
       /> : 
       <Box margin="xs" padding="xs" textAlign="center">
