@@ -108,31 +108,30 @@ export default function Chat(props: { sessionId?: string }) {
     // }
   };
 
-  
-
-  const [items, setItems] = React.useState([
-    {
-      type: "info",
-      dismissible: true,
-      dismissLabel: "Dismiss message",
-      content: "The 'EEA Grants Navigator' only assists with finding not applying for grant opportunities.",
-      id: "message_5",
-      onDismiss: () =>
-         setItems(items =>
-          items.filter(item => item.id !== "message_5")
-        )
-    },
-    {
-      type: "info",
-      dismissible: false,
-      content: "AI Models can make mistakes. Be mindful in validating important information. Please refrain from including any personal information.",
-      id: "message_4",
-      onDismiss: () =>
-        setItems(items =>
-          items.filter(item => item.id !== "message_4")
-        )
-    },
-  ]);
+  // flashbar content
+  // const [items, setItems] = React.useState([
+  //   {
+  //     type: "info",
+  //     dismissible: true,
+  //     dismissLabel: "Dismiss message",
+  //     content: "The 'EEA Grants Navigator' only assists with finding not applying for grant opportunities.",
+  //     id: "message_5",
+  //     onDismiss: () =>
+  //        setItems(items =>
+  //         items.filter(item => item.id !== "message_5")
+  //       )
+  //   },
+  //   {
+  //     type: "info",
+  //     dismissible: false,
+  //     content: "AI Models can make mistakes. Be mindful in validating important information. Please refrain from including any personal information.",
+  //     id: "message_4",
+  //     onDismiss: () =>
+  //       setItems(items =>
+  //         items.filter(item => item.id !== "message_4")
+  //       )
+  //   },
+  // ]);
 
   const addUserFeedback = async (feedbackData) => {
     // if (!appContext) return;
@@ -167,22 +166,22 @@ export default function Chat(props: { sessionId?: string }) {
         )}
       </div>
       <div className={styles.input_container}>
-      <SpaceBetween direction="vertical" size="m">
-        <Flashbar
-          items={items}
-          i18nStrings={{
-            ariaLabel: "Notifications",
-            notificationBarAriaLabel:
-             "View all notifications",
-            notificationBarText: "Notifications",
-            errorIconAriaLabel: "Error",
-            warningIconAriaLabel: "Warning",
-            successIconAriaLabel: "Success",
-            infoIconAriaLabel: "Info",
-            inProgressIconAriaLabel: "In progress"
-          }}
+        {/* <SpaceBetween direction="vertical" size="m">
+          <Flashbar
+            items={items}
+            i18nStrings={{
+              ariaLabel: "Notifications",
+              notificationBarAriaLabel:
+              "View all notifications",
+              notificationBarText: "Notifications",
+              errorIconAriaLabel: "Error",
+              warningIconAriaLabel: "Warning",
+              successIconAriaLabel: "Success",
+              infoIconAriaLabel: "Info",
+              inProgressIconAriaLabel: "In progress"
+            }}
           />
-          </SpaceBetween>
+          </SpaceBetween> */}
         <SpaceBetween direction="vertical" size="l">
         {/* <Alert
           dismissible
