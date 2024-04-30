@@ -51,8 +51,7 @@ export default function NavigationPanel() {
     }
   }  catch (error) {
     console.error("Failed to load sessions:", error);
-    addNotification("error", "Failed to load sessions");
-    setLoaded(true);
+    addNotification("error", "Failed to load sessions, please refresh the page.");    
     // const delay = ms => new Promise(res => setTimeout(res, ms));
     // delay(3000).then(() => removeNotification(id));
     
@@ -140,7 +139,11 @@ export default function NavigationPanel() {
         //   ...item,
         //   defaultExpanded: !navigationPanelState.collapsedSections[idx]
         // }))}  
-        items={items}
+        items={Array.isArray(items) ? items.map((item, idx) => ({
+          ...item,
+          defaultExpanded: !navigationPanelState.collapsedSections[idx]
+        })) : []}
+        
       /> : 
       <Box margin="xs" padding="xs" textAlign="center">
         <StatusIndicator type="loading">Loading sessions...</StatusIndicator>
