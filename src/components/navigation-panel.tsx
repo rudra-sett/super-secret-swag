@@ -13,67 +13,62 @@ import PencilSquareIcon from "../../public/images/pencil-square.jsx";
 import RouterButton from "../components/wrappers/router-button";
 import { useContext, useState, useEffect } from "react";
 import { ApiClient } from "../common/api-client/api-client";
-import { CHATBOT_NAME } from "../common/constants";
 import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
+import { useSession } from "../common/session-context";
+import { useNotifications } from "../components/notif-manager";
 
 export default function NavigationPanel() {
   const appContext = useContext(AppContext);
-  // const uid = ; 
   const apiClient = new ApiClient(appContext);
   const onFollow = useOnFollow();
-  const [navigationPanelState, setNavigationPanelState] =
-    useNavigationPanelState();
-
+  const [navigationPanelState, setNavigationPanelState] = useNavigationPanelState();
   const [sessions, setSessions] = useState<any[]>([]);
   const [items, setItems] = useState<SideNavigationProps.Item[]>([]);
   const [loadingSessions, setLoadingSessions] = useState(false);
+  const { isNewSession, setNewSession } = useSession();
+  const { addNotification } = useNotifications();
 
   const loadSessions = async () => {
     setLoadingSessions(true);
     try {
-      let username;
-      await Auth.currentAuthenticatedUser().then((value) => username = value.username);
+      let username = await Auth.currentAuthenticatedUser().then((value) => value.username);
       if (username) {
         const fetchedSessions = await apiClient.sessions.getAllSessions(username);
         updateItems(fetchedSessions);
       }
     } catch (error) {
       console.error("Failed to load sessions:", error);
-      // update UI here to show an error message
+      addNotification("error", "Failed to load sessions");
     } finally {
       setLoadingSessions(false);
     }
   };
 
-  // Reload button click handler
-  const onReloadClick = () => {
-    console.log("Reload button clicked");
-    loadSessions().catch(error => {
-      console.error("Failed to reload sessions manually:", error);
-      // Optionally, update the UI here to show an error message
-    });
-    console.log("Reload button done");
+  const onReloadClick = async () => {
+    await loadSessions();
+    addNotification("success", "Sessions reloaded successfully!");
   };
 
   useEffect(() => {
-    // loadSessions();
-  }, [apiClient]);
+    loadSessions();
+  }, []);
 
   useEffect(() => {
-    const handleSessionUpdate = () => {
-      loadSessions();
+    const performSessionLoad = async () => {
+      if (isNewSession) {
+        console.log(isNewSession)
+        console.log("New session detected, loading sessions.");
+        await loadSessions();
+        setNewSession(false);
+        console.log("reset session state back to false");
+      }
     };
+  
+    performSessionLoad();
+  }, [isNewSession, loadSessions]);
 
-    window.addEventListener('sessionCreated', handleSessionUpdate);
-    return () => {
-      window.removeEventListener('sessionCreated', handleSessionUpdate);
-    };
-  }, [apiClient]);
-
-  //  const [items, setItems] = useState<SideNavigationProps.Item[]>
-  // const [items] = useState<SideNavigationProps.Item[]>(() => {
-  const updateItems = (sessions: any[]) => {
+  const updateItems = (sessions) => {
     const newItems: SideNavigationProps.Item[] = [
       {
         type: "section",
@@ -99,25 +94,8 @@ export default function NavigationPanel() {
     setItems(newItems);
   };
 
-  // useEffect(() => {
-  //   setItems(prevItems => {
-  //     const newItems = [...prevItems]; 
-  //     const sessionIndex = newItems.findIndex(item => item.type === "section" && item.text === "Session History");
-
-  //     if (sessionIndex !== -1 && newItems[sessionIndex].type === "section") {
-  //       newItems[sessionIndex].items = sessions.map(session => ({
-  //         type: "link",
-  //         text: `Session ${session.session_id}`,
-  //         href: `/chatbot/sessions/${session.session_id}`
-  //       }));
-  //     }
-  //     return newItems; 
-  //   }); 
-  // }, [sessions]); 
-
   const onChange = ({ detail }) => {
     const sectionIndex = items.findIndex(item => item.text === detail.item.text);
-    // Toggle the collapsed state in a new object to trigger re-render
     const newCollapsedSections = {
       ...navigationPanelState.collapsedSections,
       [sectionIndex]: !navigationPanelState.collapsedSections[sectionIndex]
@@ -141,7 +119,6 @@ export default function NavigationPanel() {
           style={{ textAlign: "right"}}
         >
           New session
-
         </RouterButton>
       </Box>
       <SideNavigation
@@ -155,5 +132,3 @@ export default function NavigationPanel() {
     </div>
   );
 }
-
-

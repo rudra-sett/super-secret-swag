@@ -3,11 +3,15 @@ import Chat from "../../../components/chatbot/chat";
 
 import { Link, useParams } from "react-router-dom";
 import { Alert, Header, HelpPanel } from "@cloudscape-design/components";
+import { SessionProvider } from "../../../common/session-context";
+import { NotificationProvider } from "../../../components/notif-manager";
 
 export default function Playground() {
   const { sessionId } = useParams();
 
   return (
+    <SessionProvider>
+    <NotificationProvider>
     <BaseAppLayout
       info={
         <HelpPanel header={<Header variant="h3">Using the chat</Header>}>
@@ -46,5 +50,7 @@ export default function Playground() {
       </div>
      }
     />
+    </NotificationProvider>
+    </SessionProvider>
   );
 }

@@ -6,7 +6,7 @@ import {
   FeedbackData,
 } from "./types";
 import { Auth } from "aws-amplify";
-import { SpaceBetween, StatusIndicator, Alert } from "@cloudscape-design/components";
+import { SpaceBetween, StatusIndicator, Alert, Flashbar } from "@cloudscape-design/components";
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
@@ -14,9 +14,12 @@ import ChatMessage from "./chat-message";
 import ChatInputPanel, { ChatScrollState } from "./chat-input-panel";
 import styles from "../../styles/chat.module.scss";
 import { CHATBOT_NAME } from "../../common/constants";
+import { useSession } from "../../common/session-context";
+import { useNotifications } from "../notif-manager";
 
 export default function Chat(props: { sessionId?: string }) {
   const appContext = useContext(AppContext);
+  const { setNewSession, isNewSession } = useSession();
   const [running, setRunning] = useState<boolean>(false);
   const [session, setSession] = useState<{ id: string; loading: boolean }>({
     id: props.sessionId ?? uuidv4(),
@@ -33,6 +36,8 @@ export default function Chat(props: { sessionId?: string }) {
     })
   );
 
+  const { notifications } = useNotifications();
+
   const [messageHistory, setMessageHistory] = useState<ChatBotHistoryItem[]>(
     []
   );
@@ -43,7 +48,11 @@ export default function Chat(props: { sessionId?: string }) {
 
     (async () => {
       if (!props.sessionId) {
+        console.log("Creating new session");
         setSession({ id: uuidv4(), loading: false });
+        setNewSession(true);
+        console.log("new session has been created, setNewSession to true");
+        // new session created
         return;
       }
 
@@ -112,8 +121,16 @@ export default function Chat(props: { sessionId?: string }) {
   }
 
   return (
-    <div className={styles.chat_container}>      
+    <div className={styles.chat_container}> 
       <SpaceBetween direction="vertical" size="m">
+        {notifications.length > 0 && (
+          <Flashbar items={notifications.map(notif => ({
+            content: notif.content,
+            dismissible: notif.dismissible,
+            onDismiss: () => notif.onDismiss(),
+            type: notif.type
+          }))} />
+        )}
       {messageHistory.length == 0 && !session?.loading && (
        <Alert
           statusIconAriaLabel="Info"
@@ -121,6 +138,7 @@ export default function Chat(props: { sessionId?: string }) {
        >
         AI Models can make mistakes. Be mindful in validating important information.
       </Alert> )}
+
       <SpaceBetween direction="vertical" size="m"></SpaceBetween>
         {messageHistory.map((message, idx) => (
           <ChatMessage
