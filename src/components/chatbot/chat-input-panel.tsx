@@ -54,6 +54,7 @@ import {
 // import { receiveMessages } from "../../graphql/subscriptions";
 import { Utils } from "../../common/utils";
 import {SessionRefreshContext} from "../../common/session-refresh-context"
+import { useNotifications } from "../notif-manager";
 
 export interface ChatInputPanelProps {
   running: boolean;
@@ -99,6 +100,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     // modelsStatus: "loading",
     // workspacesStatus: "loading",
   });
+  const { notifications, addNotification } = useNotifications();
   const [configDialogVisible, setConfigDialogVisible] = useState(false);
   const [imageDialogVisible, setImageDialogVisible] = useState(false);
   const [files, setFiles] = useState<ImageFile[]>([]);
@@ -447,11 +449,11 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       // Event listener for incoming messages
       ws.addEventListener('message', async function incoming(data) {
         // console.log(data);        
+        if (data.data.includes("ERROR: ")) {
+          addNotification("error",data.data);          
+          ws.close();
+        }
         if (data.data == '!<|EOF_STREAM|>!') {
-          // await apiClient.sessions.updateSession(props.session.id, "0", messageHistoryRef.current);
-          // ws.close();
-          // appContext.config.api_endpoint = "hi"
-          // console.log(appContext);
           
           incomingMetadata = true;
           return;
