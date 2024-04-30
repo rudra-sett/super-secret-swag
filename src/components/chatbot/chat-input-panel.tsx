@@ -359,9 +359,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     let username;
     await Auth.currentAuthenticatedUser().then((value) => username = value.username);
     if (!username) return;
-    let username;
-    await Auth.currentAuthenticatedUser().then((value) => username = value.username);
-    if (!username) return;
     // const readline = require('readline').createInterface({
     //   input: process.stdin,
     //   output: process.stdout

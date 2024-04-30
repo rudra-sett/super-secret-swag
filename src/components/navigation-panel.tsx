@@ -147,7 +147,6 @@ export default function NavigationPanel() {
         </RouterButton>
 
       </Header> */}
-      {/* <SpaceBetween alignItems="center" size="s"> */}
       <Box margin="xs" padding="xs" textAlign="center">
         <RouterButton
           iconAlign="right"
@@ -163,6 +162,7 @@ export default function NavigationPanel() {
         </RouterButton>
         </Box>
       {/* </SpaceBetween> */}
+      {loaded ?
       <SideNavigation
         onFollow={onFollow}
         onChange={onChange}
