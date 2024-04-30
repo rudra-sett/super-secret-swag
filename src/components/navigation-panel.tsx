@@ -15,7 +15,6 @@ import { useContext, useState, useEffect } from "react";
 import { ApiClient } from "../common/api-client/api-client";
 import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
-import { useSession } from "../common/session-context";
 import { useNotifications } from "../components/notif-manager";
 
 export default function NavigationPanel() {
@@ -26,7 +25,6 @@ export default function NavigationPanel() {
   const [sessions, setSessions] = useState<any[]>([]);
   const [items, setItems] = useState<SideNavigationProps.Item[]>([]);
   const [loadingSessions, setLoadingSessions] = useState(false);
-  const { isNewSession, setNewSession } = useSession();
   const { addNotification } = useNotifications();
 
   const loadSessions = async () => {
@@ -53,20 +51,6 @@ export default function NavigationPanel() {
   useEffect(() => {
     loadSessions();
   }, []);
-
-  useEffect(() => {
-    const performSessionLoad = async () => {
-      if (isNewSession) {
-        console.log(isNewSession)
-        console.log("New session detected, loading sessions.");
-        await loadSessions();
-        setNewSession(false);
-        console.log("reset session state back to false");
-      }
-    };
-  
-    performSessionLoad();
-  }, [isNewSession, loadSessions]);
 
   const updateItems = (sessions) => {
     const newItems: SideNavigationProps.Item[] = [

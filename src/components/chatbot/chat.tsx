@@ -14,17 +14,16 @@ import ChatMessage from "./chat-message";
 import ChatInputPanel, { ChatScrollState } from "./chat-input-panel";
 import styles from "../../styles/chat.module.scss";
 import { CHATBOT_NAME } from "../../common/constants";
-import { useSession } from "../../common/session-context";
 import { useNotifications } from "../notif-manager";
 
 export default function Chat(props: { sessionId?: string }) {
   const appContext = useContext(AppContext);
-  const { setNewSession, isNewSession } = useSession();
   const [running, setRunning] = useState<boolean>(false);
   const [session, setSession] = useState<{ id: string; loading: boolean }>({
     id: props.sessionId ?? uuidv4(),
     loading: typeof props.sessionId !== "undefined",
   });
+
   const [configuration, setConfiguration] = useState<ChatBotConfiguration>(
     () => ({
       streaming: true,
@@ -42,17 +41,22 @@ export default function Chat(props: { sessionId?: string }) {
     []
   );
 
+  // // add useEffect that sets the isNewSession to true after the first message is sent and the stream is done.
+  // useEffect(() => {
+  //   if (messageHistory.length === 0 && !running) {
+  //     console.log("First message has been rendered");
+  //     setNewSession(true);
+  //     console.log("setNewSession to true in chat");
+  //   }
+  // }, [messageHistory]);  // Dependency on messageHistory and the handled flag
+
   useEffect(() => {
     if (!appContext) return;
     setMessageHistory([]);
 
     (async () => {
       if (!props.sessionId) {
-        console.log("Creating new session");
         setSession({ id: uuidv4(), loading: false });
-        setNewSession(true);
-        console.log("new session has been created, setNewSession to true");
-        // new session created
         return;
       }
 
