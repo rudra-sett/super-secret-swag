@@ -54,7 +54,7 @@ export default function ChatMessage(props: ChatMessageProps) {
       setLoading(true);
       if (message.metadata?.files) {
         const files: ImageFile[] = [];
-        for await (const file of message.metadata?.files) {
+        for await (const file of (message.metadata?.files as ImageFile[])) {
           const signedUrl = await getSignedUrl(file.key);
           files.push({
             ...file,
@@ -77,7 +77,7 @@ export default function ChatMessage(props: ChatMessageProps) {
       ? props.message.content
       : props.message.tokens?.map((v) => v.value).join("");
 
-  const showSources = props.message.metadata?.Sources && props.message.metadata.Sources.length > 0;
+  const showSources = props.message.metadata?.Sources && (props.message.metadata.Sources as string[]).length > 0;
 
   return (
     <div>

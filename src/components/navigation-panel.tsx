@@ -101,7 +101,7 @@ export default function NavigationPanel() {
   };
 
   const onChange = ({ detail }) => {
-    const sectionIndex = items.findIndex(item => item.text === detail.item.text);
+    const sectionIndex = items.findIndex((item : SideNavigationProps.Item) => (item as SideNavigationProps.Section).text === detail.item.text);
     const newCollapsedSections = {
       ...navigationPanelState.collapsedSections,
       [sectionIndex]: !navigationPanelState.collapsedSections[sectionIndex]
