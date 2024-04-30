@@ -18,7 +18,11 @@ import React from "react";
 import Box from '@cloudscape-design/components/box';
 
 
-
+const AIWarning = () => {
+  return (
+    <Box textAlign="center">AI Models can make mistakes. Make sure to verify all information.</Box>
+  );
+};
 
 export default function Chat(props: { sessionId?: string }) {
   const appContext = useContext(AppContext);
@@ -182,7 +186,7 @@ export default function Chat(props: { sessionId?: string }) {
             }}
           />
           </SpaceBetween> */}
-        <SpaceBetween direction="vertical" size="l">
+        <SpaceBetween direction="vertical" size="0.5">
         {/* <Alert
           dismissible
           statusIconAriaLabel="info"
@@ -202,6 +206,9 @@ export default function Chat(props: { sessionId?: string }) {
             setMessageHistory={setMessageHistory}
             configuration={configuration}
             setConfiguration={setConfiguration} />
+            <div style={{ marginTop: '-22px' }}>
+              <AIWarning />
+              </div>
         </SpaceBetween>
         <div className={styles.chat_container}>
           <SpaceBetween direction="vertical" size="m">
