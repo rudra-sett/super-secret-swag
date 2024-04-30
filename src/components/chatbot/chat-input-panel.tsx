@@ -57,6 +57,8 @@ import {SessionRefreshContext} from "../../common/session-refresh-context"
 
 
 
+
+
 export interface ChatInputPanelProps {
   running: boolean;
   setRunning: Dispatch<SetStateAction<boolean>>;
@@ -450,7 +452,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       });
       // Event listener for incoming messages
       ws.addEventListener('message', async function incoming(data) {
-        // console.log(data);        
+        console.log(data);        
         if (data.data == '!<|EOF_STREAM|>!') {
           // await apiClient.sessions.updateSession(props.session.id, "0", messageHistoryRef.current);
           // ws.close();
