@@ -9,7 +9,7 @@ export default function Playground() {
 
   return (
     <BaseAppLayout
-      
+      //RIGHT-HAND Side Panel: Customized text HERE
       info={
         <HelpPanel header={<Header variant="h3">Using the search tool</Header>}>
           <p>
