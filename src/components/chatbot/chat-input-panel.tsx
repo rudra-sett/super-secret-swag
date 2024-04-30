@@ -452,11 +452,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           // ws.close();
           // appContext.config.api_endpoint = "hi"
           // console.log(appContext);
-          if (firstTime) {   
-            // console.log("first time!", firstTime)
-            // console.log("did we also need a refresh?", needsRefresh)                   
-            setNeedsRefresh(true);            
-          }
+          
           incomingMetadata = true;
           return;
           // return;
@@ -504,6 +500,11 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       // Handle WebSocket closure
       ws.addEventListener('close', async function close() {
         // await apiClient.sessions.updateSession("0", props.session.id, messageHistoryRef.current);
+        if (firstTime) {   
+          // console.log("first time!", firstTime)
+          // console.log("did we also need a refresh?", needsRefresh)                   
+          setNeedsRefresh(true);            
+        }
         props.setRunning(false);        
         console.log('Disconnected from the WebSocket server');
       });

@@ -38,7 +38,7 @@ export default function NavigationPanel() {
       if (username && needsRefresh) {
         // let's wait for about half a second before refreshing the sessions
         const delay = ms => new Promise(res => setTimeout(res, ms));
-        await delay(1000);
+        await delay(1500);
         const fetchedSessions = await apiClient.sessions.getSessions(username);
         updateItems(fetchedSessions);
         console.log("fetched sessions")
