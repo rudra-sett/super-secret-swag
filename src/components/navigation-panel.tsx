@@ -51,7 +51,7 @@ export default function NavigationPanel() {
     }
   }  catch (error) {
     console.error("Failed to load sessions:", error);
-    addNotification("error", "Failed to load sessions, please refresh the page.");    
+    addNotification("error", error.message);    
     // const delay = ms => new Promise(res => setTimeout(res, ms));
     // delay(3000).then(() => removeNotification(id));
     

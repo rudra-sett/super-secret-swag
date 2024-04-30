@@ -91,7 +91,7 @@ export default function Chat(props: { sessionId?: string }) {
         }
       } catch (error) {
         console.log(error);
-        addNotification("error","Could not load session, please try again")
+        addNotification("error",error.message)
       }
 
       setSession({ id: props.sessionId, loading: false });

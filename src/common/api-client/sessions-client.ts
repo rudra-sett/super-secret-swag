@@ -29,6 +29,7 @@ export class SessionsClient {
     let output = [];
     let runs = 0;
     let limit = 3;
+    let errorMessage = "Could not load sessions"
     while (!validData && runs < limit ) {
       runs += 1;
       const response = await fetch(API + '/user-session', {
@@ -41,6 +42,8 @@ export class SessionsClient {
       });
       if (response.status != 200) {
         validData = false;
+        errorMessage = await response.json()
+        // errorMessage = body.body;
         break;
       }
       const reader = response.body.getReader();
@@ -56,7 +59,7 @@ export class SessionsClient {
       }
     }
     if (!validData) {
-      throw new Error("Could not load sessions");
+      throw new Error(errorMessage);
     }
     console.log(output);
     return output;
@@ -73,6 +76,7 @@ export class SessionsClient {
     let output;
     let runs = 0;
     let limit = 3;
+    let errorMessage = "Could not load session!";
     while (!validData && runs < limit ) {
       runs += 1;
       const response = await fetch(API + '/user-session', {
@@ -89,6 +93,7 @@ export class SessionsClient {
       // console.log(response.body);
       if (response.status != 200) {
         validData = false;
+        errorMessage = await response.json()
         break;
       }
       const reader = response.body.getReader();
@@ -104,7 +109,7 @@ export class SessionsClient {
       }
     }
     if (!validData) {
-      throw new Error("Could not load session!")      
+      throw new Error()      
     }
     let history: ChatBotHistoryItem[] = [];
     // console.log(output);
