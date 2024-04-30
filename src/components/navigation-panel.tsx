@@ -18,6 +18,7 @@ import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
 import {SessionRefreshContext} from "../common/session-refresh-context"
 import { useNotifications } from "../components/notif-manager";
+import { Utils } from "../common/utils.js";
 
 export default function NavigationPanel() {
   const appContext = useContext(AppContext);
@@ -29,7 +30,7 @@ export default function NavigationPanel() {
   const [loaded,setLoaded] = useState<boolean>(false);
   const {needsRefresh, setNeedsRefresh} = useContext(SessionRefreshContext);
   const [loadingSessions, setLoadingSessions] = useState(false);
-  const { addNotification } = useNotifications();
+  const { addNotification, removeNotification } = useNotifications();
 
 
   // update the list of sessions every now and then
@@ -52,7 +53,10 @@ export default function NavigationPanel() {
     }
   }  catch (error) {
     console.error("Failed to load sessions:", error);
-    addNotification("error", "Failed to load sessions");
+    const id = addNotification("error", "Failed to load sessions");
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+    delay(1500).then(() => removeNotification(id));
+    
   } finally {
     setLoadingSessions(false);
   }
@@ -70,7 +74,8 @@ export default function NavigationPanel() {
 
   const onReloadClick = async () => {
     await loadSessions();
-    addNotification("success", "Sessions reloaded successfully!");
+    const id =addNotification("success", "Sessions reloaded successfully!");
+    Utils.delay(3000).then(() => removeNotification(id))
   };
 
 
@@ -85,7 +90,7 @@ export default function NavigationPanel() {
           href: `/chatbot/playground/${session.session_id}`,
         })).concat([{
           type: "link",
-          info: <Button onClick={onReloadClick} iconName="refresh" loading={loadingSessions} variant="link">Reload Sessions</Button>
+          info: <Box margin="xs" padding={{ top: "xs" }} textAlign="center" ><Button onClick={onReloadClick} iconName="refresh" loading={loadingSessions} variant="link">Reload Sessions</Button></Box>
         }]),
       },
       {
@@ -126,23 +131,7 @@ export default function NavigationPanel() {
         >
           New session
         </RouterButton>
-      </Box>
-      {/* <SpaceBetween alignItems="center" size="s"> */}
-      <Box margin="xs" padding="xs" textAlign="center">
-        <RouterButton
-          iconAlign="right"
-          iconSvg={<PencilSquareIcon />}
-          variant="primary"
-          href={`/chatbot/playground/${uuidv4()}`}
-          data-alignment="right"
-          className="new-chat-button"
-          style={{ textAlign: "right" }}
-        >
-          New session
-
-        </RouterButton>
-        </Box>
-      {/* </SpaceBetween> */}
+      </Box>            
       {loaded ?
       <SideNavigation
         onFollow={onFollow}
