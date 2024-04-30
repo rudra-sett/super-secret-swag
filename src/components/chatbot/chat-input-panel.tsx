@@ -402,7 +402,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       const wsUrl = TEST_URL+'?Authorization='+TOKEN;
       const ws = new WebSocket(wsUrl);
 
-      let incomingMetadata : boolean = false;
+      let incomingMetadata: boolean = false;
       let sources = {};
 
       setTimeout(() => {if (receivedData == '') {
@@ -434,7 +434,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           Mobility Center (handles eligibility questions, renewals, and changes to mobility status): 617-337-2727 (voice/relay)
           MBTA Customer support (handles all other queries): 617-222-3200 (voice/relay)`,
             projectId: 'rsrs111111',
-            user_id : username,
+            user_id: username,
             session_id: props.session.id
           }
         });
@@ -460,11 +460,11 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         if (!incomingMetadata) {
           receivedData += data.data;
         } else {
-          sources = {"Sources" : JSON.parse(data.data)}
+          sources = { "Sources": JSON.parse(data.data) }
           console.log(sources);
         }
-        
-        
+
+
 
         // console.log(data.data);
         // Update the chat history state with the new message        
@@ -491,7 +491,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         // if (data.data == '') {
         //   ws.close()
         // }
-        
+
       });
       // Handle possible errors
       ws.addEventListener('error', function error(err) {
