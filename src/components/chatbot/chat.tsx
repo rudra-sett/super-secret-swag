@@ -15,6 +15,9 @@ import ChatInputPanel, { ChatScrollState } from "./chat-input-panel";
 import styles from "../../styles/chat.module.scss";
 import { CHATBOT_NAME } from "../../common/constants";
 import React from "react";
+import Box from '@cloudscape-design/components/box';
+
+
 
 
 export default function Chat(props: { sessionId?: string }) {
@@ -104,6 +107,8 @@ export default function Chat(props: { sessionId?: string }) {
       addUserFeedback(feedbackData);
     // }
   };
+
+  
 
   const [items, setItems] = React.useState([
     {
