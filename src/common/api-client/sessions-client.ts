@@ -27,7 +27,10 @@ export class SessionsClient {
     const auth = await Utils.authenticate();
     let validData = false;
     let output = [];
-    while (!validData) {
+    let runs = 0;
+    let limit = 3;
+    while (!validData && runs < limit ) {
+      runs += 1;
       const response = await fetch(API + '/user-session', {
         method: 'POST',
         headers: {
@@ -59,7 +62,10 @@ export class SessionsClient {
     const auth = await Utils.authenticate();
     let validData = false;
     let output;
-    while (!validData) {
+    let runs = 0;
+    let limit = 3;
+    while (!validData && runs < limit ) {
+      runs += 1;
       const response = await fetch(API + '/user-session', {
         method: 'POST',
         headers: {
