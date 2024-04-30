@@ -6,7 +6,7 @@ import {
   FeedbackData,
 } from "./types";
 // import { Auth } from "aws-amplify";
-import { SpaceBetween, StatusIndicator } from "@cloudscape-design/components";
+import { Alert, SpaceBetween, StatusIndicator } from "@cloudscape-design/components";
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
@@ -14,6 +14,7 @@ import ChatMessage from "./chat-message";
 import ChatInputPanel, { ChatScrollState } from "./chat-input-panel";
 import styles from "../../styles/chat.module.scss";
 import { CHATBOT_NAME } from "../../common/constants";
+
 
 export default function Chat(props: { sessionId?: string }) {
   const appContext = useContext(AppContext);
@@ -83,6 +84,7 @@ export default function Chat(props: { sessionId?: string }) {
   }, [appContext, props.sessionId]);
 
   const handleFeedback = (feedbackType: 1 | 0, idx: number, message: ChatBotHistoryItem) => {
+    
     // if (message.metadata.sessionId) {
       console.log("submitting feedback...")
       // let prompt = "";
@@ -119,9 +121,14 @@ export default function Chat(props: { sessionId?: string }) {
   }
   return (
     <div>
-      {messageHistory.length === 0 && !session?.loading && (
-        <div className={`${styles.fullscreen_center} ${styles.chatbot_name}`}>{CHATBOT_NAME}</div>
-      )}
+      
+      {/* {messageHistory.length === 0 && !session?.loading && (
+        <div className={`${styles.fullscreen_center} ${styles.chatbot_name}`}>
+          <SpaceBetween direction="vertical" size="l">
+          {CHATBOT_NAME}
+            </SpaceBetween>
+            </div>
+      )} */}
       <div className={styles.welcome_text}>
         {session?.loading && (
           <center>
@@ -131,6 +138,17 @@ export default function Chat(props: { sessionId?: string }) {
       </div>
       <div className={styles.input_container}>
         <SpaceBetween direction="vertical" size="m">
+        <Alert
+          dismissible
+          statusIconAriaLabel="info"
+          type="warning"
+          header=""
+          >
+            AI Models can make mistakes. Be mindful in validating important information.
+            Please refrain from including any personal information such as name, address, or birthday. 
+            The 'EEA Grants Navigator' only assists with finding not applying for grant opportunities.
+            </Alert>
+            
           <ChatInputPanel
             session={session}
             running={running}

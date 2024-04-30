@@ -394,9 +394,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             chatHistory: assembleHistory(messageHistoryRef.current.slice(0, -2)),
             systemPrompt: `Based on the project and organization description provided by user, 
             recommend the most relevant specific grant programs offered by the Massachusetts energy 
-            and environment office that would be a good fit. Boldly list the grant program name as a header, 
+            and environment office that would be a good fit. Always boldly list the grant program name as a header, 
             a 2-3 sentence description and under sub-bullet points about the specific deadline date, 
-            target audience, funding amount, match requirement, and contact information listed on the relevant grant webpage.`,
+            target audience, funding amount, match requirement, and contact email and application link listed on the relevant grant webpage.`,
             // You are a navigator of grants offered by the Massachusetts Executive Office of Energy and Enviornmental Affairs(EEA). With each
             // user input, you will return the relevant grants offered by the EEA that are most relevant to the user input. The response should be formatted to include
             // the name of the grant as a bolded subheading, a 2-3 sentence description of the grant.
@@ -572,7 +572,8 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             setVisible={setImageDialogVisible}
             configuration={props.configuration}
             setConfiguration={props.setConfiguration}
-          /> */}
+            /> */
+            }
           <TextareaAutosize
             className={styles.input_textarea}
             maxRows={6}
@@ -620,9 +621,10 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
                 props.session.loading
               }
               onClick={handleSendMessage}
-              iconAlign="right"
-              iconName={!props.running ? "angle-right-double" : undefined}
+              iconAlign="left"
+              iconName={!props.running ? "search" : undefined}
               variant="primary"
+              //variant="primary"
             >
               {props.running ? (
                 <>
@@ -630,7 +632,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
                   <Spinner />
                 </>
               ) : (
-                "Send"
+                "Search"
               )}
             </Button>
           </div>
