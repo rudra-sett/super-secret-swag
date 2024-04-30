@@ -22,6 +22,7 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import { Auth } from "aws-amplify";
+import { Auth } from "aws-amplify";
 import TextareaAutosize from "react-textarea-autosize";
 import { ReadyState } from "react-use-websocket";
 // import WebSocket from 'ws';
@@ -355,6 +356,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     let username;
     await Auth.currentAuthenticatedUser().then((value) => username = value.username);
     if (!username) return;
+    let username;
+    await Auth.currentAuthenticatedUser().then((value) => username = value.username);
+    if (!username) return;
     // const readline = require('readline').createInterface({
     //   input: process.stdin,
     //   output: process.stdout
@@ -362,8 +366,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
 
     let messageToSend = state.value.trim();
     console.log(messageToSend);
-    messageToSend  = await apiClient.comprehendMedical.redactText(messageToSend);
-    console.log(messageToSend);
+    messageToSend  = await apiClient.comprehendMedicalClient.redactText(messageToSend);
+
+    
     setState({ value: "" });
     // let start = new Date().getTime() / 1000;
     

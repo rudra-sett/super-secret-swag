@@ -152,10 +152,13 @@ export default function DocumentsTab(props: DocumentsTabProps) {
   });
 
   const syncKendra = async () => {    
+  const syncKendra = async () => {    
     if (syncing) {
+      // setSyncing(false)
       // setSyncing(false)
       return;
     }
+    setSyncing(true);
     setSyncing(true);
     try {
       await apiClient.knowledgeManagement.syncKendra();

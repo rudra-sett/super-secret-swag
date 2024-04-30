@@ -14,6 +14,7 @@ import PencilSquareIcon from "../../public/images/pencil-square.jsx";
 import RouterButton from "../components/wrappers/router-button";
 import { useContext, useState, useEffect } from "react";
 import { ApiClient } from "../common/api-client/api-client";
+import { CHATBOT_NAME } from "../common/constants";
 import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
 import {SessionRefreshContext} from "../common/session-refresh-context"
@@ -114,39 +115,55 @@ export default function NavigationPanel() {
 
   return (
     <div>
-      <div style={{justifyContent: 'center'}}> 
-      <Header >
-        MEC Knowledge Tool
-      </Header>
+      {/* <div style={{ justifyContent: 'center' }}>
+        <Header >
+          MBTA The RIDE Guide AI
+        </Header>
       </div>
-    
-      <div style={{display: 'flex', justifyContent: 'center' }}> 
-      <RouterButton
-        iconAlign="right"
-        iconSvg={<PencilSquareIcon />}
-        variant="primary"
-        href={`/chatbot/playground/${uuidv4()}`}
-  >
-    New session
-  </RouterButton>
-      
+
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <RouterButton
+          iconAlign="right"
+          iconSvg={<PencilSquareIcon />}
+          variant="primary"
+          href={`/chatbot/playground/${uuidv4()}`}
+        >
+          New session
+        </RouterButton>
+
       </div>
-     <Header> 
-       <RouterButton
-         iconAlign="right"
-         iconSvg= {<PencilSquareIcon />}
-         variant="primary"
-         href={`/chatbot/playground/${uuidv4()}`}
-         data-alignment= "right"
-         className="new-chat-button"
-         style = {{textAlign: "right"}}
-         >
-         New session
-         
-       </RouterButton>
-        
-       </Header>
-    <SideNavigation
+      <Header>
+        <RouterButton
+          iconAlign="right"
+          iconSvg={<PencilSquareIcon />}
+          variant="primary"
+          href={`/chatbot/playground/${uuidv4()}`}
+          data-alignment="right"
+          className="new-chat-button"
+          style={{ textAlign: "right" }}
+        >
+          New session
+
+        </RouterButton>
+
+      </Header> */}
+      {/* <SpaceBetween alignItems="center" size="s"> */}
+      <Box margin="xs" padding="xs" textAlign="center">
+        <RouterButton
+          iconAlign="right"
+          iconSvg={<PencilSquareIcon />}
+          variant="primary"
+          href={`/chatbot/playground/${uuidv4()}`}
+          data-alignment="right"
+          className="new-chat-button"
+          style={{ textAlign: "right" }}
+        >
+          New session
+
+        </RouterButton>
+        </Box>
+      {/* </SpaceBetween> */}
+      <SideNavigation
         onFollow={onFollow}
         onChange={onChange}
         // header={{ href: "/", text: "The Ride Guide AI" }}
