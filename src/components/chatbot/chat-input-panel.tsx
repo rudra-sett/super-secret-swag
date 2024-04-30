@@ -363,6 +363,10 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     // });    
 
     const messageToSend = state.value.trim();
+    if (messageToSend.length === 0) {
+      addNotification("error","Please do not submit blank text!");
+      return;          
+    }
     setState({ value: "" });
     // let start = new Date().getTime() / 1000;
     
@@ -452,6 +456,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         if (data.data.includes("ERROR: ")) {
           addNotification("error",data.data);          
           ws.close();
+          return;
         }
         if (data.data == '!<|EOF_STREAM|>!') {
           
