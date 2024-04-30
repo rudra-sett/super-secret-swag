@@ -108,16 +108,16 @@ export default function NavigationPanel() {
   }: {
     detail: SideNavigationProps.ChangeDetail;
   }) => {
-    const sectionIndex = items.indexOf(detail.item);//items.findIndex((item) => (item as SideNavigationProps.Section).text === detail.item.text);
-    const newCollapsedSections = {
-      ...navigationPanelState.collapsedSections,
-      [sectionIndex]: !navigationPanelState.collapsedSections[sectionIndex]
-    };
+    // const sectionIndex = items.findIndex(detail.item);
+    const sectionIndex = items.indexOf(detail.item);
     setNavigationPanelState({
-      ...navigationPanelState,
-      collapsedSections: newCollapsedSections
+      collapsedSections: {
+        ...navigationPanelState.collapsedSections,
+        [sectionIndex]: !detail.expanded,
+      },
     });
   };
+
 
   return (
     <div>
@@ -139,10 +139,11 @@ export default function NavigationPanel() {
         onFollow={onFollow}
         onChange={onChange}
         // header={{ href: "/", text: "The Ride Guide AI" }}
-        items={items.map((item, idx) => ({
-          ...item,
-          defaultExpanded: !navigationPanelState.collapsedSections[idx]
-        }))}  
+        // items={items.map((item, idx) => ({
+        //   ...item,
+        //   defaultExpanded: !navigationPanelState.collapsedSections[idx]
+        // }))}  
+        items={items}
         // items={Array.isArray(items) ? items.map((item, idx) => ({
         //   ...item,
         //   defaultExpanded: !navigationPanelState.collapsedSections[idx]
