@@ -114,12 +114,14 @@ export default function Chat(props: { sessionId?: string }) {
   return (
     <div className={styles.chat_container}>      
       <SpaceBetween direction="vertical" size="m">
-      <Alert
+      {messageHistory.length == 0 && !session?.loading && (
+       <Alert
           statusIconAriaLabel="Info"
           header=""
        >
         AI Models can make mistakes. Be mindful in validating important information.
-      </Alert>
+      </Alert> )}
+      <SpaceBetween direction="vertical" size="m"></SpaceBetween>
         {messageHistory.map((message, idx) => (
           <ChatMessage
             key={idx}
