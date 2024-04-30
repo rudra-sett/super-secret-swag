@@ -110,6 +110,46 @@ export default function Chat(props: { sessionId?: string }) {
     const apiClient = new ApiClient(appContext);
     await apiClient.userFeedback.sendUserFeedback(feedbackData);
   }
+<<<<<<< Updated upstream
+=======
+  
+  const [items, setItems] = React.useState([
+    {
+      type: "success",
+      dismissible: true,
+      dismissLabel: "Dismiss message",
+      content: "This is a success flash message",
+      id: "message_5",
+      onDismiss: () =>
+         setItems(items =>
+          items.filter(item => item.id !== "message_5")
+        )
+    },
+    {
+      type: "warning",
+      dismissible: true,
+      dismissLabel: "Dismiss message",
+      content: "This is a warning flash message",
+      id: "message_4",
+      onDismiss: () =>
+        setItems(items =>
+          items.filter(item => item.id !== "message_4")
+        )
+    },
+    {
+      type: "error",
+      dismissible: true,
+      dismissLabel: "Dismiss message",
+      header: "Failed to update instance id-4890f893e",
+      content: "This is a dismissible error message",
+      id: "message_3",
+      onDismiss: () =>
+        setItems(items =>
+          items.filter(item => item.id !== "message_3")
+        )
+    }
+  ]);
+>>>>>>> Stashed changes
 
   return (
     <div className={styles.chat_container}>
