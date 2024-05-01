@@ -18,7 +18,7 @@ import { useNotifications } from "../notif-manager";
 
 export default function Chat(props: { sessionId?: string }) {
   const appContext = useContext(AppContext);
-  const [running, setRunning] = useState<boolean>(false);
+  const [running, setRunning] = useState<boolean>(true);
   const [session, setSession] = useState<{ id: string; loading: boolean }>({
     id: props.sessionId ?? uuidv4(),
     loading: typeof props.sessionId !== "undefined",
@@ -90,13 +90,12 @@ export default function Chat(props: { sessionId?: string }) {
           });
         }
         setSession({ id: props.sessionId, loading: false });
+        setRunning(false);
       } catch (error) {
         console.log(error);
         addNotification("error",error.message)
+        addNotification("info","Please refresh the page")
       }
-
-      
-      setRunning(false);
     })();
   }, [appContext, props.sessionId]);
 

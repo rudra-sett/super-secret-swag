@@ -42,7 +42,9 @@ export class SessionsClient {
       });
       if (response.status != 200) {
         validData = false;
-        errorMessage = await response.json()
+        let jsonResponse = await response.json()
+        // console.log(jsonResponse);
+        errorMessage = jsonResponse;
         // errorMessage = body.body;
         break;
       }
@@ -55,6 +57,7 @@ export class SessionsClient {
         output = JSON.parse(parsed);
         validData = true;
       } catch (e) {
+        // just retry, we get 3 attempts!
         console.log(e);
       }
     }
