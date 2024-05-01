@@ -91,7 +91,7 @@ export default function Chat(props: { sessionId?: string }) {
         }
       } catch (error) {
         console.log(error);
-        addNotification("error",error.message)
+        addNotification("error",error)
       }
 
       setSession({ id: props.sessionId, loading: false });
@@ -128,14 +128,7 @@ export default function Chat(props: { sessionId?: string }) {
   return (
     <div className={styles.chat_container}> 
       <SpaceBetween direction="vertical" size="m">
-        {notifications.length > 0 && (
-          <Flashbar items={notifications.map(notif => ({
-            content: notif.content,
-            dismissible: notif.dismissible,
-            onDismiss: () => notif.onDismiss(),
-            type: notif.type
-          }))} />
-        )}
+        
       {messageHistory.length == 0 && !session?.loading && (
        <Alert
           statusIconAriaLabel="Info"
@@ -144,7 +137,7 @@ export default function Chat(props: { sessionId?: string }) {
         AI Models can make mistakes. Be mindful in validating important information.
       </Alert> )}
 
-      <SpaceBetween direction="vertical" size="m"></SpaceBetween>
+      {/* <SpaceBetween direction="vertical" size="m"></SpaceBetween> */}
         {messageHistory.map((message, idx) => (
           <ChatMessage
             key={idx}
