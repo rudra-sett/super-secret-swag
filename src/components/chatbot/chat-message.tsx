@@ -13,7 +13,8 @@ import {
   Cards,
   SpaceBetween,
   Header,
-  Link
+  Link,
+  ButtonDropdown
 } from "@cloudscape-design/components";
 import { useEffect, useState } from "react";
 import { JsonView, darkStyles } from "react-json-view-lite";
@@ -82,176 +83,13 @@ export default function ChatMessage(props: ChatMessageProps) {
       {props.message?.type === ChatBotMessageType.AI && (
         <Container
           footer={
-            ((props?.showMetadata && props.message.metadata) ||
-              (props.message.metadata &&
+            ((props?.showMetadata && props.message.metadata.Sources) ||
+              (props.message.metadata.Sources &&
                 props.configuration?.showMetadata)) && (
-              <ExpandableSection variant="footer" headerText="Sources">
-                {/* <JsonView
-                  shouldInitiallyExpand={(level) => level < 2}
-                  data={JSON.parse(
-                    JSON.stringify(props.message.metadata).replace(
-                      /\\n/g,
-                      "\\\\n"
-                    )
-                  )}
-                  style={{
-                    ...darkStyles,
-                    stringValue: "jsonStrings",
-                    numberValue: "jsonNumbers",
-                    booleanValue: "jsonBool",
-                    nullValue: "jsonNull",
-                    container: "jsonContainer",
-                  }}
-                /> */}
-                <Cards
-                  // ariaLabels={{
-                  //   itemSelectionLabel: (e, t) => `select ${t.name}`,
-                  //   selectionGroupLabel: "Item selection"
-                  // }}
-                  cardDefinition={{
-                    header: item => (
-                      <Link href={item} fontSize="body-s">
-                        {item}
-                      </Link>
-                    ),
-                    // sections: [
-                    //   {
-                    //     id: "date",
-                    //     header: "Date",
-                    //     content: item => item.date
-                    //   },                      
-                    // ]
-                  }}
-                  cardsPerRow={[
-                    { cards: 1 },
-                    { minWidth: 500, cards: 3 }
-                  ]}
-                  items={props.message.metadata.Sources as string[]}
-                  loadingText="Loading sources..."
-                  empty={
-                    <Box
-                      margin={{ vertical: "xs" }}
-                      textAlign="center"
-                      color="inherit"
-                    >
-                      <SpaceBetween size="m">
-                        <b>No resources</b>
-                        <Button>Create resource</Button>
-                      </SpaceBetween>
-                    </Box>
-                  }
-                  // header={<Header>Example Cards</Header>}
-                />
-                {props.message.metadata.documents && (
-                  <>
-                    <div className={styles.btn_chabot_metadata_copy}>
-                      <Popover
-                        size="medium"
-                        position="top"
-                        triggerType="custom"
-                        dismissButton={false}
-                        content={
-                          <StatusIndicator type="success">
-                            Copied to clipboard
-                          </StatusIndicator>
-                        }
-                      >
-                        <Button
-                          variant="inline-icon"
-                          iconName="copy"
-                          onClick={() => {
-                            navigator.clipboard.writeText(
-                              (
-                                props.message.metadata
-                                  .documents as RagDocument[]
-                              )[parseInt(documentIndex)].page_content
-                            );
-                          }}
-                        />
-                      </Popover>
-                    </div>
-                    <Tabs
-                      tabs={(
-                        props.message.metadata.documents as RagDocument[]
-                      ).map((p: any, i) => {
-                        return {
-                          id: `${i}`,
-                          label: p.metadata.path,
-                          content: (
-                            <>
-                              <Textarea
-                                value={p.page_content}
-                                readOnly={true}
-                                rows={8}
-                              />
-                            </>
-                          ),
-                        };
-                      })}
-                      activeTabId={documentIndex}
-                      onChange={({ detail }) =>
-                        setDocumentIndex(detail.activeTabId)
-                      }
-                    />
-                  </>
-                )}
-                {props.message.metadata.prompts && (
-                  <>
-                    <div className={styles.btn_chabot_metadata_copy}>
-                      <Popover
-                        size="medium"
-                        position="top"
-                        triggerType="custom"
-                        dismissButton={false}
-                        content={
-                          <StatusIndicator type="success">
-                            Copied to clipboard
-                          </StatusIndicator>
-                        }
-                      >
-                        <Button
-                          variant="inline-icon"
-                          iconName="copy"
-                          onClick={() => {
-                            navigator.clipboard.writeText(
-                              (props.message.metadata.prompts as string[][])[
-                              parseInt(promptIndex)
-                              ][0]
-                            );
-                          }}
-                        />
-                      </Popover>
-                    </div>
-                    <Tabs
-                      tabs={(props.message.metadata.prompts as string[][]).map(
-                        (p, i) => {
-                          return {
-                            id: `${i}`,
-                            label: `Prompt ${(props.message.metadata.prompts as string[][])
-                                .length > 1
-                                ? i + 1
-                                : ""
-                              }`,
-                            content: (
-                              <>
-                                <Textarea
-                                  value={p[0]}
-                                  readOnly={true}
-                                  rows={8}
-                                />
-                              </>
-                            ),
-                          };
-                        }
-                      )}
-                      activeTabId={promptIndex}
-                      onChange={({ detail }) =>
-                        setPromptIndex(detail.activeTabId)
-                      }
-                    />
-                  </>
-                )}
-              </ExpandableSection>
+                  <ButtonDropdown
+                  items={(props.message.metadata.Sources as any[]).map((item) => { return {id: "id", disabled: false, text : item.title, href : item.uri, external : true, externalIconAriaLabel: "(opens in new tab)"}})}
+            
+                  >Sources</ButtonDropdown>                                                                
             )
           }
         >
@@ -321,8 +159,8 @@ export default function ChatMessage(props: ChatMessageProps) {
               },
             }}
           />
-          <div className={styles.thumbsContainer}>
-            {/* {(selectedIcon === 1 || selectedIcon === null) && (
+          {/* <div className={styles.thumbsContainer}>
+            {(selectedIcon === 1 || selectedIcon === null) && (
               <Button
                 variant="icon"
                 iconName={selectedIcon === 1 ? "thumbs-up-filled" : "thumbs-up"}
@@ -332,8 +170,8 @@ export default function ChatMessage(props: ChatMessageProps) {
                   setSelectedIcon(1);
                 }}
               />
-            )} */}
-            {/* {(selectedIcon === 0 || selectedIcon === null) && (
+            )}
+            {(selectedIcon === 0 || selectedIcon === null) && (
               <Button
                 iconName={
                   selectedIcon === 0 ? "thumbs-down-filled" : "thumbs-down"
@@ -344,8 +182,8 @@ export default function ChatMessage(props: ChatMessageProps) {
                   setSelectedIcon(0);
                 }}
               />
-            )} */}
-          </div>
+            )}
+          </div> */}
         </Container>
       )}
       {loading && (
@@ -379,7 +217,3 @@ export default function ChatMessage(props: ChatMessageProps) {
     </div>
   );
 }
-
-
-
-

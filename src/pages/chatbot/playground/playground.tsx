@@ -23,7 +23,11 @@ export default function Playground() {
             <br></br>
             Learn more about the developers <a href="https://burnes.northeastern.edu/ai-for-impact-coop/">here</a>.
             <br></br>
-            Feedback? Please visit our form to provide our team feedback <a href="https://docs.google.com/forms/d/e/1FAIpQLSfR2SQ5OP4m9P6ALUmMhz3Lf-eZsPvG_BZzGCKTIa6OVPylqg/viewform?usp=sf_link">here</a>.
+          </p>
+          <h3>Feedback?</h3>
+          <p>
+          Please visit our form to provide our team feedback <a href="https://docs.google.com/forms/d/e/1FAIpQLSfR2SQ5OP4m9P6ALUmMhz3Lf-eZsPvG_BZzGCKTIa6OVPylqg/viewform?usp=sf_link">here</a>.
+          <br></br>
           </p>
         
         </HelpPanel>
