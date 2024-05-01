@@ -89,12 +89,13 @@ export default function Chat(props: { sessionId?: string }) {
             behavior: "instant",
           });
         }
+        setSession({ id: props.sessionId, loading: false });
       } catch (error) {
         console.log(error);
         addNotification("error",error.message)
       }
 
-      setSession({ id: props.sessionId, loading: false });
+      
       setRunning(false);
     })();
   }, [appContext, props.sessionId]);

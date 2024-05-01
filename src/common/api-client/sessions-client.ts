@@ -76,7 +76,7 @@ export class SessionsClient {
     let output;
     let runs = 0;
     let limit = 3;
-    let errorMessage = "Could not load session!";
+    let errorMessage = "Could not load session";
     while (!validData && runs < limit ) {
       runs += 1;
       const response = await fetch(API + '/user-session', {
@@ -109,7 +109,7 @@ export class SessionsClient {
       }
     }
     if (!validData) {
-      throw new Error()      
+      throw new Error(errorMessage)      
     }
     let history: ChatBotHistoryItem[] = [];
     // console.log(output);
