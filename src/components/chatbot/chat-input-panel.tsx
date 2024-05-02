@@ -453,7 +453,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       // Event listener for incoming messages
       ws.addEventListener('message', async function incoming(data) {
         // console.log(data);        
-        if (data.data.includes("ERROR: ")) {
+        if (data.data.includes("<!ERROR!>:")) {
           addNotification("error",data.data);          
           ws.close();
           return;
