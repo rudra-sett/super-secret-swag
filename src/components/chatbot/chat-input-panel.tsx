@@ -396,7 +396,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             recommend the most relevant specific grant programs offered by the Massachusetts energy 
             and environment office that would be a good fit. Always boldly list the grant program name as a header, 
             a 2-3 sentence description and under sub-bullet points about the specific deadline date, 
-            target audience, funding amount, match requirement, and contact email and relevant link listed on the relevant grant webpage.`,
+            target audience, funding amount, match requirement, and contact information and relevant link listed on the relevant grant webpage.`,
             // You are a navigator of grants offered by the Massachusetts Executive Office of Energy and Enviornmental Affairs(EEA). With each
             // user input, you will return the relevant grants offered by the EEA that are most relevant to the user input. The response should be formatted to include
             // the name of the grant as a bolded subheading, a 2-3 sentence description of the grant.
