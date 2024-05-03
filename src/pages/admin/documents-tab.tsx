@@ -4,13 +4,10 @@ import {
   Table,
   Pagination,
   Button,
-  TableProps,
   Header,
-  CollectionPreferences,
   Modal,
   Spinner,
 } from "@cloudscape-design/components";
-import React from 'react'
 import { useCallback, useContext, useEffect, useState } from "react";
 import RouterButton from "../../components/wrappers/router-button";
 import { RagDocumentType } from "../../common/types";
@@ -58,48 +55,6 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     },
     selection: {},
   });
-
-  /*const getDocuments = useCallback(
-    async (params: { lastDocumentId?: string; pageIndex?: number }) => {
-      // if (!appContext) return;
-      // if (!props.workspaceId) return;
-
-      setLoading(true);
-
-      const apiClient = new ApiClient(appContext);
-      try {
-        const result = await apiClient.documents.getDocuments(
-          // props.workspaceId,
-          props.documentType,
-          params?.lastDocumentId
-        );
-
-        setPages((current) => {
-          const foundIndex = current.findIndex(
-            (c) =>
-              c!.lastDocumentId === result.data!.listDocuments.lastDocumentId
-          );
-
-          if (foundIndex !== -1) {
-            current[foundIndex] = result.data?.listDocuments;
-            return [...current];
-          } else if (typeof params.pageIndex !== "undefined") {
-            current[params.pageIndex - 1] = result.data?.listDocuments;
-            return [...current];
-          } else if (result.data?.listDocuments.items.length === 0) {
-            return current;
-          } else {
-            return [...current, result.data?.listDocuments];
-          }
-        });
-      } catch (error) {
-        console.error(Utils.getErrorMessage(error));
-      }
-
-      setLoading(false);
-    },
-    [appContext, props.documentType]
-  );*/
 
   const getDocuments = useCallback(
     async (params: { continuationToken?: string; pageIndex?: number }) => {
@@ -196,21 +151,12 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     return () => clearInterval(interval);
   });
 
-  // const getStatus = async () => {
-  //   const result = await apiClient.knowledgeManagement.kendraIsSyncing();
-  //   console.log(result);    
-  //   if (result == "DONE SYNCING") {
-  //     setSyncing(false); 
-  //   }
-  //   return result;
-  // }
-
-  const syncKendra = async () => {
-    setSyncing(true);
+  const syncKendra = async () => {    
     if (syncing) {
-      setSyncing(false)
+      // setSyncing(false)
       return;
     }
+    setSyncing(true);
     try {
       await apiClient.knowledgeManagement.syncKendra();
       
@@ -324,54 +270,3 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     </>
   );
 }
-/*
-function ragDocumentTypeToString(type: RagDocumentType) {
-  switch (type) {
-    case "file":
-      return "File";
-    case "text":
-      return "Text";
-    case "qna":
-      return "Q&A";
-    case "website":
-      return "Website";
-    case "rssfeed":
-      return "RSS Feed";
-    case "rsspost":
-      return "RSS Post";
-  }
-}
-
-function ragDocumentTypeToTitleString(type: RagDocumentType) {
-  switch (type) {
-    case "file":
-      return "Files";
-    case "text":
-      return "Texts";
-    case "qna":
-      return "Q&As";
-    case "website":
-      return "Websites";
-    case "rssfeed":
-      return "RSS Feeds";
-    case "rsspost":
-      return "RSS Posts";
-  }
-}
-
-function ragDocumentTypeToAddString(type: RagDocumentType) {
-  switch (type) {
-    case "file":
-      return "Upload files";
-    case "text":
-      return "Add texts";
-    case "qna":
-      return "Add Q&A";
-    case "website":
-      return "Crawl website";
-    case "rssfeed":
-      return "Subcribe to RSS Feed";
-    case "rsspost":
-      return "Add RSS Post";
-  }
-}*/

@@ -16,15 +16,16 @@ export default function GlobalHeader() {
 
   useEffect(() => {
     (async () => {
-      const result = await Auth.currentUserInfo();
-      console.log((await Auth.currentSession()).getAccessToken());
-      console.log((await Auth.currentSession()).getAccessToken().getJwtToken());
+      const result = await Auth.currentAuthenticatedUser();    
+      // console.log(result);  
       if (!result || Object.keys(result).length === 0) {
+        console.log("Signed out!")
         Auth.signOut();
         return;
       }
 
-      const userName = result?.attributes?.email;
+      // const userName = result?.attributes?.email;
+      const userName = result?.signInUserSession?.idToken?.payload?.name;
       setUserName(userName);
     })();
   }, []);
