@@ -7,7 +7,7 @@ import "../../../styles/chat.module.scss";
 export default function Playground() {
   const { sessionId } = useParams();
 
-  return (
+  return (    
     <BaseAppLayout
       //RIGHT-HAND Side Panel: Customized text HERE
       info={

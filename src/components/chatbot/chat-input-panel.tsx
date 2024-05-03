@@ -52,7 +52,9 @@ import {
   assembleHistory
 } from "./utils";
 // import { receiveMessages } from "../../graphql/subscriptions";
-// import { Utils } from "../../common/utils";
+import { Utils } from "../../common/utils";
+import {SessionRefreshContext} from "../../common/session-refresh-context"
+import { useNotifications } from "../notif-manager";
 
 export interface ChatInputPanelProps {
   running: boolean;
@@ -85,6 +87,7 @@ export abstract class ChatScrollState {
 
 export default function ChatInputPanel(props: ChatInputPanelProps) {
   const appContext = useContext(AppContext);
+  const {needsRefresh, setNeedsRefresh} = useContext(SessionRefreshContext);
   const apiClient = new ApiClient(appContext);
   const navigate = useNavigate();
   const { transcript, listening, browserSupportsSpeechRecognition } =
@@ -97,17 +100,24 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     // modelsStatus: "loading",
     // workspacesStatus: "loading",
   });
+  const { notifications, addNotification } = useNotifications();
   const [configDialogVisible, setConfigDialogVisible] = useState(false);
   const [imageDialogVisible, setImageDialogVisible] = useState(false);
   const [files, setFiles] = useState<ImageFile[]>([]);
   const [readyState, setReadyState] = useState<ReadyState>(
     ReadyState.OPEN
   );
-
+  // const [firstTime, setFirstTime] = useState<boolean>(false);
   const messageHistoryRef = useRef<ChatBotHistoryItem[]>([]);
 
   useEffect(() => {
     messageHistoryRef.current = props.messageHistory;
+    // // console.log(messageHistoryRef.current.length)
+    // if (messageHistoryRef.current.length < 3) {
+    //   setFirstTime(true);
+    // } else {
+    //   setFirstTime(false);
+    // }
   }, [props.messageHistory]);
 
   // THIS PART OF THE CODE HANDLES READY STATE
@@ -353,10 +363,17 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     // });    
 
     const messageToSend = state.value.trim();
+    if (messageToSend.length === 0) {
+      addNotification("error","Please do not submit blank text!");
+      return;          
+    }
     setState({ value: "" });
+    // let start = new Date().getTime() / 1000;
+    
     try {
       props.setRunning(true);
-      let receivedData = '';
+      let receivedData = '';      
+      
       messageHistoryRef.current = [
         ...messageHistoryRef.current,
 
@@ -377,12 +394,34 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       ];
       props.setMessageHistory(messageHistoryRef.current);
 
-      const wsUrl = 'wss://ngdpdxffy0.execute-api.us-east-1.amazonaws.com/test/';
+      let firstTime = false;
+      if (messageHistoryRef.current.length < 3) {
+        firstTime = true;
+      }
+      // const wsUrl = 'wss://ngdpdxffy0.execute-api.us-east-1.amazonaws.com/test/';      
+      const TEST_URL = 'wss://caoyb4x42c.execute-api.us-east-1.amazonaws.com/test/';
+
       // Create a new WebSocket connection
+      const TOKEN = (await Auth.currentSession()).getAccessToken().getJwtToken()  
+          
+      // console.log(TOKEN)
+      const wsUrl = TEST_URL+'?Authorization='+TOKEN;
       const ws = new WebSocket(wsUrl);
 
-      let incomingMetadata : boolean = false;
+      let incomingMetadata: boolean = false;
       let sources = {};
+
+      setTimeout(() => {if (receivedData == '') {
+        ws.close()
+        messageHistoryRef.current.pop();
+        messageHistoryRef.current.push({
+          type: ChatBotMessageType.AI,
+          tokens: [],
+          content: 'Response timed out!',
+          metadata: {},
+        })
+      }},60000)
+
       // Event listener for when the connection is open
       ws.addEventListener('open', function open() {
         console.log('Connected to the WebSocket server');
@@ -418,9 +457,13 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       // Event listener for incoming messages
       ws.addEventListener('message', async function incoming(data) {
         // console.log(data);        
+        if (data.data.includes("<!ERROR!>:")) {
+          addNotification("error",data.data);          
+          ws.close();
+          return;
+        }
         if (data.data == '!<|EOF_STREAM|>!') {
-          // await apiClient.sessions.updateSession(props.session.id, "0", messageHistoryRef.current);
-          // ws.close();
+          
           incomingMetadata = true;
           return;
           // return;
@@ -428,9 +471,11 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         if (!incomingMetadata) {
           receivedData += data.data;
         } else {
-          sources = {"Sources" : JSON.parse(data.data)}
+          sources = { "Sources": JSON.parse(data.data) }
           console.log(sources);
         }
+
+
 
         // console.log(data.data);
         // Update the chat history state with the new message        
@@ -457,7 +502,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         // if (data.data == '') {
         //   ws.close()
         // }
-        
+
       });
       // Handle possible errors
       ws.addEventListener('error', function error(err) {
@@ -466,6 +511,11 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       // Handle WebSocket closure
       ws.addEventListener('close', async function close() {
         // await apiClient.sessions.updateSession("0", props.session.id, messageHistoryRef.current);
+        if (firstTime) {   
+          // console.log("first time!", firstTime)
+          // console.log("did we also need a refresh?", needsRefresh)
+          Utils.delay(1500).then(() => setNeedsRefresh(true));
+        }
         props.setRunning(false);        
         console.log('Disconnected from the WebSocket server');
       });

@@ -14,13 +14,7 @@ import NotFound from "./pages/not-found";
 import WorkspacePane from "./pages/admin/workspace";
 import SessionPage from "./pages/chatbot/sessions/sessions"
 import { v4 as uuidv4 } from "uuid";
-// import CreateWorkspace from "./pages/rag/create-workspace/create-workspace";
-// import Dashboard from "./pages/rag/dashboard/dashboard";
-// import RssFeed from "./pages/rag/workspace/rss-feed";
-// import WorkspacePane from "./pages/rag/workspace/workspace";
-// import Workspaces from "./pages/rag/workspaces/workspaces";
 import "./styles/app.scss";
-// import SessionPage from "./pages/chatbot/sessions/sessions";
 
 function App() {
   const appContext = useContext(AppContext);
@@ -32,15 +26,12 @@ function App() {
         <GlobalHeader />
         <div style={{ height: "56px", backgroundColor: "#000716" }}>&nbsp;</div>
         <div>
-          <Routes>
-            {/* <Route index path="/" element={<Playground />} /> */}
-            {/* <Route index path="/" element={<Playground />} /> */}
+          <Routes>            
             <Route
                 index
                 path="/"
                 element={<Navigate to={`/chatbot/playground/${uuidv4()}`} replace />}
-            />
-            {/* <Redirect from="/" to={`/chatbot/playground/${uuidv4()}`} /> */}
+            />            
             <Route path="/chatbot" element={<Outlet />}>
               <Route path="playground" element={<Playground />} />
               <Route path="playground/:sessionId" element={<Playground />} />

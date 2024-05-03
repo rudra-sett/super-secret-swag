@@ -5,8 +5,8 @@ import {
   ChatBotMessageType,
   FeedbackData,
 } from "./types";
-// import { Auth } from "aws-amplify";
-import { SpaceBetween, StatusIndicator } from "@cloudscape-design/components";
+import { Auth } from "aws-amplify";
+import { SpaceBetween, StatusIndicator, Alert, Flashbar } from "@cloudscape-design/components";
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
@@ -14,14 +14,16 @@ import ChatMessage from "./chat-message";
 import ChatInputPanel, { ChatScrollState } from "./chat-input-panel";
 import styles from "../../styles/chat.module.scss";
 import { CHATBOT_NAME } from "../../common/constants";
+import { useNotifications } from "../notif-manager";
 
 export default function Chat(props: { sessionId?: string }) {
   const appContext = useContext(AppContext);
-  const [running, setRunning] = useState<boolean>(false);
+  const [running, setRunning] = useState<boolean>(true);
   const [session, setSession] = useState<{ id: string; loading: boolean }>({
     id: props.sessionId ?? uuidv4(),
     loading: typeof props.sessionId !== "undefined",
   });
+
   const [configuration, setConfiguration] = useState<ChatBotConfiguration>(
     () => ({
       streaming: true,
@@ -33,9 +35,20 @@ export default function Chat(props: { sessionId?: string }) {
     })
   );
 
+  const { notifications, addNotification } = useNotifications();
+
   const [messageHistory, setMessageHistory] = useState<ChatBotHistoryItem[]>(
     []
   );
+
+  // // add useEffect that sets the isNewSession to true after the first message is sent and the stream is done.
+  // useEffect(() => {
+  //   if (messageHistory.length === 0 && !running) {
+  //     console.log("First message has been rendered");
+  //     setNewSession(true);
+  //     console.log("setNewSession to true in chat");
+  //   }
+  // }, [messageHistory]);  // Dependency on messageHistory and the handled flag
 
   useEffect(() => {
     if (!appContext) return;
@@ -73,12 +86,13 @@ export default function Chat(props: { sessionId?: string }) {
             behavior: "instant",
           });
         }
+        setSession({ id: props.sessionId, loading: false });
+        setRunning(false);
       } catch (error) {
         console.log(error);
+        addNotification("error",error.message)
+        addNotification("info","Please refresh the page")
       }
-
-      setSession({ id: props.sessionId, loading: false });
-      setRunning(false);
     })();
   }, [appContext, props.sessionId]);
 

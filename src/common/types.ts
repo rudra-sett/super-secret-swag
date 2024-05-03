@@ -23,6 +23,7 @@ export interface AppConfig {
     default_cross_encoder_model: string;
     privateWebsite: boolean;
   };
+  update_session : true;
   Storage: {
     AWSS3: {
       bucket: string;
