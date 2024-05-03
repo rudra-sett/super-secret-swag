@@ -205,7 +205,7 @@ export default function Chat(props: { sessionId?: string }) {
             }}
           />
           </SpaceBetween> */}
-        <SpaceBetween direction="horizontal" size="large">
+        <SpaceBetween direction="horizontal" size="l">
         {/* <Alert
           dismissible
           statusIconAriaLabel="info"
@@ -224,7 +224,7 @@ export default function Chat(props: { sessionId?: string }) {
               <DefaultButton/>
             </div> */}
           </SpaceBetween> 
-        <SpaceBetween direction="vertical" size="0.5">
+        <SpaceBetween direction="vertical" size="s">
           <ChatInputPanel
             session={session}
             running={running}
