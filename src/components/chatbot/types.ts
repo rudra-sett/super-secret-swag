@@ -13,6 +13,7 @@ export interface ChatBotConfiguration {
 
 export interface ChatInputState {
   value: string;
+  systemPrompt: string;
   // workspaces?: Workspace[];
   // models?: Model[];
   // selectedModel: SelectProps.Option | null;

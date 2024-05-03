@@ -54,6 +54,33 @@ import {
 // import { receiveMessages } from "../../graphql/subscriptions";
 // import { Utils } from "../../common/utils";
 
+// different prompts for different users
+const defaultPrompt = `Based on the project and organization description provided by user, 
+recommend the most relevant specific grant programs offered by the Massachusetts energy 
+and environment office that would be a good fit. Always boldly list the grant program name as a header, 
+a 2-3 sentence description and under sub-bullet points about the specific deadline date, 
+target audience, funding amount, match requirement, and contact information and relevant link listed on the relevant grant webpage.`;
+const farmPrompt = `Based on the project description provided by user, 
+recommend the most relevant specific grant programs offered by the Massachusetts energy 
+and environment office that would be a good fit for a farm. Always boldly list the grant program name as a header, 
+a 2-3 sentence description and under sub-bullet points about the specific deadline date, 
+target audience, funding amount, match requirement, and contact information and relevant link listed on the relevant grant webpage.`;
+const nonprofitPrompt = `Based on the project description provided by user, 
+recommend the most relevant specific grant programs offered by the Massachusetts energy 
+and environment office that would be a good fit for a nonprofit. Always boldly list the grant program name as a header, 
+a 2-3 sentence description and under sub-bullet points about the specific deadline date, 
+target audience, funding amount, match requirement, and contact information and relevant link listed on the relevant grant webpage.`;
+const businessPrompt = `Based on the project description provided by user, 
+recommend the most relevant specific grant programs offered by the Massachusetts energy 
+and environment office that would be a good fit for a business. Always boldly list the grant program name as a header, 
+a 2-3 sentence description and under sub-bullet points about the specific deadline date, 
+target audience, funding amount, match requirement, and contact information and relevant link listed on the relevant grant webpage.`;
+const townPrompt = `Based on the project description provided by user, 
+recommend the most relevant specific grant programs offered by the Massachusetts energy 
+and environment office that would be a good fit for a municipality or town. Always boldly list the grant program name as a header, 
+a 2-3 sentence description and under sub-bullet points about the specific deadline date, 
+target audience, funding amount, match requirement, and contact information and relevant link listed on the relevant grant webpage.`;
+
 export interface ChatInputPanelProps {
   running: boolean;
   setRunning: Dispatch<SetStateAction<boolean>>;
@@ -91,12 +118,20 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     useSpeechRecognition();
   const [state, setState] = useState<ChatInputState>({
     value: "",
+    systemPrompt: defaultPrompt,
     // selectedModel: null,
     // selectedModelMetadata: null,
     // selectedWorkspace: workspaceDefaultOptions[0],
     // modelsStatus: "loading",
     // workspacesStatus: "loading",
   });
+//   <div className={styles.prompt_buttons}>
+//   <Button onClick={() => setState({...state, systemPrompt: defaultPrompt})}>Default</Button>
+//   <Button onClick={() => setState({...state, systemPrompt: farmPrompt})}>Farm</Button>
+//   <Button onClick={() => setState({...state, systemPrompt: townPrompt})}>Town</Button>
+//   <Button onClick={() => setState({...state, systemPrompt: nonprofitPrompt})}>Nonprofit</Button>
+//   <Button onClick={() => setState({...state, systemPrompt: businessPrompt})}>Business</Button>
+// </div>
   const [configDialogVisible, setConfigDialogVisible] = useState(false);
   const [imageDialogVisible, setImageDialogVisible] = useState(false);
   const [files, setFiles] = useState<ImageFile[]>([]);
@@ -341,7 +376,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
   const handleSendMessage = async () => {
     // if (!state.selectedModel) return;
     if (props.running) return;
-    if (readyState !== ReadyState.OPEN) return;
+    if (readyState !== ReadyState.OPEN) return
     ChatScrollState.userHasScrolled = false;
 
     // let username;
@@ -353,7 +388,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     // });    
 
     const messageToSend = state.value.trim();
-    setState({ value: "" });
+    setState({ value: "" , systemPrompt: defaultPrompt});
     try {
       props.setRunning(true);
       let receivedData = '';
@@ -381,6 +416,8 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       // Create a new WebSocket connection
       const ws = new WebSocket(wsUrl);
 
+     
+
       let incomingMetadata : boolean = false;
       let sources = {};
       // Event listener for when the connection is open
@@ -392,11 +429,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           "data": {
             userMessage: messageToSend,
             chatHistory: assembleHistory(messageHistoryRef.current.slice(0, -2)),
-            systemPrompt: `Based on the project and organization description provided by user, 
-            recommend the most relevant specific grant programs offered by the Massachusetts energy 
-            and environment office that would be a good fit. Always boldly list the grant program name as a header, 
-            a 2-3 sentence description and under sub-bullet points about the specific deadline date, 
-            target audience, funding amount, match requirement, and contact information and relevant link listed on the relevant grant webpage.`,
+            systemPrompt: state.systemPrompt,
             // You are a navigator of grants offered by the Massachusetts Executive Office of Energy and Enviornmental Affairs(EEA). With each
             // user input, you will return the relevant grants offered by the EEA that are most relevant to the user input. The response should be formatted to include
             // the name of the grant as a bolded subheading, a 2-3 sentence description of the grant.

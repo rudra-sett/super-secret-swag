@@ -6,7 +6,7 @@ import {
   FeedbackData,
 } from "./types";
 // import { Auth } from "aws-amplify";
-import { Alert, Flashbar, SpaceBetween, StatusIndicator } from "@cloudscape-design/components";
+import { Alert, Flashbar, SpaceBetween, StatusIndicator, Button} from "@cloudscape-design/components";
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
@@ -16,6 +16,7 @@ import styles from "../../styles/chat.module.scss";
 import { CHATBOT_NAME } from "../../common/constants";
 import React from "react";
 import Box from '@cloudscape-design/components/box';
+import {ChatInputState} from "./types";
 
 
 const AIWarning = () => {
@@ -23,6 +24,24 @@ const AIWarning = () => {
     <Box textAlign="center">AI Models can make mistakes. Make sure to verify all information.</Box>
   );
 };
+
+
+const DefaultButton = () => {
+  return <Button variant="link">Other</Button>;
+}
+const FarmButton = () => {
+  return <Button variant="link">Farm</Button>;
+}
+const BusinessButton = () => {
+  return <Button variant="link">Business</Button>;
+}
+const NonprofitButton = () => {
+  return <Button variant="link">Nonprofit</Button>;
+}
+const TownButton = () => {
+  return <Button variant="link">Town</Button>;
+}
+
 
 export default function Chat(props: { sessionId?: string }) {
   const appContext = useContext(AppContext);
@@ -186,7 +205,7 @@ export default function Chat(props: { sessionId?: string }) {
             }}
           />
           </SpaceBetween> */}
-        <SpaceBetween direction="vertical" size="0.5">
+        <SpaceBetween direction="horizontal" size="large">
         {/* <Alert
           dismissible
           statusIconAriaLabel="info"
@@ -197,7 +216,15 @@ export default function Chat(props: { sessionId?: string }) {
             Please refrain from including any personal information. 
             The 'EEA Grants Navigator' only assists with finding not applying for grant opportunities.
             </Alert> */}
-            
+            {/* <div style={{ display: 'flex', justifyContent: 'center'}}>
+              <FarmButton/>
+              <BusinessButton/>
+              <NonprofitButton/>
+              <TownButton/>
+              <DefaultButton/>
+            </div> */}
+          </SpaceBetween> 
+        <SpaceBetween direction="vertical" size="0.5">
           <ChatInputPanel
             session={session}
             running={running}
@@ -207,7 +234,7 @@ export default function Chat(props: { sessionId?: string }) {
             configuration={configuration}
             setConfiguration={setConfiguration} />
             <div style={{ marginTop: '-22px' }}>
-              <AIWarning />
+              <AIWarning/>
               </div>
         </SpaceBetween>
         <div className={styles.chat_container}>
