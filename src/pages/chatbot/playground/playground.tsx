@@ -3,10 +3,19 @@ import Chat from "../../../components/chatbot/chat";
 
 import { Link, useParams } from "react-router-dom";
 import { Alert, Header, HelpPanel } from "@cloudscape-design/components";
+import EmailPanel from "../../../components/chatbot/email-panel"
+import { useState, useEffect } from "react";
+import { ChatBotHistoryItem } from "../../../components/chatbot/types";
 
 export default function Playground() {
   const { sessionId } = useParams();
+  const [emailPanelShown, setEmailPanelShown] = useState<boolean>(false);
+  const [messageHistoryForEmail, setMessageHistoryForEmail] = useState<ChatBotHistoryItem[]>([]);
 
+  useEffect(() => {
+    console.log("email history updated")
+    console.log(messageHistoryForEmail);
+  },[messageHistoryForEmail])
   return (    
     <BaseAppLayout
       info={
@@ -21,11 +30,12 @@ export default function Playground() {
         </HelpPanel>
       }
       toolsWidth={300}
+      splitPanel={<EmailPanel isHidden={false} messageHistory={messageHistoryForEmail}/>}
       content={
        <div>
       {/* <Chat sessionId={sessionId} /> */}
       
-      <Chat sessionId={sessionId} />
+      <Chat sessionId={sessionId} updateEmailFunction={setMessageHistoryForEmail} />
       </div>
      }
     />    

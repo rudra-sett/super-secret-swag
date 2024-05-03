@@ -49,6 +49,7 @@ export interface ChatMessageProps {
   showMetadata?: boolean;
   onThumbsUp: () => void;
   onThumbsDown: (feedbackTopic : string, feedbackType : string, feedbackMessage: string) => void;
+  onSendEmail: () => void;
 }
 
 
@@ -160,11 +161,44 @@ export default function ChatMessage(props: ChatMessageProps) {
         <Container
           footer={
             showSources && (
-        
+              // <ExpandableSection variant="footer" headerText="Sources">
+              //   <Cards
+              //     cardDefinition={{
+              //       header: item => (
+              //         <Link href={item.uri} fontSize="body-s">
+              //           {item.title}
+              //         </Link>
+              //       ),
+              //     }}
+              //     cardsPerRow={[
+              //       { cards: 1 },
+              //       { minWidth: 500, cards: 3 }
+              //     ]}
+              //     items={props.message.metadata.Sources as any[]}
+              //     loadingText="Loading sources..."
+              //     empty={
+              //       <Box
+              //         margin={{ vertical: "xs" }}
+              //         textAlign="center"
+              //         color="inherit"
+              //       >
+              //         <SpaceBetween size="m">
+              //           <b>No resources</b>
+              //           <Button>Create resource</Button>
+              //         </SpaceBetween>
+              //       </Box>
+              //     }
+              //   />
+              // </ExpandableSection>
+              <SpaceBetween direction="horizontal" size="s">
               <ButtonDropdown
               items={(props.message.metadata.Sources as any[]).map((item) => { return {id: "id", disabled: false, text : item.title, href : item.uri, external : true, externalIconAriaLabel: "(opens in new tab)"}})}
         
               >Sources</ButtonDropdown>
+              <Button onClick={() => {
+                   props.onSendEmail()
+                  }}>Generate Email</Button>
+              </SpaceBetween>
             )
           }
         >
