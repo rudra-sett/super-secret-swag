@@ -41,12 +41,7 @@ export default function Playground() {
       content={
        <div>
       {/* <Chat sessionId={sessionId} /> */}
-      <Alert
-          statusIconAriaLabel="Info"
-          header=""
-       >
-        AI Models can make mistakes. Be mindful in validating important information.
-      </Alert>
+      
       <Chat sessionId={sessionId} />
       </div>
      }
