@@ -8,7 +8,7 @@ import {
   StatusIndicator
 } from "@cloudscape-design/components";
 import useOnFollow from "../common/hooks/use-on-follow";
-import { useNavigationPanelState } from "../common/hooks/use-navigation-panel-state";
+// import { useNavigationPanelState } from "../common/hooks/use-navigation-panel-state";
 import { AppContext } from "../common/app-context";
 import PencilSquareIcon from "../../public/images/pencil-square.jsx";
 import RouterButton from "../components/wrappers/router-button";
@@ -17,20 +17,20 @@ import { ApiClient } from "../common/api-client/api-client";
 import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
 import {SessionRefreshContext} from "../common/session-refresh-context"
-import { useNotifications } from "../components/notif-manager";
+// import { useNotifications } from "../components/notif-manager";
 import { Utils } from "../common/utils.js";
 
 export default function NavigationPanel() {
   const appContext = useContext(AppContext);
   const apiClient = new ApiClient(appContext);
   const onFollow = useOnFollow();
-  const [navigationPanelState, setNavigationPanelState] =
-    useNavigationPanelState();
+  // const [navigationPanelState, setNavigationPanelState] =
+  //   useNavigationPanelState();
   const [items, setItems] = useState<SideNavigationProps.Item[]>([]);
   const [loaded,setLoaded] = useState<boolean>(false);
   const {needsRefresh, setNeedsRefresh} = useContext(SessionRefreshContext);
   const [loadingSessions, setLoadingSessions] = useState(false);
-  const { addNotification, removeNotification } = useNotifications();
+  // const { addNotification, removeNotification } = useNotifications();
 
 
   // update the list of sessions every now and then
@@ -52,8 +52,8 @@ export default function NavigationPanel() {
   }  catch (error) {
     console.error("Failed to load sessions:", error);
     setLoaded(true);
-    addNotification("error", "Could not load sessions:".concat(error.message));
-    addNotification("info", "Please refresh the page");    
+    // addNotification("error", "Could not load sessions:".concat(error.message));
+    // addNotification("info", "Please refresh the page");    
     // const delay = ms => new Promise(res => setTimeout(res, ms));
     // delay(3000).then(() => removeNotification(id));
     
@@ -72,11 +72,11 @@ export default function NavigationPanel() {
   }, [needsRefresh]);
 
 
-  const onReloadClick = async () => {
-    await loadSessions();
-    const id =addNotification("success", "Sessions reloaded successfully!");
-    Utils.delay(3000).then(() => removeNotification(id))
-  };
+  // const onReloadClick = async () => {
+  //   await loadSessions();
+  //   const id =addNotification("success", "Sessions reloaded successfully!");
+  //   Utils.delay(3000).then(() => removeNotification(id))
+  // };
 
 
   const updateItems = (sessions) => {
@@ -90,7 +90,7 @@ export default function NavigationPanel() {
           href: `/chatbot/playground/${session.session_id}`,
         })).concat([{
           type: "link",
-          info: <Box margin="xxs" textAlign="center" ><Button onClick={onReloadClick} iconName="refresh" loading={loadingSessions} variant="link">Reload Sessions</Button></Box>
+          info: <Box margin="xxs" textAlign="center" ><Button iconName="refresh" loading={loadingSessions} variant="link">Reload Sessions</Button></Box>
         }]),
       },
       {
@@ -105,20 +105,20 @@ export default function NavigationPanel() {
     setItems(newItems);
   };
 
-  const onChange = ({
-    detail,
-  }: {
-    detail: SideNavigationProps.ChangeDetail;
-  }) => {
-    // const sectionIndex = items.findIndex(detail.item);
-    const sectionIndex = items.indexOf(detail.item);
-    setNavigationPanelState({
-      collapsedSections: {
-        ...navigationPanelState.collapsedSections,
-        [sectionIndex]: !detail.expanded,
-      },
-    });
-  };
+  // const onChange = ({
+  //   detail,
+  // }: {
+  //   detail: SideNavigationProps.ChangeDetail;
+  // }) => {
+  //   // const sectionIndex = items.findIndex(detail.item);
+  //   const sectionIndex = items.indexOf(detail.item);
+  //   setNavigationPanelState({
+  //     collapsedSections: {
+  //       ...navigationPanelState.collapsedSections,
+  //       [sectionIndex]: !detail.expanded,
+  //     },
+  //   });
+  // };
 
 
   return (
@@ -137,21 +137,7 @@ export default function NavigationPanel() {
         </RouterButton>
       </Box>            
       {loaded ?
-      <SideNavigation
-        onFollow={onFollow}
-        onChange={onChange}
-        // header={{ href: "/", text: "The Ride Guide AI" }}
-        // items={items.map((item, idx) => ({
-        //   ...item,
-        //   defaultExpanded: !navigationPanelState.collapsedSections[idx]
-        // }))}  
-        items={items}
-        // items={Array.isArray(items) ? items.map((item, idx) => ({
-        //   ...item,
-        //   defaultExpanded: !navigationPanelState.collapsedSections[idx]
-        // })) : []}
-        
-      /> : 
+      <></>: 
       <Box margin="xs" padding="xs" textAlign="center">
         <StatusIndicator type="loading">Loading sessions...</StatusIndicator>
       </Box>}

@@ -11,7 +11,7 @@ import { AppContext } from "./common/app-context";
 import GlobalHeader from "./components/global-header";
 import Playground from "./pages/chatbot/playground/playground";
 import NotFound from "./pages/not-found";
-import WorkspacePane from "./pages/admin/workspace";
+// import WorkspacePane from "./pages/admin/workspace";
 import SessionPage from "./pages/chatbot/sessions/sessions"
 import { v4 as uuidv4 } from "uuid";
 import "./styles/app.scss";

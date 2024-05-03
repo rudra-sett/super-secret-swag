@@ -14,8 +14,6 @@ export default function BaseAppLayout(
   // props.navigation
 
   return (
-    <SessionRefreshContext.Provider value={{needsRefresh,setNeedsRefresh}}>
-      <NotificationProvider>
     <AppLayout
       headerSelector="#awsui-top-navigation"
       // DO NOT TOUCH THE LINE BELOW 
@@ -27,7 +25,5 @@ export default function BaseAppLayout(
  
          {...props}
     />
-    </NotificationProvider>
-    </SessionRefreshContext.Provider>
   );
 }
