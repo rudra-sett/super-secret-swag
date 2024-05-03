@@ -16,7 +16,7 @@ import styles from "../../styles/chat.module.scss";
 import { CHATBOT_NAME } from "../../common/constants";
 import { useNotifications } from "../notif-manager";
 
-export default function Chat(props: { sessionId?: string }) {
+export default function Chat(props: { sessionId?: string, updateEmailFunction : React.Dispatch<React.SetStateAction<ChatBotHistoryItem[]>>}) {
   const appContext = useContext(AppContext);
   const [running, setRunning] = useState<boolean>(true);
   const [session, setSession] = useState<{ id: string; loading: boolean }>({
@@ -125,6 +125,11 @@ export default function Chat(props: { sessionId?: string }) {
     await apiClient.userFeedback.sendUserFeedback(feedbackData);
   }
 
+  const handleUpdateMessageHistory = async () => {
+    console.log("updating history for email")
+    props.updateEmailFunction(messageHistory);
+  }
+
   return (
     <div className={styles.chat_container}> 
       <SpaceBetween direction="vertical" size="m">
@@ -145,6 +150,7 @@ export default function Chat(props: { sessionId?: string }) {
             showMetadata={configuration.showMetadata}
             onThumbsUp={() => handleFeedback(1,idx, message)}
             onThumbsDown={() => handleFeedback(0,idx, message)}
+            onSendEmail={() => handleUpdateMessageHistory()}
           />
         ))}
       </SpaceBetween>

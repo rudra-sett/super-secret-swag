@@ -42,6 +42,7 @@ export interface ChatMessageProps {
   showMetadata?: boolean;
   onThumbsUp: () => void;
   onThumbsDown: () => void;
+  onSendEmail: () => void;
 }
 
 export default function ChatMessage(props: ChatMessageProps) {
@@ -118,10 +119,15 @@ export default function ChatMessage(props: ChatMessageProps) {
               //     }
               //   />
               // </ExpandableSection>
+              <SpaceBetween direction="horizontal" size="s">
               <ButtonDropdown
               items={(props.message.metadata.Sources as any[]).map((item) => { return {id: "id", disabled: false, text : item.title, href : item.uri, external : true, externalIconAriaLabel: "(opens in new tab)"}})}
         
               >Sources</ButtonDropdown>
+              <Button onClick={() => {
+                   props.onSendEmail()
+                  }}>Generate Email</Button>
+              </SpaceBetween>
             )
           }
         >
