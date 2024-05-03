@@ -18,7 +18,7 @@ export default function BaseAppLayout(
       onNavigationChange={({ detail }) =>
         setNavigationPanelState({ collapsed: !detail.open })
       }
-      toolsHide={props.info === undefined ? true : false}
+      toolsHide={true}
       tools={props.info}
       toolsOpen={toolsOpen}
       onToolsChange={({ detail }) => setToolsOpen(detail.open)}
