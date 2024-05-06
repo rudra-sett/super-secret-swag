@@ -16,6 +16,7 @@ export interface EmailPanelProps {
 export default function EmailPanel(props: EmailPanelProps) {
 
   const [generatedEmail, setGeneratedEmail] = useState<string>('');
+  const firstRender = useRef(true);
 
   useEffect(() => {
     const handleGenerateEmail = async () => {
@@ -91,7 +92,11 @@ export default function EmailPanel(props: EmailPanelProps) {
       });
       
     }
-    handleGenerateEmail();
+    if (!firstRender.current){
+      handleGenerateEmail();
+    } else {
+      firstRender.current = false;
+    }
   }, [props.messageHistory])
   return (
     <div>
