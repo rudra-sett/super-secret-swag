@@ -151,6 +151,7 @@ export default function Chat(props: { sessionId?: string, updateEmailFunction : 
             onThumbsUp={() => handleFeedback(1,idx, message)}
             onThumbsDown={() => handleFeedback(0,idx, message)}
             onSendEmail={() => handleUpdateMessageHistory()}
+            isLastMessage={idx == messageHistory.length - 1}
           />
         ))}
       </SpaceBetween>
