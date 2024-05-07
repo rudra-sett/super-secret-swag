@@ -14,6 +14,7 @@ export const NotificationProvider = ({ children }) => {
 
   const addNotification = (type, content) => {
     const id = uuidv4();  // Generate a UUID for each new notification
+    // type: "info" | "success" | "warning" | "error"
 
     setNotifications(prev => [...prev, {
       id: id,

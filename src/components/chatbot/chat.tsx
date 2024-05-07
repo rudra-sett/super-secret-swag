@@ -81,7 +81,6 @@ export default function Chat(props: { sessionId?: string }) {
               .map((x) => ({
                 type: x!.type as ChatBotMessageType,
                 metadata: x!.metadata!,
-                metadata: x!.metadata!,
                 content: x!.content,
               }))
           );
@@ -133,6 +132,7 @@ export default function Chat(props: { sessionId?: string }) {
           <Flashbar items={notifications.map(notif => ({
             content: notif.content,
             dismissible: notif.dismissible,
+            sticky : true,
             onDismiss: () => notif.onDismiss(),
             type: notif.type
           }))} />
@@ -142,9 +142,8 @@ export default function Chat(props: { sessionId?: string }) {
           statusIconAriaLabel="Info"
           header=""
        >
-        AI Models can make mistakes. Be mindful in validating important information.
+        Be mindful in validating important information. Please refrain from sending sensitive member information.
       </Alert> )}
-
       <SpaceBetween direction="vertical" size="m"></SpaceBetween>
         {messageHistory.map((message, idx) => (
           <ChatMessage

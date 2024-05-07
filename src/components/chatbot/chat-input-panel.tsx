@@ -54,7 +54,7 @@ import {
 // import { receiveMessages } from "../../graphql/subscriptions";
 import { Utils } from "../../common/utils";
 import {SessionRefreshContext} from "../../common/session-refresh-context"
-
+import { useNotifications } from "../notif-manager";
 
 
 
@@ -111,6 +111,8 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
   );
   // const [firstTime, setFirstTime] = useState<boolean>(false);
   const messageHistoryRef = useRef<ChatBotHistoryItem[]>([]);
+
+  const { addNotification } = useNotifications();
 
   useEffect(() => {
     messageHistoryRef.current = props.messageHistory;
@@ -215,61 +217,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     }
   }, [transcript]);
 
-  // this handles models/workspaces
-
-  // useEffect(() => {
-  //   if (!appContext) return;
-
-  //   (async () => {
-  //     const apiClient = new ApiClient(appContext);
-  //     let workspaces: Workspace[] = [];
-  //     let workspacesStatus: LoadingStatus = "finished";
-  //     let modelsResult: GraphQLResult<any>;
-  //     let workspacesResult: GraphQLResult<any>;
-  //     try {
-  //       if (appContext?.config.rag_enabled) {
-  //         [modelsResult, workspacesResult] = await Promise.all([
-  //           apiClient.models.getModels(),
-  //           apiClient.workspaces.getWorkspaces(),
-  //         ]);
-  //         workspaces = workspacesResult.data?.listWorkspaces;
-  //         workspacesStatus =
-  //           workspacesResult.errors === undefined ? "finished" : "error";
-  //       } else {
-  //         modelsResult = await apiClient.models.getModels();
-  //       }
-
-  //       const models = modelsResult.data ? modelsResult.data.listModels : [];
-
-  //       const selectedModelOption = getSelectedModelOption(models);
-  //       const selectedModelMetadata = getSelectedModelMetadata(
-  //         models,
-  //         selectedModelOption
-  //       );
-  //       const selectedWorkspaceOption = appContext?.config.rag_enabled
-  //         ? getSelectedWorkspaceOption(workspaces)
-  //         : workspaceDefaultOptions[0];
-
-  //       setState((state) => ({
-  //         ...state,
-  //         models,
-  //         workspaces,
-  //         selectedModel: selectedModelOption,
-  //         selectedModelMetadata,
-  //         selectedWorkspace: selectedWorkspaceOption,
-  //         modelsStatus: "finished",
-  //         workspacesStatus: workspacesStatus,
-  //       }));
-  //     } catch (error) {
-  //       console.log(Utils.getErrorMessage(error));
-  //       setState((state) => ({
-  //         ...state,
-  //         modelsStatus: "error",
-  //       }));
-  //     }
-  //   })();
-  // }, [appContext, state.modelsStatus]);
-
   useEffect(() => {
     const onWindowScroll = () => {
       if (ChatScrollState.skipNextScrollEvent) {
@@ -313,42 +260,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     }
   }, [props.messageHistory]);
 
-  // this probably handles image file uploads?
-
-  // useEffect(() => {
-  //   const getSignedUrls = async () => {
-  //     if (props.configuration?.files as ImageFile[]) {
-  //       const files: ImageFile[] = [];
-  //       for await (const file of props.configuration?.files ?? []) {
-  //         const signedUrl = await getSignedUrl(file.key);
-  //         files.push({
-  //           ...file,
-  //           url: signedUrl,
-  //         });
-  //       }
-
-  //       setFiles(files);
-  //     }
-  //   };
-
-  //   if (props.configuration.files?.length) {
-  //     getSignedUrls();
-  //   }
-  // }, [props.configuration]);
-
-  // images I guess?
-
-  // const hasImagesInChatHistory = function (): boolean {
-  //   return (
-  //     messageHistoryRef.current.filter(
-  //       (x) =>
-  //         x.type == ChatBotMessageType.Human &&
-  //         x.metadata?.files &&
-  //         (x.metadata.files as object[]).length > 0
-  //     ).length > 0
-  //   );
-  // };
-
+  
   // THIS IS THE ALL-IMPORTANT MESSAGE SENDING FUNCTION
   const handleSendMessage = async () => {
     // if (!state.selectedModel) return;
@@ -366,9 +278,12 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
 
     let messageToSend = state.value.trim();
     console.log(messageToSend);
-    messageToSend  = await apiClient.comprehendMedicalClient.redactText(messageToSend);
+    const redactedMessage  = await apiClient.comprehendMedicalClient.redactText(messageToSend);
+    if (messageToSend !== redactedMessage) {
+      addNotification("warning", "Please do not attempt to share sensitive member information.")
+      messageToSend = redactedMessage;
+    }
 
-    
     setState({ value: "" });
     // let start = new Date().getTime() / 1000;
     
@@ -433,9 +348,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           "data": {
             userMessage: messageToSend,
             chatHistory: assembleHistory(messageHistoryRef.current.slice(0, -2)),
-            systemPrompt: `You are an AI chatbot for the MassHealth Enrollment Center. You will help customer service representatives respond to user complaints and queries.
-          Answer questions based on your knowledge and nothing more. If you are unable to decisively answer a question, say that you do not have the neccessary information to answer the question.
-          Do not make up information outside of your given information. If asked a question that hase multiple information sources, provide the lastest and most up to date information`,
+            systemPrompt: "You are a considerate and helpful AI chatbot assistant for ALL MassHealth Enrollment Center workers. You are an INTERNAL tool to made ONLY to help MassHealth employees. You are an expert on ALL policies, procedural information, MassHealth enrollment, and internal traning materials. You will help call center workers respond to user complaints and queries about MassHealth enrollment and act as an integral resource for workers to refer and use when working on member cases. When you respond your answers should be efficient and straight to the point, only respond to directly what the user asks and quickly direct them to all the resources and FACTUAL knowledge they need to know to answer their question. Respond to their question and structure your response clearly each time so the direct answer to their question stands out immediately. If they are asking for help with a process or an action that has multiple steps clearly number and list out each step they need to take with explanations. If a user tries to input any sensitive personal information about members, such as their SSN, it will be redacted from the message, so you can very quickly remind them not to input any PII but continue to respond to their question unless more information is needed after the message has been redacted. If you do not have any given knowledge of the question, say that you do not have the neccessary information to answer the question and refer the user to the best resources for them to locate the answer themselves. Do not make up information outside of your given information, be honest and helpful always.",
             projectId: 'vgbt420420',
             user_id : username,
             session_id: props.session.id
@@ -518,32 +431,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       alert('Sorry, something has gone horribly wrong! Please try again or refresh the page.');
       props.setRunning(false);
     }
-
-    // THIS RESETS THE MESSAGE BOX ONCE A RESPONSE IS DONE
-    // commented because if you type out your next query while a message is streaming,
-    // it'll delete that query which sucks
-
-    // setState((state) => ({
-    //   ...state,
-    //   value: "",
-    // }));
-    // setFiles([]);
-
-    // no idea what this does
-
-    // props.setConfiguration({
-    //   ...props.configuration,
-    //   files: [],
-    // });
-
-    // graphQL things we don't need anymore
-
-    // API.graphql({
-    //   query: sendQuery,
-    //   variables: {
-    //     data: JSON.stringify(request),
-    //   },
-    // });    
   };
 
   const connectionStatus = {
@@ -554,67 +441,12 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     [ReadyState.UNINSTANTIATED]: "Uninstantiated",
   }[readyState];
 
-  // imagine having model options
-
-  /*
-  const modelsOptions = OptionsHelper.getSelectOptionGroups(state.models ?? []);
-
-  const workspaceOptions = [
-    ...workspaceDefaultOptions,
-    ...OptionsHelper.getSelectOptions(state.workspaces ?? []),
-  ]; 
-  */
-
   return (
     <SpaceBetween direction="vertical" size="l">
       <Container>
         <div className={styles.input_textarea_container}>
-          <SpaceBetween size="xxs" direction="horizontal" alignItems="center">
-            {browserSupportsSpeechRecognition ? (
-              <Button
-                iconName={listening ? "microphone-off" : "microphone"}
-                variant="icon"
-                onClick={() =>
-                  listening
-                    ? SpeechRecognition.stopListening()
-                    : SpeechRecognition.startListening()
-                }
-              />
-            ) : (
-              <Icon name="microphone-off" variant="disabled" />
-            )}
-            {/* 
-            image button dialogue
-            {state.selectedModelMetadata?.inputModalities.includes(
-              ChabotInputModality.Image
-            ) && (
-              <Button
-                variant="icon"
-                onClick={() => setImageDialogVisible(true)}
-                iconSvg={
-                  <svg viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
-                    <rect
-                      x="2"
-                      y="2"
-                      width="19"
-                      height="19"
-                      rx="2"
-                      ry="2"
-                    ></rect>
-                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                    <polyline points="21 15 16 10 5 21"></polyline>
-                  </svg>
-                }
-              ></Button>
-             )}*/}
+          <SpaceBetween size="xs" direction="horizontal" alignItems="center">
           </SpaceBetween>
-          {/* <ImageDialog
-            sessionId={props.session.id}
-            visible={imageDialogVisible}
-            setVisible={setImageDialogVisible}
-            configuration={props.configuration}
-            setConfiguration={props.setConfiguration}
-          /> */}
           <TextareaAutosize
             className={styles.input_textarea}
             maxRows={6}
@@ -634,29 +466,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             placeholder={"Send a message"}
           />
           <div style={{ marginLeft: "8px" }}>
-            {/* {state.selectedModelMetadata?.inputModalities.includes(
-              ChabotInputModality.Image
-            ) &&
-              files.length > 0 &&
-              files.map((file, idx) => (
-                <img
-                  key={idx}
-                  onClick={() => setImageDialogVisible(true)}
-                  src={file.url}
-                  style={{
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    maxHeight: "30px",
-                    float: "left",
-                    marginRight: "8px",
-                  }}
-                />
-              ))} */}
             <Button
               disabled={
                 readyState !== ReadyState.OPEN ||
-                // !state.models?.length ||
-                // !state.selectedModel ||
                 props.running ||
                 state.value.trim().length === 0 ||
                 props.session.loading
@@ -678,82 +490,10 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           </div>
         </div>
       </Container>
-      <div className={styles.input_controls}>
-        <div
-        // className={
-        //   appContext?.config.rag_enabled
-        //     ? styles.input_controls_selects_2
-        //     : styles.input_controls_selects_1
-        // }
-        >
-          {/* <Select
-            disabled={props.running}
-            statusType={state.modelsStatus}
-            loadingText="Loading models (might take few seconds)..."
-            placeholder="Select a model"
-            empty={
-              <div>
-                No models available. Please make sure you have access to Amazon
-                Bedrock or alternatively deploy a self hosted model on SageMaker
-                or add API_KEY to Secrets Manager
-              </div>
-            }
-            filteringType="auto"
-            selectedOption={state.selectedModel}
-            onChange={({ detail }) => {
-              setState((state) => ({
-                ...state,
-                selectedModel: detail.selectedOption,
-                selectedModelMetadata: getSelectedModelMetadata(
-                  state.models,
-                  detail.selectedOption
-                ),
-              }));
-              if (detail.selectedOption?.value) {
-                StorageHelper.setSelectedLLM(detail.selectedOption.value);
-              }
-            }}
-            options={modelsOptions}
-          /> */}
-          {/* {appContext?.config.rag_enabled && (
-            <Select
-              disabled={
-                props.running || !state.selectedModelMetadata?.ragSupported
-              }
-              loadingText="Loading workspaces (might take few seconds)..."
-              statusType={state.workspacesStatus}
-              placeholder="Select a workspace (RAG data source)"
-              filteringType="auto"
-              selectedOption={state.selectedWorkspace}
-              options={workspaceOptions}
-              onChange={({ detail }) => {
-                if (detail.selectedOption?.value === "__create__") {
-                  navigate("/rag/workspaces/create");
-                } else {
-                  setState((state) => ({
-                    ...state,
-                    selectedWorkspace: detail.selectedOption,
-                  }));
-
-                  StorageHelper.setSelectedWorkspaceId(
-                    detail.selectedOption?.value ?? ""
-                  );
-                }
-              }}
-              empty={"No Workspaces available"}
-            />
-          )} */}
-        </div>
+      {/* <div className={styles.input_controls}>
         <div className={styles.input_controls_right}>
           <SpaceBetween direction="horizontal" size="xxs" alignItems="center">
             <div style={{ paddingTop: "1px" }}>
-              {/* <ConfigDialog
-                sessionId={props.session.id}
-                visible={configDialogVisible}
-                setVisible={setConfigDialogVisible}
-                configuration={props.configuration}
-                setConfiguration={props.setConfiguration}
-              /> */}
               <Button
                 iconName="settings"
                 variant="icon"
@@ -774,75 +514,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             </StatusIndicator>
           </SpaceBetween>
         </div>
-      </div>
-    </SpaceBetween>
+      </div> */}
+    <SpaceBetween size="s"></SpaceBetween></SpaceBetween>
   );
 }
-
-
-// function getSelectedModelOption(models: Model[]): SelectProps.Option | null {
-//   let selectedModelOption: SelectProps.Option | null = null;
-//   const savedModel = StorageHelper.getSelectedLLM();
-
-//   if (savedModel) {
-//     const savedModelDetails = OptionsHelper.parseValue(savedModel);
-//     const targetModel = models.find(
-//       (m) =>
-//         m.name === savedModelDetails.name &&
-//         m.provider === savedModelDetails.provider
-//     );
-
-//     if (targetModel) {
-//       selectedModelOption = OptionsHelper.getSelectOptionGroups([
-//         targetModel,
-//       ])[0].options[0];
-//     }
-//   }
-
-//   let candidate: Model | undefined = undefined;
-//   if (!selectedModelOption) {
-//     const bedrockModels = models.filter((m) => m.provider === "bedrock");
-//     const sageMakerModels = models.filter((m) => m.provider === "sagemaker");
-//     const openAIModels = models.filter((m) => m.provider === "openai");
-
-//     candidate = bedrockModels.find((m) => m.name === "anthropic.claude-v2");
-//     if (!candidate) {
-//       candidate = bedrockModels.find((m) => m.name === "anthropic.claude-v1");
-//     }
-
-//     if (!candidate) {
-//       candidate = bedrockModels.find(
-//         (m) => m.name === "amazon.titan-tg1-large"
-//       );
-//     }
-
-//     if (!candidate) {
-//       candidate = bedrockModels.find((m) => m.name.startsWith("amazon.titan-"));
-//     }
-
-//     if (!candidate && sageMakerModels.length > 0) {
-//       candidate = sageMakerModels[0];
-//     }
-
-//     if (openAIModels.length > 0) {
-//       if (!candidate) {
-//         candidate = openAIModels.find((m) => m.name === "gpt-4");
-//       }
-
-//       if (!candidate) {
-//         candidate = openAIModels.find((m) => m.name === "gpt-3.5-turbo-16k");
-//       }
-//     }
-
-//     if (!candidate && bedrockModels.length > 0) {
-//       candidate = bedrockModels[0];
-//     }
-
-//     if (candidate) {
-//       selectedModelOption = OptionsHelper.getSelectOptionGroups([candidate])[0]
-//         .options[0];
-//     }
-//   }
-
-//   return selectedModelOption;
-// }

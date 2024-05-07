@@ -13,7 +13,8 @@ import {
   Cards,
   SpaceBetween,
   Header,
-  Link
+  Link,
+  ButtonDropdown
 } from "@cloudscape-design/components";
 import { useEffect, useState } from "react";
 import { JsonView, darkStyles } from "react-json-view-lite";
@@ -52,9 +53,9 @@ export default function ChatMessage(props: ChatMessageProps) {
   useEffect(() => {
     const getSignedUrls = async () => {
       setLoading(true);
-      if (message.metadata?.files) {
+      if (message.metadata?.files as ImageFile[]) {
         const files: ImageFile[] = [];
-        for await (const file of (message.metadata?.files as ImageFile[])) {
+        for await (const file of message.metadata?.files as ImageFile[]) {
           const signedUrl = await getSignedUrl(file.key);
           files.push({
             ...file,
@@ -67,7 +68,7 @@ export default function ChatMessage(props: ChatMessageProps) {
       }
     };
 
-    if (message.metadata?.files) {
+    if (message.metadata?.files as ImageFile[]) {
       getSignedUrls();
     }
   }, [message]);
@@ -77,43 +78,18 @@ export default function ChatMessage(props: ChatMessageProps) {
       ? props.message.content
       : props.message.tokens?.map((v) => v.value).join("");
 
-  const showSources = props.message.metadata?.Sources && (props.message.metadata.Sources as string[]).length > 0;
-
   return (
     <div>
       {props.message?.type === ChatBotMessageType.AI && (
         <Container
           footer={
-            showSources && (
-              <ExpandableSection variant="footer" headerText="Sources">
-                <Cards
-                  cardDefinition={{
-                    header: item => (
-                      <Link href={item.uri} fontSize="body-s">
-                        {item.title}
-                      </Link>
-                    ),
-                  }}
-                  cardsPerRow={[
-                    { cards: 1 },
-                    { minWidth: 500, cards: 3 }
-                  ]}
-                  items={props.message.metadata.Sources as any[]}
-                  loadingText="Loading sources..."
-                  empty={
-                    <Box
-                      margin={{ vertical: "xs" }}
-                      textAlign="center"
-                      color="inherit"
-                    >
-                      <SpaceBetween size="m">
-                        <b>No resources</b>
-                        <Button>Create resource</Button>
-                      </SpaceBetween>
-                    </Box>
-                  }
-                />
-              </ExpandableSection>
+            ((props?.showMetadata && props.message.metadata.Sources) ||
+              (props.message.metadata.Sources &&
+                props.configuration?.showMetadata)) && (
+                  <ButtonDropdown
+                  items={(props.message.metadata.Sources as any[]).map((item) => { return {id: "id", disabled: false, text : item.title, href : item.uri, external : true, externalIconAriaLabel: "(opens in new tab)"}})}
+            
+                  >Sources</ButtonDropdown>                                                                
             )
           }
         >
@@ -189,6 +165,7 @@ export default function ChatMessage(props: ChatMessageProps) {
                 variant="icon"
                 iconName={selectedIcon === 1 ? "thumbs-up-filled" : "thumbs-up"}
                 onClick={() => {
+                  // console.log("pressed thumbs up!")
                   props.onThumbsUp();
                   setSelectedIcon(1);
                 }}
