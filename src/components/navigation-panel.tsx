@@ -5,73 +5,94 @@ import {
   Button,
   Box,
   SpaceBetween,
+  StatusIndicator
 } from "@cloudscape-design/components";
 import useOnFollow from "../common/hooks/use-on-follow";
-import { useNavigationPanelState } from "../common/hooks/use-navigation-panel-state";
+// import { useNavigationPanelState } from "../common/hooks/use-navigation-panel-state";
 import { AppContext } from "../common/app-context";
 import PencilSquareIcon from "../../public/images/pencil-square.jsx";
 import RouterButton from "../components/wrappers/router-button";
 import { useContext, useState, useEffect } from "react";
 import { ApiClient } from "../common/api-client/api-client";
-import { CHATBOT_NAME } from "../common/constants";
 import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
+import {SessionRefreshContext} from "../common/session-refresh-context"
+// import { useNotifications } from "../components/notif-manager";
+import { Utils } from "../common/utils.js";
 
 export default function NavigationPanel() {
   const appContext = useContext(AppContext);
-  // const uid = ; 
   const apiClient = new ApiClient(appContext);
   const onFollow = useOnFollow();
-  const [navigationPanelState, setNavigationPanelState] =
-    useNavigationPanelState();
-
-  const [sessions, setSessions] = useState<any[]>([]);
+  // const [navigationPanelState, setNavigationPanelState] =
+  //   useNavigationPanelState();
   const [items, setItems] = useState<SideNavigationProps.Item[]>([]);
+  const [loaded,setLoaded] = useState<boolean>(false);
+  const {needsRefresh, setNeedsRefresh} = useContext(SessionRefreshContext);
+  const [loadingSessions, setLoadingSessions] = useState(false);
+  // const { addNotification, removeNotification } = useNotifications();
 
-  useEffect(() => {
-    async function loadSessions() {
-      let username;
-      await Auth.currentAuthenticatedUser().then((value) => username = value.username);
-      if (username) {
-        const fetchedSessions = await apiClient.sessions.getSessions(username);
-        updateItems(fetchedSessions);
+
+  // update the list of sessions every now and then
+  const loadSessions = async () => {
+    let username;
+    try {
+    await Auth.currentAuthenticatedUser().then((value) => username = value.username);
+    if (username && needsRefresh) {
+      // let's wait for about half a second before refreshing the sessions      
+      const fetchedSessions = await apiClient.sessions.getSessions(username);  
+      updateItems(fetchedSessions);
+      console.log("fetched sessions")
+      // console.log(fetchedSessions);
+      if (!loaded) {
+        setLoaded(true);
       }
-      // console.log(fetchedSessions); 
-      // setSessions(fetchedSessions); 
-
+      setNeedsRefresh(false);
     }
-    // hit console.log("pong"); 
+  }  catch (error) {
+    console.error("Failed to load sessions:", error);
+    setLoaded(true);
+    // addNotification("error", "Could not load sessions:".concat(error.message));
+    // addNotification("info", "Please refresh the page");    
+    // const delay = ms => new Promise(res => setTimeout(res, ms));
+    // delay(3000).then(() => removeNotification(id));
+    
+  } finally {
+    setLoadingSessions(false);
+  }
+}
+  useEffect(() => {
+   
 
-    const interval = setInterval(loadSessions, 1000);
+    // const interval = setInterval(loadSessions, 1000);
     // loadSessions();
 
-    return () => clearInterval(interval);
-    // loadSessions(); 
-  }, [apiClient]);
+    // return () => clearInterval(interval);
+    loadSessions(); 
+  }, [needsRefresh]);
 
-  //  const [items, setItems] = useState<SideNavigationProps.Item[]>
-  // const [items] = useState<SideNavigationProps.Item[]>(() => {
-  const updateItems = (sessions: any[]) => {
-    // console.log("hit the update button")
+
+  // const onReloadClick = async () => {
+  //   await loadSessions();
+  //   const id =addNotification("success", "Sessions reloaded successfully!");
+  //   Utils.delay(3000).then(() => removeNotification(id))
+  // };
+
+
+  const updateItems = (sessions) => {
     const newItems: SideNavigationProps.Item[] = [
-      // {
-      //   type: "link",
-      //   text: "Home",
-      //   href: "/",
-      // },
-      // // {
-      // //   type: "link",
-      // //   text: "New Session", 
-      // //   href: `/chatbot/playground/${uuidv4()}`,
-      // // },
-      // {
-      //   type: "section",
-      //   text: "Chatbot",
-      //   items: [
-      //     { type: "link", text: "Chat", href: "/chatbot/playground" },
-
-      //   ],
-      // },
+      {
+        type: "section",
+        text: "Session History",
+        items: sessions.map(session => ({
+          type: "link",
+          text: `${session.title}`,
+          href: `/chatbot/playground/${session.session_id}`,
+        })).concat([{
+          type: "link",
+          info: <Box margin="xxs" textAlign="center" ><Button iconName="refresh" loading={loadingSessions} variant="link">Reload Sessions</Button></Box>
+        }]),
+      },
       {
         type: "section",
         text: "Admin",
@@ -80,73 +101,29 @@ export default function NavigationPanel() {
           { type: "link", text: "Data", href: "/admin/data" }
         ],
       },
-      {
-        type: "section",
-        text: "Session History",
-        items: sessions.map(session => ({
-          type: "link",
-          text: `${session.title}`,
-          href: `/chatbot/playground/${session.session_id}`,
-        })),
-      },
     ];
     setItems(newItems);
-    // console.log("pong")
-    // return items; 
   };
 
+  // const onChange = ({
+  //   detail,
+  // }: {
+  //   detail: SideNavigationProps.ChangeDetail;
+  // }) => {
+  //   // const sectionIndex = items.findIndex(detail.item);
+  //   const sectionIndex = items.indexOf(detail.item);
+  //   setNavigationPanelState({
+  //     collapsedSections: {
+  //       ...navigationPanelState.collapsedSections,
+  //       [sectionIndex]: !detail.expanded,
+  //     },
+  //   });
+  // };
 
-  // useEffect(() => {
-  //   setItems(prevItems => {
-  //     const newItems = [...prevItems]; 
-  //     const sessionIndex = newItems.findIndex(item => item.type === "section" && item.text === "Session History");
-
-  //     if (sessionIndex !== -1 && newItems[sessionIndex].type === "section") {
-  //       newItems[sessionIndex].items = sessions.map(session => ({
-  //         type: "link",
-  //         text: `Session ${session.session_id}`,
-  //         href: `/chatbot/sessions/${session.session_id}`
-  //       }));
-  //     }
-  //     return newItems; 
-  //   }); 
-  // }, [sessions]); 
-
-  const onChange = ({
-    detail,
-  }: {
-    detail: SideNavigationProps.ChangeDetail;
-  }) => {
-    // const sectionIndex = items.findIndex(detail.item);
-    const sectionIndex = items.indexOf(detail.item);
-    setNavigationPanelState({
-      collapsedSections: {
-        ...navigationPanelState.collapsedSections,
-        [sectionIndex]: !detail.expanded,
-      },
-    });
-  };
 
   return (
     <div>
-      {/* <div style={{ justifyContent: 'center' }}>
-        <Header >
-          MBTA The RIDE Guide AI
-        </Header>
-      </div>
-
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <RouterButton
-          iconAlign="right"
-          iconSvg={<PencilSquareIcon />}
-          variant="primary"
-          href={`/chatbot/playground/${uuidv4()}`}
-        >
-          New session
-        </RouterButton>
-
-      </div>
-      <Header>
+      <Box margin="xs" padding={{ top: "l" }} textAlign="center">
         <RouterButton
           iconAlign="right"
           iconSvg={<PencilSquareIcon />}
@@ -154,46 +131,16 @@ export default function NavigationPanel() {
           href={`/chatbot/playground/${uuidv4()}`}
           data-alignment="right"
           className="new-chat-button"
-          style={{ textAlign: "right" }}
+          style={{ textAlign: "right"}}
         >
           New session
-
         </RouterButton>
-
-      </Header> */}
-      {/* <SpaceBetween alignItems="center" size="s"> */}
+      </Box>            
+      {loaded ?
+      <></>: 
       <Box margin="xs" padding="xs" textAlign="center">
-        <RouterButton
-          iconAlign="right"
-          iconSvg={<PencilSquareIcon />}
-          variant="primary"
-          href={`/chatbot/playground/${uuidv4()}`}
-          data-alignment="right"
-          className="new-chat-button"
-          style={{ textAlign: "right" }}
-        >
-          New session
-
-        </RouterButton>
-        </Box>
-      {/* </SpaceBetween> */}
-      <SideNavigation
-        onFollow={onFollow}
-        onChange={onChange}
-        // header={{ href: "/", text: "The Ride Guide AI" }}
-        items={items}
-      // items={items.map((value, idx) => {
-      //   if (value.type === "section") {
-      //     const collapsed = navigationPanelState.collapsedSections?.[idx] === true;
-      //     value.defaultExpanded = !collapsed;
-      //   }
-
-      //   return value;
-      // })} 
-      // // items={items}
-      />
+        <StatusIndicator type="loading">Loading sessions...</StatusIndicator>
+      </Box>}
     </div>
   );
 }
-
-

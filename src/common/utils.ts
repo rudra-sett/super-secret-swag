@@ -1,3 +1,4 @@
+import {Auth} from 'aws-amplify'
 export class Utils {
   // static isDevelopment() {
   //   return import.meta.env.MODE === "development";
@@ -125,5 +126,33 @@ export class Utils {
     );
 
     return result !== null;
+  }
+
+  static async authenticate(): Promise<string> {
+    try {
+      // const currentSession = await Auth.currentSession();
+      let token = '';
+      // console.log('Auth token:', currentSession.getAccessToken().getJwtToken());
+      // console.log('ID token:', currentSession.getAccessToken().getJwtToken());
+      // console.log(Auth.currentSession())
+      // console.log(await Auth.currentSession())
+      const currentUser = await Auth.currentAuthenticatedUser()
+      // currentUser.
+      // console.log(currentUser);
+      // console.log(currentSession);
+      // token = 'Bearer ' + currentUser.signInUserSession.idToken.jwtToken
+      
+      // for some reason
+      token = currentUser.signInUserSession.idToken.jwtToken //currentSession.getAccessToken().getJwtToken(); 
+
+      // currentUser.idToken.jwtToken
+      
+      // console.log("new token:", token)
+      // return currentSession.getAccessToken().getJwtToken();
+      return token
+    } catch (error) {
+      console.error('Error getting current user session:', error);
+      throw new Error('Authentication failed');
+    }
   }
 }

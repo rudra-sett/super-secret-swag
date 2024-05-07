@@ -5,8 +5,8 @@ import {
   ChatBotMessageType,
   FeedbackData,
 } from "./types";
-// import { Auth } from "aws-amplify";
-import { Alert, Flashbar, SpaceBetween, StatusIndicator, Button} from "@cloudscape-design/components";
+import { Auth } from "aws-amplify";
+import { SpaceBetween, StatusIndicator, Alert, Flashbar, Button } from "@cloudscape-design/components";
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
@@ -42,14 +42,16 @@ const TownButton = () => {
   return <Button variant="link">Town</Button>;
 }
 
+import { useNotifications } from "../notif-manager";
 
 export default function Chat(props: { sessionId?: string }) {
   const appContext = useContext(AppContext);
-  const [running, setRunning] = useState<boolean>(false);
+  const [running, setRunning] = useState<boolean>(true);
   const [session, setSession] = useState<{ id: string; loading: boolean }>({
     id: props.sessionId ?? uuidv4(),
     loading: typeof props.sessionId !== "undefined",
   });
+
   const [configuration, setConfiguration] = useState<ChatBotConfiguration>(
     () => ({
       streaming: true,
@@ -61,9 +63,20 @@ export default function Chat(props: { sessionId?: string }) {
     })
   );
 
+  const { notifications, addNotification } = useNotifications();
+
   const [messageHistory, setMessageHistory] = useState<ChatBotHistoryItem[]>(
     []
   );
+
+  // // add useEffect that sets the isNewSession to true after the first message is sent and the stream is done.
+  // useEffect(() => {
+  //   if (messageHistory.length === 0 && !running) {
+  //     console.log("First message has been rendered");
+  //     setNewSession(true);
+  //     console.log("setNewSession to true in chat");
+  //   }
+  // }, [messageHistory]);  // Dependency on messageHistory and the handled flag
 
   useEffect(() => {
     if (!appContext) return;
@@ -91,7 +104,7 @@ export default function Chat(props: { sessionId?: string }) {
               .filter((x) => x !== null)
               .map((x) => ({
                 type: x!.type as ChatBotMessageType,
-                metadata: {}, //JSON.parse(x!.metadata!),
+                metadata: x!.metadata!,
                 content: x!.content,
               }))
           );
@@ -101,12 +114,13 @@ export default function Chat(props: { sessionId?: string }) {
             behavior: "instant",
           });
         }
+        setSession({ id: props.sessionId, loading: false });
+        setRunning(false);
       } catch (error) {
         console.log(error);
+        addNotification("error",error.message)
+        addNotification("info","Please refresh the page")
       }
-
-      setSession({ id: props.sessionId, loading: false });
-      setRunning(false);
     })();
   }, [appContext, props.sessionId]);
 
@@ -171,6 +185,46 @@ export default function Chat(props: { sessionId?: string }) {
     });
     console.log(response);
   }
+// =======
+  
+//   const [items, setItems] = React.useState([
+//     {
+//       type: "success",
+//       dismissible: true,
+//       dismissLabel: "Dismiss message",
+//       content: "This is a success flash message",
+//       id: "message_5",
+//       onDismiss: () =>
+//          setItems(items =>
+//           items.filter(item => item.id !== "message_5")
+//         )
+//     },
+//     {
+//       type: "warning",
+//       dismissible: true,
+//       dismissLabel: "Dismiss message",
+//       content: "This is a warning flash message",
+//       id: "message_4",
+//       onDismiss: () =>
+//         setItems(items =>
+//           items.filter(item => item.id !== "message_4")
+//         )
+//     },
+//     {
+//       type: "error",
+//       dismissible: true,
+//       dismissLabel: "Dismiss message",
+//       header: "Failed to update instance id-4890f893e",
+//       content: "This is a dismissible error message",
+//       id: "message_3",
+//       onDismiss: () =>
+//         setItems(items =>
+//           items.filter(item => item.id !== "message_3")
+//         )
+//     }
+//   ]);
+// >>>>>>> Stashed changes
+
   return (
     <div>
       
