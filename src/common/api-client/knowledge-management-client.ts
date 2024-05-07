@@ -7,6 +7,14 @@ import {
   Utils
 } from "../utils"
 
+import {
+  API
+} from "../constants"
+
+import {
+  Utils
+} from "../utils"
+
 export class KnowledgeManagementClient {
 
   // Returns a URL from the API that allows one file upload to S3 with that exact filename
@@ -15,6 +23,7 @@ export class KnowledgeManagementClient {
       alert('Must have valid file type!');
       return;
     }
+
     try {
       const auth = await Utils.authenticate();
       const response = await fetch(API + '/signed-url', {

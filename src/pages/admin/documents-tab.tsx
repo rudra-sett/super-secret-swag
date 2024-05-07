@@ -4,13 +4,10 @@ import {
   Table,
   Pagination,
   Button,
-  TableProps,
   Header,
-  CollectionPreferences,
   Modal,
   Spinner,
 } from "@cloudscape-design/components";
-import React from 'react'
 import { useCallback, useContext, useEffect, useState } from "react";
 import RouterButton from "../../components/wrappers/router-button";
 import { RagDocumentType } from "../../common/types";
@@ -58,48 +55,6 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     },
     selection: {},
   });
-
-  /*const getDocuments = useCallback(
-    async (params: { lastDocumentId?: string; pageIndex?: number }) => {
-      // if (!appContext) return;
-      // if (!props.workspaceId) return;
-
-      setLoading(true);
-
-      const apiClient = new ApiClient(appContext);
-      try {
-        const result = await apiClient.documents.getDocuments(
-          // props.workspaceId,
-          props.documentType,
-          params?.lastDocumentId
-        );
-
-        setPages((current) => {
-          const foundIndex = current.findIndex(
-            (c) =>
-              c!.lastDocumentId === result.data!.listDocuments.lastDocumentId
-          );
-
-          if (foundIndex !== -1) {
-            current[foundIndex] = result.data?.listDocuments;
-            return [...current];
-          } else if (typeof params.pageIndex !== "undefined") {
-            current[params.pageIndex - 1] = result.data?.listDocuments;
-            return [...current];
-          } else if (result.data?.listDocuments.items.length === 0) {
-            return current;
-          } else {
-            return [...current, result.data?.listDocuments];
-          }
-        });
-      } catch (error) {
-        console.error(Utils.getErrorMessage(error));
-      }
-
-      setLoading(false);
-    },
-    [appContext, props.documentType]
-  );*/
 
   const getDocuments = useCallback(
     async (params: { continuationToken?: string; pageIndex?: number }) => {
@@ -196,182 +151,126 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     return () => clearInterval(interval);
   });
 
-  // const getStatus = async () => {
-  //   const result = await apiClient.knowledgeManagement.kendraIsSyncing();
-  //   console.log(result);    
-  //   if (result == "DONE SYNCING") {
-  //     setSyncing(false); 
-  //   }
-  //   return result;
-  // }
-
-  const syncKendra = async () => {    
-    if (syncing) {
-      // setSyncing(false)
-      return;
-    }
-    setSyncing(true);
-    try {
-      await apiClient.knowledgeManagement.syncKendra();
-      
-    } catch (error) {
-      console.log(error);
-      setSyncing(false)
-    }
-  }
-
-  return (
-    <><Modal
-      onDismiss={() => setShowModalDelete(false)}
-      visible={showModalDelete}
-      footer={
-        <Box float="right">
-          <SpaceBetween direction="horizontal" size="xs">
-            {" "}
-            <Button variant="link" onClick={() => setShowModalDelete(false)}>
-              Cancel
-            </Button>
-            <Button variant="primary" onClick={deleteSelectedFiles}>
-              Ok
-            </Button>
-          </SpaceBetween>{" "}
-        </Box>
+  const syncKendra = async () => {
+    const syncKendra = async () => {
+      if (syncing) {
+        // setSyncing(false)
+        // setSyncing(false)
+        return;
       }
-      header={"Delete session" + (selectedItems.length > 1 ? "s" : "")}
-    >
-      Do you want to delete{" "}
-      {selectedItems.length == 1
-        ? `file ${selectedItems[0].Key!}?`
-        : `${selectedItems.length} files?`}
-    </Modal>
-      <Table
-        {...collectionProps}
-        loading={loading}
-        loadingText={`Loading files`}
-        columnDefinitions={columnDefinitions}
-        selectionType="multi"
-        onSelectionChange={({ detail }) => {
-          console.log(detail);
-          setSelectedItems(detail.selectedItems);
-        }}
-        selectedItems={selectedItems}
-        items={pages[Math.min(pages.length - 1, currentPageIndex - 1)]?.Contents!}
-        trackBy="Key"
-        header={
-          <Header
-            actions={
-              <SpaceBetween direction="horizontal" size="xs">
-                <Button iconName="refresh" onClick={refreshPage} />
-                <RouterButton
-                  // href={`/rag/workspaces/add-data?workspaceId=${props.workspaceId}&tab=${props.documentType}`}
-                  href={`/admin/add-data`}
-                >
-                  {'Add Files'}
-                </RouterButton>
-                <Button
-                  variant="primary"
-                  disabled={selectedItems.length == 0}
-                  onClick={() => {
-                    if (selectedItems.length > 0) setShowModalDelete(true);
-                  }}
-                  data-testid="submit">
-                  Delete
-                </Button>
-                <Button
-                  variant="primary"
-                  disabled={syncing}
-                  onClick={() => {
-                    syncKendra();
-                  }}
-                // data-testid="submit"
-                >
-                  {syncing ? (
-                    <>
-                      Syncing data...&nbsp;&nbsp;
-                      <Spinner />
-                    </>
-                  ) : (
-                    "Sync data now"
-                  )}
-                </Button>
-              </SpaceBetween>
-            }
-            description="Please expect a delay for your changes to be reflected. Press the refresh button to see the latest changes."
-          >
-            {"Files"}
-          </Header>
+      setSyncing(true);
+      setSyncing(true);
+      try {
+        await apiClient.knowledgeManagement.syncKendra();
+
+      } catch (error) {
+        console.log(error);
+        setSyncing(false)
+      }
+    }
+
+    return (
+      <><Modal
+        onDismiss={() => setShowModalDelete(false)}
+        visible={showModalDelete}
+        footer={
+          <Box float="right">
+            <SpaceBetween direction="horizontal" size="xs">
+              {" "}
+              <Button variant="link" onClick={() => setShowModalDelete(false)}>
+                Cancel
+              </Button>
+              <Button variant="primary" onClick={deleteSelectedFiles}>
+                Ok
+              </Button>
+            </SpaceBetween>{" "}
+          </Box>
         }
-        empty={
-          <TableEmptyState
-            resourceName={"File"}
-            // createHref={`/rag/workspaces/add-data?workspaceId=${props.workspaceId}&tab=${props.documentType}`}
-            createHref={`/admin/add-data`}
-            createText={"Add Files"}
-          />
-        }
-        pagination={
-          pages.length === 0 ? null : (
-            <Pagination
-              openEnd={true}
-              pagesCount={pages.length}
-              currentPageIndex={currentPageIndex}
-              onNextPageClick={onNextPageClick}
-              onPreviousPageClick={onPreviousPageClick}
+        header={"Delete session" + (selectedItems.length > 1 ? "s" : "")}
+      >
+        Do you want to delete{" "}
+        {selectedItems.length == 1
+          ? `file ${selectedItems[0].Key!}?`
+          : `${selectedItems.length} files?`}
+      </Modal>
+        <Table
+          {...collectionProps}
+          loading={loading}
+          loadingText={`Loading files`}
+          columnDefinitions={columnDefinitions}
+          selectionType="multi"
+          onSelectionChange={({ detail }) => {
+            console.log(detail);
+            setSelectedItems(detail.selectedItems);
+          }}
+          selectedItems={selectedItems}
+          items={pages[Math.min(pages.length - 1, currentPageIndex - 1)]?.Contents!}
+          trackBy="Key"
+          header={
+            <Header
+              actions={
+                <SpaceBetween direction="horizontal" size="xs">
+                  <Button iconName="refresh" onClick={refreshPage} />
+                  <RouterButton
+                    // href={`/rag/workspaces/add-data?workspaceId=${props.workspaceId}&tab=${props.documentType}`}
+                    href={`/admin/add-data`}
+                  >
+                    {'Add Files'}
+                  </RouterButton>
+                  <Button
+                    variant="primary"
+                    disabled={selectedItems.length == 0}
+                    onClick={() => {
+                      if (selectedItems.length > 0) setShowModalDelete(true);
+                    }}
+                    data-testid="submit">
+                    Delete
+                  </Button>
+                  <Button
+                    variant="primary"
+                    disabled={syncing}
+                    onClick={() => {
+                      syncKendra();
+                    }}
+                  // data-testid="submit"
+                  >
+                    {syncing ? (
+                      <>
+                        Syncing data...&nbsp;&nbsp;
+                        <Spinner />
+                      </>
+                    ) : (
+                      "Sync data now"
+                    )}
+                  </Button>
+                </SpaceBetween>
+              }
+              description="Please expect a delay for your changes to be reflected. Press the refresh button to see the latest changes."
+            >
+              {"Files"}
+            </Header>
+          }
+          empty={
+            <TableEmptyState
+              resourceName={"File"}
+              // createHref={`/rag/workspaces/add-data?workspaceId=${props.workspaceId}&tab=${props.documentType}`}
+              createHref={`/admin/add-data`}
+              createText={"Add Files"}
             />
-          )
-        }
-      />
-    </>
-  );
-}
-/*
-function ragDocumentTypeToString(type: RagDocumentType) {
-  switch (type) {
-    case "file":
-      return "File";
-    case "text":
-      return "Text";
-    case "qna":
-      return "Q&A";
-    case "website":
-      return "Website";
-    case "rssfeed":
-      return "RSS Feed";
-    case "rsspost":
-      return "RSS Post";
+          }
+          pagination={
+            pages.length === 0 ? null : (
+              <Pagination
+                openEnd={true}
+                pagesCount={pages.length}
+                currentPageIndex={currentPageIndex}
+                onNextPageClick={onNextPageClick}
+                onPreviousPageClick={onPreviousPageClick}
+              />
+            )
+          }
+        />
+      </>
+    );
   }
-}
-
-function ragDocumentTypeToTitleString(type: RagDocumentType) {
-  switch (type) {
-    case "file":
-      return "Files";
-    case "text":
-      return "Texts";
-    case "qna":
-      return "Q&As";
-    case "website":
-      return "Websites";
-    case "rssfeed":
-      return "RSS Feeds";
-    case "rsspost":
-      return "RSS Posts";
-  }
-}
-
-function ragDocumentTypeToAddString(type: RagDocumentType) {
-  switch (type) {
-    case "file":
-      return "Upload files";
-    case "text":
-      return "Add texts";
-    case "qna":
-      return "Add Q&A";
-    case "website":
-      return "Crawl website";
-    case "rssfeed":
-      return "Subcribe to RSS Feed";
-    case "rsspost":
-      return "Add RSS Post";
-  }
-}*/
+};

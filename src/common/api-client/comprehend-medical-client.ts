@@ -1,4 +1,3 @@
-
 export class ComprehendMedicalClient {
   async redactText(userInput: string) {
     try {

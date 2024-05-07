@@ -1,5 +1,7 @@
 import { Auth } from "aws-amplify";
 
+import { Auth } from "aws-amplify";
+
 import {
   ChatBotHistoryItem,
   ChatBotMessageType,
@@ -17,6 +19,15 @@ import {
   API
 } from "../constants"
 
+
+import {
+  Utils
+} from "../utils"
+
+import {
+  API
+} from "../constants"
+
 export class SessionsClient {
 
   // Gets all sessions tied to a given user ID
@@ -25,20 +36,32 @@ export class SessionsClient {
     userId: string
   ) {
     const auth = await Utils.authenticate();
-    const response = await fetch(API + '/user-session', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + auth,
-      },
-      body: JSON.stringify({ "operation": "list_sessions_by_user_id", "user_id": userId })
-    });
-    const reader = response.body.getReader();
-    const { value, done } = await reader.read();
-    const decoder = new TextDecoder();
-    const output = decoder.decode(value);
+    let validData = false;
+    let output = [];
+    let runs = 0;
+    let limit = 3;
+    while (!validData && runs < limit ) {
+      runs += 1;
+      const response = await fetch(API + '/user-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + auth,
+        },
+        body: JSON.stringify({ "operation": "list_sessions_by_user_id", "user_id": userId })
+      });
+      const reader = response.body.getReader();
+      const { value, done } = await reader.read();
+      const decoder = new TextDecoder();
+      try{
+        output = JSON.parse(decoder.decode(value));
+        validData = true;
+      } catch (e) {
+        console.log(e);
+      }
+    }
     // console.log(output);
-    return JSON.parse(output);
+    return output;
   }
 
   // Returns a chat history given a specific user ID and session ID
@@ -48,24 +71,36 @@ export class SessionsClient {
     userId: string,
   ): Promise<ChatBotHistoryItem[]> {
     const auth = await Utils.authenticate();
-    const response = await fetch(API + '/user-session', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + auth,
-      },
-      body: JSON.stringify({
-        "operation": "get_session", "session_id": sessionId,
-        "user_id": userId
-      })
-    });
-    // console.log(response.body);
-    const reader = response.body.getReader();
-    const { value, done } = await reader.read();
-    // console.log(value);
-    const decoder = new TextDecoder();
-    // console.log(decoder.decode(value));    
-    const output = JSON.parse(decoder.decode(value)).chat_history! as any[];
+    let validData = false;
+    let output;
+    let runs = 0;
+    let limit = 3;
+    while (!validData && runs < limit ) {
+      runs += 1;
+      const response = await fetch(API + '/user-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + auth,
+        },
+        body: JSON.stringify({
+          "operation": "get_session", "session_id": sessionId,
+          "user_id": userId
+        })
+      });
+      // console.log(response.body);
+      const reader = response.body.getReader();
+      const { value, done } = await reader.read();
+      // console.log(value);
+      const decoder = new TextDecoder();
+      // console.log(decoder.decode(value));    
+      try {
+        output = JSON.parse(decoder.decode(value)).chat_history! as any[];
+        validData = true;
+      } catch (e) {
+        console.log(e);
+      }
+    }
     let history: ChatBotHistoryItem[] = [];
     // console.log(output);
     if (output === undefined) {

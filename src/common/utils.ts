@@ -147,7 +147,7 @@ export class Utils {
 
       // currentUser.idToken.jwtToken
       
-      console.log("new token:", token)
+      // console.log("new token:", token)
       // return currentSession.getAccessToken().getJwtToken();
       return token
     } catch (error) {
