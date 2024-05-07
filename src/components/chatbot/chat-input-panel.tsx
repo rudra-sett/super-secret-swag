@@ -24,18 +24,9 @@ import SpeechRecognition, {
 import { Auth } from "aws-amplify";
 import TextareaAutosize from "react-textarea-autosize";
 import { ReadyState } from "react-use-websocket";
-// import WebSocket from 'ws';
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
-// import { OptionsHelper } from "../../common/helpers/options-helper";
-// import { StorageHelper } from "../../common/helpers/storage-helper";
-// import { API } from "aws-amplify";
-// import { GraphQLSubscription, GraphQLResult } from "@aws-amplify/api";
-// import { Model, ReceiveMessagesSubscription, Workspace } from "../../API";
-// import { LoadingStatus, ModelInterface } from "../../common/types";
 import styles from "../../styles/chat.module.scss";
-// import ConfigDialog from "./config-dialog";
-// import ImageDialog from "./image-dialog";
 import {
   ChatBotConfiguration,
   ChatBotHistoryItem,
@@ -44,20 +35,14 @@ import {
   ChatInputState,
   ImageFile,
 } from "./types";
-// import { sendQuery } from "../../graphql/mutations";
 import {
-  // getSelectedModelMetadata,
   getSignedUrl,
   updateMessageHistoryRef,
   assembleHistory
 } from "./utils";
-// import { receiveMessages } from "../../graphql/subscriptions";
 import { Utils } from "../../common/utils";
 import {SessionRefreshContext} from "../../common/session-refresh-context"
 import { useNotifications } from "../notif-manager";
-
-
-
 
 export interface ChatInputPanelProps {
   running: boolean;
@@ -75,19 +60,6 @@ export abstract class ChatScrollState {
   static skipNextHistoryUpdate = false;
 }
 
-// const workspaceDefaultOptions: SelectProps.Option[] = [
-//   // {
-//   //   label: "No workspace (RAG data source)",
-//   //   value: "",
-//   //   iconName: "close",
-//   // },
-//   {
-//     label: "Create new workspace",
-//     value: "__create__",
-//     iconName: "add-plus",
-//   },
-// ];
-
 export default function ChatInputPanel(props: ChatInputPanelProps) {
   const appContext = useContext(AppContext);
   const {needsRefresh, setNeedsRefresh} = useContext(SessionRefreshContext);
@@ -97,11 +69,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     useSpeechRecognition();
   const [state, setState] = useState<ChatInputState>({
     value: "",
-    // selectedModel: null,
-    // selectedModelMetadata: null,
-    // selectedWorkspace: workspaceDefaultOptions[0],
-    // modelsStatus: "loading",
-    // workspacesStatus: "loading",
   });
   const [configDialogVisible, setConfigDialogVisible] = useState(false);
   const [imageDialogVisible, setImageDialogVisible] = useState(false);
@@ -114,6 +81,8 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
 
   const { addNotification } = useNotifications();
 
+  const prompt = "You are a considerate and helpful AI chatbot assistant for ALL MassHealth Enrollment Center workers. You are an INTERNAL tool to made ONLY to help MassHealth employees. You are an expert on ALL policies, procedural information, MassHealth enrollment, and internal traning materials. You will help call center workers respond to user complaints and queries about MassHealth enrollment and act as an integral resource for workers to refer and use when working on member cases. When you respond your answers should be efficient and straight to the point, only respond to directly what the user asks and quickly direct them to all the resources and FACTUAL knowledge they need to know to answer their question. Respond to their question and structure your response clearly each time so the direct answer to their question stands out immediately. If they are asking for help with a process or an action that has multiple steps clearly number and list out each step they need to take with explanations. If a user tries to input any sensitive personal information about members, such as their SSN, it will be redacted from the message, so you can very quickly remind them not to input any PII but continue to respond to their question unless more information is needed after the message has been redacted. If you do not have any given knowledge of the question, say that you do not have the neccessary information to answer the question and refer the user to the best resources for them to locate the answer themselves. Do not make up information outside of your given information, be honest and helpful always.";
+
   useEffect(() => {
     messageHistoryRef.current = props.messageHistory;
     // // console.log(messageHistoryRef.current.length)
@@ -123,93 +92,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     //   setFirstTime(false);
     // }
   }, [props.messageHistory]);
-
-  // THIS PART OF THE CODE HANDLES READY STATE
-  // it is currently forced to say OPEN
-
-  // useEffect(() => {
-  //   async function subscribe() {
-  //     console.log("Subscribing to AppSync");
-  //     setReadyState(ReadyState.CONNECTING);
-  //     const sub = await API.graphql<
-  //       GraphQLSubscription<ReceiveMessagesSubscription>
-  //     >({
-  //       query: receiveMessages,
-  //       variables: {
-  //         sessionId: props.session.id,
-  //       },
-  //       authMode: "AMAZON_COGNITO_USER_POOLS",
-  //     }).subscribe({
-  //       next: ({ value }) => {
-  //         const data = value.data!.receiveMessages?.data;
-  //         if (data !== undefined && data !== null) {
-  //           const response: ChatBotMessageResponse = JSON.parse(data);
-  //           console.log("message data", response.data);
-  //           if (response.action === ChatBotAction.Heartbeat) {
-  //             console.log("Heartbeat pong!");
-  //             return;
-  //           }
-  //           updateMessageHistoryRef(
-  //             props.session.id,
-  //             messageHistoryRef.current,
-  //             response
-  //           );
-
-  //           if (
-  //             response.action === ChatBotAction.FinalResponse ||
-  //             response.action === ChatBotAction.Error
-  //           ) {
-  //             console.log("Final message received");
-  //             props.setRunning(false);
-  //           }
-  //           props.setMessageHistory([...messageHistoryRef.current]);
-  //         }
-  //       },
-  //       error: (error) => console.warn(error),
-  //     });
-  //     return sub;
-  //   }
-
-  //   const sub = subscribe();
-  //   sub
-  //     .then(() => {
-  //       setReadyState(ReadyState.OPEN);
-  //       console.log(`Subscribed to session ${props.session.id}`);
-  //       const request: ChatBotHeartbeatRequest = {
-  //         action: ChatBotAction.Heartbeat,
-  //         modelInterface: ChatBotModelInterface.Langchain,
-  //         data: {
-  //           sessionId: props.session.id,
-  //         },
-  //       };
-  //       const result = API.graphql({
-  //         query: sendQuery,
-  //         variables: {
-  //           data: JSON.stringify(request),
-  //         },
-  //       });
-  //       Promise.all([result])
-  //         .then((x) => console.log(`Query successful`, x))
-  //         .catch((err) => console.log(err));
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       setReadyState(ReadyState.CLOSED);
-  //     });
-
-  //   return () => {
-  //     sub
-  //       .then((s) => {
-  //         console.log(`Unsubscribing from ${props.session.id}`);
-  //         s.unsubscribe();
-  //       })
-  //       .catch((err) => console.log(err));
-  //   };
-  //   // eslint-disable-next-line
-  // }, [props.session.id]);
-
-
-  // uhhh I think this handles speech stuff??
 
   useEffect(() => {
     if (transcript) {
@@ -348,7 +230,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           "data": {
             userMessage: messageToSend,
             chatHistory: assembleHistory(messageHistoryRef.current.slice(0, -2)),
-            systemPrompt: "You are a considerate and helpful AI chatbot assistant for ALL MassHealth Enrollment Center workers. You are an INTERNAL tool to made ONLY to help MassHealth employees. You are an expert on ALL policies, procedural information, MassHealth enrollment, and internal traning materials. You will help call center workers respond to user complaints and queries about MassHealth enrollment and act as an integral resource for workers to refer and use when working on member cases. When you respond your answers should be efficient and straight to the point, only respond to directly what the user asks and quickly direct them to all the resources and FACTUAL knowledge they need to know to answer their question. Respond to their question and structure your response clearly each time so the direct answer to their question stands out immediately. If they are asking for help with a process or an action that has multiple steps clearly number and list out each step they need to take with explanations. If a user tries to input any sensitive personal information about members, such as their SSN, it will be redacted from the message, so you can very quickly remind them not to input any PII but continue to respond to their question unless more information is needed after the message has been redacted. If you do not have any given knowledge of the question, say that you do not have the neccessary information to answer the question and refer the user to the best resources for them to locate the answer themselves. Do not make up information outside of your given information, be honest and helpful always.",
+            systemPrompt: prompt,
             projectId: 'vgbt420420',
             user_id : username,
             session_id: props.session.id
@@ -490,31 +372,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           </div>
         </div>
       </Container>
-      {/* <div className={styles.input_controls}>
-        <div className={styles.input_controls_right}>
-          <SpaceBetween direction="horizontal" size="xxs" alignItems="center">
-            <div style={{ paddingTop: "1px" }}>
-              <Button
-                iconName="settings"
-                variant="icon"
-                onClick={() => setConfigDialogVisible(true)}
-              />
-            </div>
-            <StatusIndicator
-              type={
-                readyState === ReadyState.OPEN
-                  ? "success"
-                  : readyState === ReadyState.CONNECTING ||
-                    readyState === ReadyState.UNINSTANTIATED
-                    ? "in-progress"
-                    : "error"
-              }
-            >
-              {readyState === ReadyState.OPEN ? "Connected" : connectionStatus}
-            </StatusIndicator>
-          </SpaceBetween>
-        </div>
-      </div> */}
     <SpaceBetween size="s"></SpaceBetween></SpaceBetween>
   );
 }
