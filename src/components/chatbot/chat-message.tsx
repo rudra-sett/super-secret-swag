@@ -74,9 +74,10 @@ export default function ChatMessage(props: ChatMessageProps) {
   }, [message]);
 
   const content =
-    props.message.content && props.message.content.length > 0
-      ? props.message.content
-      : props.message.tokens?.map((v) => v.value).join("");
+  props.message.content && props.message.content.length > 0
+    ? props.message.content
+    : props.message.tokens?.map((v) => v.value).join("");
+
 
   return (
     <div>
@@ -98,7 +99,7 @@ export default function ChatMessage(props: ChatMessageProps) {
               <Spinner />
             </Box>
           ) : null}
-          {props.message.content.length > 0 ? (
+          {props.message.content && props.message.content.length > 0 ? (
             <div className={styles.btn_chabot_message_copy}>
               <Popover
                 size="medium"
