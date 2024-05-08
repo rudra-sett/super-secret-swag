@@ -6,6 +6,7 @@ import {
   Button,
   Header,
   Modal,
+  Select,
   Spinner,
   Textarea,
   TextContent,
@@ -21,7 +22,7 @@ import { getColumnDefinition } from "./columns";
 import { Utils } from "../../common/utils";
 import { useCollection } from "@cloudscape-design/collection-hooks";
 import React from 'react';
-// import { FeedbackResult } from "../../../API";
+//import { FeedbackResult } from "../../../API";
 
 export interface FeedbackTabProps {
   updateSelectedFeedback : React.Dispatch<any>;
@@ -40,6 +41,18 @@ export default function FeedbackTab(props: FeedbackTabProps) {
   const [endDate,setEndDate] = useState<Date>(new Date());
   const [startDate,setStartDate] = useState<Date>(new Date(endDate.getFullYear(),endDate.getMonth(),endDate.getDate() -1));
   const [topic, setTopic] = useState<string>('general RIDE');
+  const filterTopics = [
+    {label: "TRAC", value:"trac"},
+    {label: "RIDE", value:"ride"},
+    {label: "MBTA", value:"mbta"},
+    {label: "Other", value:"other"}
+
+  ]
+  const [
+    selectedOption,
+    setSelectedOption
+  ] = React.useState({ label: "Option 1", value: "1" });
+
 
   const { items, collectionProps, paginationProps } = useCollection(pages, {
     filtering: {
@@ -215,6 +228,23 @@ export default function FeedbackTab(props: FeedbackTabProps) {
           <Header
             actions={
               <SpaceBetween direction="horizontal" size="xs">
+                
+                <Select
+                  selectedOption={selectedOption}
+                  onChange={({ detail }) =>
+                  {
+                    // Ensure label and value are defined, or set default
+                    const label = detail.selectedOption.label ?? "Default Label";
+                    const value = detail.selectedOption.value ?? "Default Value";
+                    setSelectedOption({ label, value });
+                  }}
+                  options={[
+                    {label: "TRAC", value:"trac"},
+                    {label: "RIDE", value:"ride"},
+                    {label: "MBTA", value:"mbta"},
+                    {label: "Other", value:"other"}
+                  ]}
+                />
                 <Button iconName="refresh" onClick={refreshPage} />                
                 <Button
                   variant="primary"
@@ -230,6 +260,7 @@ export default function FeedbackTab(props: FeedbackTabProps) {
             description="Please expect a delay for your changes to be reflected. Press the refresh button to see the latest changes."
           >
             {"Feedback"}
+            
           </Header>
         }
         empty={
