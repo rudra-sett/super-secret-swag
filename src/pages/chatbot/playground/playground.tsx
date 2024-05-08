@@ -7,7 +7,7 @@ import { Alert, Header, HelpPanel } from "@cloudscape-design/components";
 export default function Playground() {
   const { sessionId } = useParams();
 
-  return (
+  return (    
     <BaseAppLayout
       info={
         <HelpPanel header={<Header variant="h3">Using the chat</Header>}>
@@ -44,14 +44,9 @@ export default function Playground() {
       
       <Chat sessionId={sessionId} />
       </div>
-    }/>
+     }
+    />    
   );
-
-  // return (
-  //   <BaseAppLayout
-  //     content={mainContent}  // Passing the new main content structure
-  //   />
-  // );
 }
 
 //   return (

@@ -7,7 +7,10 @@ import {
   Header,
   Modal,
   Spinner,
+  Textarea,
+  TextContent,
 } from "@cloudscape-design/components";
+import { DateTime } from "luxon";
 import { useCallback, useContext, useEffect, useState } from "react";
 import RouterButton from "../../components/wrappers/router-button";
 import { RagDocumentType } from "../../common/types";
@@ -17,29 +20,33 @@ import { AppContext } from "../../common/app-context";
 import { getColumnDefinition } from "./columns";
 import { Utils } from "../../common/utils";
 import { useCollection } from "@cloudscape-design/collection-hooks";
-// import { DocumentsResult } from "../../../API";
+import React from 'react';
+// import { FeedbackResult } from "../../../API";
 
-export interface DocumentsTabProps {
-  // workspaceId?: string;
-  documentType: RagDocumentType;
+export interface FeedbackTabProps {
+  updateSelectedFeedback : React.Dispatch<any>;
 }
 
-export default function DocumentsTab(props: DocumentsTabProps) {
+export default function FeedbackTab(props: FeedbackTabProps) {
   const appContext = useContext(AppContext);
   const apiClient = new ApiClient(appContext);
   const [loading, setLoading] = useState(true);
-  const [syncing, setSyncing] = useState(false);
   const [currentPageIndex, setCurrentPageIndex] = useState(1);
   const [pages, setPages] = useState<any[]>([]);
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const [showModalDelete, setShowModalDelete] = useState(false);
+
+  // variables for filters
+  const [endDate,setEndDate] = useState<Date>(new Date());
+  const [startDate,setStartDate] = useState<Date>(new Date(endDate.getFullYear(),endDate.getMonth(),endDate.getDate() -1));
+  const [topic, setTopic] = useState<string>('general RIDE');
 
   const { items, collectionProps, paginationProps } = useCollection(pages, {
     filtering: {
       empty: (
         <Box margin={{ vertical: "xs" }} textAlign="center" color="inherit">
           <SpaceBetween size="m">
-            <b>No sessions</b>
+            <b>No feedback</b>
           </SpaceBetween>
         </Box>
       ),
@@ -48,7 +55,7 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     sorting: {
       defaultState: {
         sortingColumn: {
-          sortingField: "Key",
+          sortingField: "FeedbackID",
         },
         isDescending: true,
       },
@@ -56,19 +63,18 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     selection: {},
   });
 
-  const getDocuments = useCallback(
-    async (params: { continuationToken?: string; pageIndex?: number }) => {
-      setLoading(true);
-
-
+  const getFeedback = useCallback(
+    async (params: {pageIndex?, nextPageToken?}) => {
+      setLoading(true);      
       try {
-        const result = await apiClient.knowledgeManagement.getDocuments(params?.continuationToken, params?.pageIndex)
-
+        const result = await apiClient.userFeedback.getUserFeedback(topic, startDate.toISOString(), endDate.toISOString(), params.nextPageToken)
+        console.log(result);
         setPages((current) => {
           if (typeof params.pageIndex !== "undefined") {
             current[params.pageIndex - 1] = result;
             return [...current];
           } else {
+            console.log("pages?")
             return [...current, result];
           }
         });
@@ -79,20 +85,21 @@ export default function DocumentsTab(props: DocumentsTabProps) {
       console.log(pages);
       setLoading(false);
     },
-    [appContext, props.documentType]
+    [appContext]
   );
 
 
   useEffect(() => {
-    getDocuments({});
-  }, [getDocuments]);
+    getFeedback({pageIndex: currentPageIndex});
+  }, [getFeedback]);
 
   const onNextPageClick = async () => {
-    const continuationToken = pages[currentPageIndex - 1]?.NextContinuationToken;
-
+    const continuationToken = pages[currentPageIndex - 1]?.NextPageToken;
+    // console.log("next page", currentPageIndex)
+    // console.log(pages);
     if (continuationToken) {
       if (pages.length <= currentPageIndex) {
-        await getDocuments({ continuationToken });
+        await getFeedback({nextPageToken : continuationToken });
       }
       setCurrentPageIndex((current) => Math.min(pages.length + 1, current + 1));
     }
@@ -100,6 +107,8 @@ export default function DocumentsTab(props: DocumentsTabProps) {
 
 
   const onPreviousPageClick = async () => {
+    console.log("prev page", currentPageIndex)
+    console.log(pages);
     setCurrentPageIndex((current) =>
       Math.max(1, Math.min(pages.length - 1, current - 1))
     );
@@ -108,66 +117,64 @@ export default function DocumentsTab(props: DocumentsTabProps) {
   const refreshPage = async () => {
     // console.log(pages[Math.min(pages.length - 1, currentPageIndex - 1)]?.Contents!)
     if (currentPageIndex <= 1) {
-      await getDocuments({ pageIndex: currentPageIndex });
+      await getFeedback({pageIndex: currentPageIndex});
     } else {
-      const continuationToken = pages[currentPageIndex - 2]?.NextContinuationToken!;
-      await getDocuments({ continuationToken });
+      const continuationToken = pages[currentPageIndex - 2]?.NextPageToken!;
+      await getFeedback({pageIndex: currentPageIndex, nextPageToken : continuationToken });
     }
   };
 
 
-  const columnDefinitions = getColumnDefinition(props.documentType);
+  const columnDefinitions = [
+    {
+      id: "problem",
+      header: "Problem",
+      cell: (item) => item.Problem,
+      isRowHeader: true,
+    }, 
+    {
+      id: "topic",
+      header: "Topic",
+      cell: (item) => item.Topic,
+      isRowHeader: true,
+    },    
+    {
+      id: "createdAt",
+      header: "Submission date",
+      cell: (item) =>
+        DateTime.fromISO(new Date(item.CreatedAt).toISOString()).toLocaleString(
+          DateTime.DATETIME_SHORT
+        ),
+    },
+    {
+      id: "prompt",
+      header: "User Prompt",
+      cell: (item) => item.UserPrompt,
+      isRowHeader: true
+    },
+    
+  ];
+  //getColumnDefinition(props.documentType);
 
-  const deleteSelectedFiles = async () => {
-    if (!appContext) return;
+  // const deleteSelectedFeedback = async () => {
+  //   if (!appContext) return;
 
-    setLoading(true);
-    setShowModalDelete(false);
-    const apiClient = new ApiClient(appContext);
-    await Promise.all(
-      selectedItems.map((s) => apiClient.knowledgeManagement.deleteFile(s.Key!))
-    );
-    await getDocuments({ pageIndex: currentPageIndex });
-    setSelectedItems([])
-    setLoading(false);
-  };
+  //   setLoading(true);
+  //   setShowModalDelete(false);
+  //   const apiClient = new ApiClient(appContext);
+  //   await Promise.all(
+  //     selectedItems.map((s) => apiClient.knowledgeManagement.deleteFeedback(s.Key!))
+  //   );
+  //   await getFeedback({ pageIndex: currentPageIndex });
+  //   setSelectedItems([])
+  //   setLoading(false);
+  // };
+  
 
-  useEffect(() => {
-    if (!appContext) return;
-    const apiClient = new ApiClient(appContext);
-
-    const getStatus = async () => {
-      try {
-        const result = await apiClient.knowledgeManagement.kendraIsSyncing();
-        setSyncing(result == "STILL SYNCING");
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    const interval = setInterval(getStatus, 5000);
-    getStatus();
-
-    return () => clearInterval(interval);
-  });
-
-  const syncKendra = async () => {    
-    if (syncing) {
-      // setSyncing(false)
-      return;
-    }
-    setSyncing(true);
-    try {
-      await apiClient.knowledgeManagement.syncKendra();
-      
-    } catch (error) {
-      console.log(error);
-      setSyncing(false)
-    }
-  }
 
   return (
-    <><Modal
+    <>
+    {/* <Modal
       onDismiss={() => setShowModalDelete(false)}
       visible={showModalDelete}
       footer={
@@ -177,43 +184,38 @@ export default function DocumentsTab(props: DocumentsTabProps) {
             <Button variant="link" onClick={() => setShowModalDelete(false)}>
               Cancel
             </Button>
-            <Button variant="primary" onClick={deleteSelectedFiles}>
+            <Button variant="primary" onClick={deleteSelectedFeedback}>
               Ok
             </Button>
           </SpaceBetween>{" "}
         </Box>
       }
-      header={"Delete session" + (selectedItems.length > 1 ? "s" : "")}
+      header={"Delete feedback" + (selectedItems.length > 1 ? "s" : "")}
     >
       Do you want to delete{" "}
       {selectedItems.length == 1
-        ? `file ${selectedItems[0].Key!}?`
-        : `${selectedItems.length} files?`}
-    </Modal>
+        ? `Feedback ${selectedItems[0].Key!}?`
+        : `${selectedItems.length} Feedback?`}
+    </Modal> */}
       <Table
         {...collectionProps}
         loading={loading}
-        loadingText={`Loading files`}
+        loadingText={`Loading Feedback`}
         columnDefinitions={columnDefinitions}
-        selectionType="multi"
+        selectionType="single"
         onSelectionChange={({ detail }) => {
           console.log(detail);
+          props.updateSelectedFeedback(detail.selectedItems[0])
           setSelectedItems(detail.selectedItems);
         }}
         selectedItems={selectedItems}
-        items={pages[Math.min(pages.length - 1, currentPageIndex - 1)]?.Contents!}
-        trackBy="Key"
+        items={pages[Math.min(pages.length - 1, currentPageIndex - 1)]?.Items!}
+        trackBy="FeedbackID"
         header={
           <Header
             actions={
               <SpaceBetween direction="horizontal" size="xs">
-                <Button iconName="refresh" onClick={refreshPage} />
-                <RouterButton
-                  // href={`/rag/workspaces/add-data?workspaceId=${props.workspaceId}&tab=${props.documentType}`}
-                  href={`/admin/add-data`}
-                >
-                  {'Add Files'}
-                </RouterButton>
+                <Button iconName="refresh" onClick={refreshPage} />                
                 <Button
                   variant="primary"
                   disabled={selectedItems.length == 0}
@@ -222,38 +224,22 @@ export default function DocumentsTab(props: DocumentsTabProps) {
                   }}
                   data-testid="submit">
                   Delete
-                </Button>
-                <Button
-                  variant="primary"
-                  disabled={syncing}
-                  onClick={() => {
-                    syncKendra();
-                  }}
-                // data-testid="submit"
-                >
-                  {syncing ? (
-                    <>
-                      Syncing data...&nbsp;&nbsp;
-                      <Spinner />
-                    </>
-                  ) : (
-                    "Sync data now"
-                  )}
-                </Button>
+                </Button>                                  
               </SpaceBetween>
             }
             description="Please expect a delay for your changes to be reflected. Press the refresh button to see the latest changes."
           >
-            {"Files"}
+            {"Feedback"}
           </Header>
         }
         empty={
-          <TableEmptyState
-            resourceName={"File"}
+          /*<TableEmptyState
+            resourceName={"Feedback"}
             // createHref={`/rag/workspaces/add-data?workspaceId=${props.workspaceId}&tab=${props.documentType}`}
-            createHref={`/admin/add-data`}
-            createText={"Add Files"}
-          />
+            // createHref={`/admin/add-data`}
+            // createText={"Add Feedback"}
+          />*/
+          <Box textAlign="center">No more feedback</Box>
         }
         pagination={
           pages.length === 0 ? null : (

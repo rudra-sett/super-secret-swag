@@ -1,3 +1,5 @@
+import { Auth } from "aws-amplify";
+
 import {
   ChatBotHistoryItem,
   ChatBotMessageType,
@@ -6,65 +8,64 @@ import {
 import {
   assembleHistory
 } from "../../components/chatbot/utils"
+
+import {
+  Utils
+} from "../utils"
+
+import {
+  API
+} from "../constants"
+
 export class SessionsClient {
-
-  // Adds a new session (NOT USED)
-  async addSession(userId: string, sessionId: string, chatHistory: ChatBotHistoryItem[]) {
-    await fetch('https://bu4z2a26c7.execute-api.us-east-1.amazonaws.com/user_session_handler', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        "operation": "add_session",
-        "user_id": userId,
-        "session_id": sessionId,
-        "chat_history": assembleHistory(chatHistory)
-      })
-    });
-  }
-
-  // Updates the current session (NOT USED)
-  async updateSession(userId: string, sessionId: string, chatHistory: ChatBotHistoryItem[]) {
-    console.log("updating session...")
-    const response = await fetch('https://bu4z2a26c7.execute-api.us-east-1.amazonaws.com/user_session_handler', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        "operation": "update_session",
-        "user_id": userId,
-        "session_id": sessionId,
-        "chat_history": assembleHistory(chatHistory)
-      })
-    });
-    const reader = response.body.getReader();
-    const { value, done } = await reader.read();
-    const decoder = new TextDecoder();
-    const output = decoder.decode(value);
-    // console.log(JSON.parse(output));
-    // return JSON.parse(output);
-  }
 
   // Gets all sessions tied to a given user ID
   // Return format: [{"session_id" : "string", "user_id" : "string", "time_stamp" : "dd/mm/yy", "title" : "string"}...]
   async getSessions(
     userId: string
   ) {
-    const response = await fetch('https://bu4z2a26c7.execute-api.us-east-1.amazonaws.com/user_session_handler', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ "operation": "list_sessions_by_user_id", "user_id": userId })
-    });
-    const reader = response.body.getReader();
-    const { value, done } = await reader.read();
-    const decoder = new TextDecoder();
-    const output = decoder.decode(value);
-    // console.log(output);
-    return JSON.parse(output);
+    const auth = await Utils.authenticate();
+    let validData = false;
+    let output = [];
+    let runs = 0;
+    let limit = 3;
+    let errorMessage = "Could not load sessions"
+    while (!validData && runs < limit ) {
+      runs += 1;
+      const response = await fetch(API + '/user-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + auth,
+        },
+        body: JSON.stringify({ "operation": "list_sessions_by_user_id", "user_id": userId })
+      });
+      if (response.status != 200) {
+        validData = false;
+        let jsonResponse = await response.json()
+        // console.log(jsonResponse);
+        errorMessage = jsonResponse;
+        // errorMessage = body.body;
+        break;
+      }
+      const reader = response.body.getReader();
+      const { value, done } = await reader.read();
+      const decoder = new TextDecoder();
+      const parsed = decoder.decode(value)
+      console.log(parsed)
+      try{
+        output = JSON.parse(parsed);
+        validData = true;
+      } catch (e) {
+        // just retry, we get 3 attempts!
+        console.log(e);
+      }
+    }
+    if (!validData) {
+      throw new Error(errorMessage);
+    }
+    console.log(output);
+    return output;
   }
 
   // Returns a chat history given a specific user ID and session ID
@@ -72,24 +73,47 @@ export class SessionsClient {
   async getSession(
     sessionId: string,
     userId: string,
-  ) : Promise<ChatBotHistoryItem[]> {
-    const response = await fetch("https://bu4z2a26c7.execute-api.us-east-1.amazonaws.com/user_session_handler", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        "operation": "get_session", "session_id": sessionId,
-        "user_id": userId
-      })
-    });
-    // console.log(response.body);
-    const reader = response.body.getReader();
-    const { value, done } = await reader.read();
-    // console.log(value);
-    const decoder = new TextDecoder();
-    // console.log(decoder.decode(value));    
-    const output = JSON.parse(decoder.decode(value)).chat_history! as any[];
+  ): Promise<ChatBotHistoryItem[]> {
+    const auth = await Utils.authenticate();
+    let validData = false;
+    let output;
+    let runs = 0;
+    let limit = 3;
+    let errorMessage = "Could not load session";
+    while (!validData && runs < limit ) {
+      runs += 1;
+      const response = await fetch(API + '/user-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + auth,
+        },
+        body: JSON.stringify({
+          "operation": "get_session", "session_id": sessionId,
+          "user_id": userId
+        })
+      });
+      // console.log(response.body);
+      if (response.status != 200) {
+        validData = false;
+        errorMessage = await response.json()
+        break;
+      }
+      const reader = response.body.getReader();
+      const { value, done } = await reader.read();
+      // console.log(value);
+      const decoder = new TextDecoder();
+      // console.log(decoder.decode(value));    
+      try {
+        output = JSON.parse(decoder.decode(value)).chat_history! as any[];
+        validData = true;
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    if (!validData) {
+      throw new Error(errorMessage)      
+    }
     let history: ChatBotHistoryItem[] = [];
     // console.log(output);
     if (output === undefined) {
@@ -98,8 +122,8 @@ export class SessionsClient {
     output.forEach(function (value) {
       let metadata = {}
       if (value.metadata) {
-        metadata = {"Sources" : JSON.parse(value.metadata)}
-      }      
+        metadata = { "Sources": JSON.parse(value.metadata) }
+      }
       history.push({
         type: ChatBotMessageType.Human,
         content: value.user,
@@ -107,27 +131,28 @@ export class SessionsClient {
         },
         tokens: [],
       },
-      {
-        type: ChatBotMessageType.AI,
-        tokens: [],
-        content: value.chatbot,
-        metadata: metadata,
-      },)
+        {
+          type: ChatBotMessageType.AI,
+          tokens: [],
+          content: value.chatbot,
+          metadata: metadata,
+        },)
     })
     // console.log(history);
     return history;
   }
 
-  // Deletes a given session based on session ID and user ID (NOT USED)
   async deleteSession(
     sessionId: string,
     userId: string,
   ) {
     try {
-      const response = await fetch('https://bu4z2a26c7.execute-api.us-east-1.amazonaws.com/user_session_handler', {
+      const auth = await Utils.authenticate();
+      const response = await fetch(API + '/user-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + auth,
         },
         body: JSON.stringify({
           "operation": "delete_session", "session_id": sessionId,
@@ -139,5 +164,4 @@ export class SessionsClient {
     }
     return "DONE";
   }
-
 }
