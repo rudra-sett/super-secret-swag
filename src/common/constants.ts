@@ -106,6 +106,21 @@ export abstract class Labels {
   // }
 }
 
+export const feedbackCategories = [
+  {label: "TRAC", value:"trac", disabled: false},
+  {label: "RIDE", value:"ride", disabled: false},
+  {label: "MBTA", value:"mbta", disabled: false},
+  {label: "Other", value:"other", disabled: false}
+]
+
+export const feedbackTypes = [
+  {label: "Accuracy", value:"accuracy", disabled: false},
+  {label: "Relevance", value:"relevance", disabled: false},
+  {label: "Clarity", value:"clarity", disabled: false},
+  {label: "Formatting", value:"completeness", disabled: false},
+  {label: "Other", value:"other", disabled: false}
+]
+
 export const API = "https://u95wm1svh0.execute-api.us-east-1.amazonaws.com/test"
 
 export const CHATBOT_NAME = "MBTA The RIDE Guide AI";

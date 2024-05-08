@@ -40,15 +40,15 @@ import "react-json-view-lite/dist/index.css";
 import "../../styles/app.scss";
 import { useNotifications } from "../notif-manager";
 import { Utils } from "../../common/utils";
-import { text } from 'body-parser';
 import { v4 as uuidv4 } from 'uuid';
+import {feedbackCategories, feedbackTypes} from '../../common/constants'
 
 export interface ChatMessageProps {
   message: ChatBotHistoryItem;
   configuration?: ChatBotConfiguration;
   showMetadata?: boolean;
   onThumbsUp: () => void;
-  onThumbsDown: () => void;
+  onThumbsDown: (feedbackTopic : string, feedbackType : string, feedbackMessage: string) => void;
 }
 
 
@@ -95,31 +95,7 @@ export default function ChatMessage(props: ChatMessageProps) {
       : props.message.tokens?.map((v) => v.value).join("");
 
   const showSources = props.message.metadata?.Sources && (props.message.metadata.Sources as any[]).length > 0;
-
-  const handleTopicChange = (id) => {
-    const topicText = items.find(item => item.id === id).text;
-    setSelectedTopic(topicText);
-  }
   
-  const handleFeedbackTypeChange = (id) => {
-    const feedbackTypeText = items.find(item => item.id === id).text;
-    setSelectedFeedbackType(feedbackTypeText);
-  }
-  
-  const items = [
-    {text: "TRAC", id:"trac", disabled: false},
-    {text: "RIDE", id:"ride", disabled: false},
-    {text: "MBTA", id:"mbta", disabled: false},
-    {text: "Other", id:"other", disabled: false}
-  ]
-
-  const feedbackTypes = [
-    {text: "Accuracy", id:"accuracy", disabled: false},
-    {text: "Relevance", id:"relevance", disabled: false},
-    {text: "Clarity", id:"clarity", disabled: false},
-    {text: "Formatting", id:"completeness", disabled: false},
-    {text: "Other", id:"other", disabled: false}
-  ]
 
   return (
     <div>
@@ -128,7 +104,7 @@ export default function ChatMessage(props: ChatMessageProps) {
       visible={modalVisible}
       footer={
         <Box float = "right">
-          <SpaceBetween direction="horizontal">
+          <SpaceBetween direction="horizontal" size="xs">
             <Button variant="link" onClick={() => {
               setModalVisible(false)
             setValue("")
@@ -141,39 +117,36 @@ export default function ChatMessage(props: ChatMessageProps) {
                 const id = addNotification("error","Please fill out all fields.")
                 Utils.delay(3000).then(() => removeNotification(id));
                 return;
-              } else{
+              } else {
               setModalVisible(false)
               setValue("")
+
               const id = addNotification("success","Your feedback has been submitted.")
               Utils.delay(3000).then(() => removeNotification(id));
+              
+              props.onThumbsDown(selectedTopic.value, selectedFeedbackType.value,value.trim());
+              setSelectedIcon(0);
+
               setSelectedTopic({label: "Select a Topic", value: "1"})
               setSelectedFeedbackType({label: "Select a Topic", value: "1"})
+              
+              
             }}}>Ok</Button>
           </SpaceBetween>
         </Box>
       }
-      header="Feedback Response"
+      header="Provide Feedback"
       >
+        <SpaceBetween size="xs">
         <Select
         selectedOption = {selectedTopic}
-        onChange = {({detail}) => setSelectedTopic(detail.selectedOption)}
-        options ={[
-          {label: "TRAC", value: "trac"},
-          {label: "RIDE", value: "ride"},
-          {label: "MBTA", value: "mbta"},
-          {label: "Other", value: "other"}
-        ]}
+        onChange = {({detail}) => setSelectedTopic({label: detail.selectedOption.label,value: detail.selectedOption.value})}
+        options ={feedbackCategories}
         />
         <Select
         selectedOption = {selectedFeedbackType}
-        onChange = {({detail}) => setSelectedFeedbackType(detail.selectedOption)}
-        options ={[
-          {label: "Accuracy", value: "accuracy"},
-          {label: "Relevance", value: "relevance"},
-          {label: "Clarity", value: "clarity"},
-          {label: "Formatting", value: "completeness"},
-          {label: "Other", value: "other"}
-        ]}
+        onChange = {({detail}) => setSelectedFeedbackType({label: detail.selectedOption.label,value: detail.selectedOption.value})}
+        options ={feedbackTypes}
         />
         <FormField label="Please enter feedback here">
           <Input
@@ -181,6 +154,7 @@ export default function ChatMessage(props: ChatMessageProps) {
           value={value}
           />
         </FormField>
+        </SpaceBetween>
       </Modal>
       {props.message?.type === ChatBotMessageType.AI && (
         <Container
@@ -280,8 +254,8 @@ export default function ChatMessage(props: ChatMessageProps) {
                 }
                 variant="icon"
                 onClick={() => {
-                  props.onThumbsDown();
-                  setSelectedIcon(0);
+                  // props.onThumbsDown();
+                  // setSelectedIcon(0);
                   setModalVisible(true);
                 }}
               />

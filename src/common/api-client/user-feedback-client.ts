@@ -7,6 +7,7 @@ export class UserFeedbackClient {
   async sendUserFeedback(feedbackData) {
 
     // TODO: use API Gateway
+    console.log(feedbackData);
     const auth = await Utils.authenticate();
     const response = await fetch(API + '/user-feedback', {
       method: 'POST',
