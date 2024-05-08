@@ -168,10 +168,7 @@ export default function NavigationPanel() {
         onFollow={onFollow}
         onChange={onChange}
         // header={{ href: "/", text: "The Ride Guide AI" }}
-        items={items.map((item, idx) => ({
-          ...item,
-          defaultExpanded: !navigationPanelState.collapsedSections[idx]
-        }))}  
+        items={items}  
       /> : 
       <Box margin="xs" padding="xs" textAlign="center">
         <StatusIndicator type="loading">Loading sessions...</StatusIndicator>
