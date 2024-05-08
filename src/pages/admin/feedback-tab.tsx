@@ -23,15 +23,23 @@ import { useCollection } from "@cloudscape-design/collection-hooks";
 import React from 'react';
 // import { FeedbackResult } from "../../../API";
 
-export default function FeedbackTab() {
+export interface FeedbackTabProps {
+  updateSelectedFeedback : React.Dispatch<any>;
+}
+
+export default function FeedbackTab(props: FeedbackTabProps) {
   const appContext = useContext(AppContext);
   const apiClient = new ApiClient(appContext);
   const [loading, setLoading] = useState(true);
-  const [syncing, setSyncing] = useState(false);
   const [currentPageIndex, setCurrentPageIndex] = useState(1);
   const [pages, setPages] = useState<any[]>([]);
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const [showModalDelete, setShowModalDelete] = useState(false);
+
+  // variables for filters
+  const [endDate,setEndDate] = useState<Date>(new Date());
+  const [startDate,setStartDate] = useState<Date>(new Date(endDate.getFullYear(),endDate.getMonth(),endDate.getDate() -1));
+  const [topic, setTopic] = useState<string>('general RIDE');
 
   const { items, collectionProps, paginationProps } = useCollection(pages, {
     filtering: {
@@ -56,13 +64,10 @@ export default function FeedbackTab() {
   });
 
   const getFeedback = useCallback(
-    async (params: {topic : string, pageIndex?, nextPageToken?}) => {
-      setLoading(true);
-      const currentDate = new Date()
-      let prevDate = new Date()
-      prevDate.setDate(prevDate.getDate() - 1)
+    async (params: {pageIndex?, nextPageToken?}) => {
+      setLoading(true);      
       try {
-        const result = await apiClient.userFeedback.getUserFeedback(params.topic, prevDate.toISOString(), currentDate.toISOString(), params.nextPageToken)
+        const result = await apiClient.userFeedback.getUserFeedback(topic, startDate.toISOString(), endDate.toISOString(), params.nextPageToken)
         console.log(result);
         setPages((current) => {
           if (typeof params.pageIndex !== "undefined") {
@@ -85,16 +90,16 @@ export default function FeedbackTab() {
 
 
   useEffect(() => {
-    getFeedback({topic: "general RIDE", pageIndex: currentPageIndex});
+    getFeedback({pageIndex: currentPageIndex});
   }, [getFeedback]);
 
   const onNextPageClick = async () => {
     const continuationToken = pages[currentPageIndex - 1]?.NextPageToken;
-    console.log("next page", currentPageIndex)
-    console.log(pages);
+    // console.log("next page", currentPageIndex)
+    // console.log(pages);
     if (continuationToken) {
       if (pages.length <= currentPageIndex) {
-        await getFeedback({ topic: "general RIDE", nextPageToken : continuationToken });
+        await getFeedback({nextPageToken : continuationToken });
       }
       setCurrentPageIndex((current) => Math.min(pages.length + 1, current + 1));
     }
@@ -112,10 +117,10 @@ export default function FeedbackTab() {
   const refreshPage = async () => {
     // console.log(pages[Math.min(pages.length - 1, currentPageIndex - 1)]?.Contents!)
     if (currentPageIndex <= 1) {
-      await getFeedback({ topic: "general RIDE", pageIndex: currentPageIndex});
+      await getFeedback({pageIndex: currentPageIndex});
     } else {
       const continuationToken = pages[currentPageIndex - 2]?.NextPageToken!;
-      await getFeedback({ topic: "general RIDE", pageIndex: currentPageIndex, nextPageToken : continuationToken });
+      await getFeedback({pageIndex: currentPageIndex, nextPageToken : continuationToken });
     }
   };
 
@@ -200,6 +205,7 @@ export default function FeedbackTab() {
         selectionType="single"
         onSelectionChange={({ detail }) => {
           console.log(detail);
+          props.updateSelectedFeedback(detail.selectedItems[0])
           setSelectedItems(detail.selectedItems);
         }}
         selectedItems={selectedItems}
