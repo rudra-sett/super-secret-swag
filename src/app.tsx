@@ -14,6 +14,7 @@ import NotFound from "./pages/not-found";
 import AddData from "./pages/admin/add-data";
 import WorkspacePane from "./pages/admin/workspace";
 import SessionPage from "./pages/chatbot/sessions/sessions"
+import UserFeedbackPage from "./pages/admin/user-feedback";
 import { v4 as uuidv4 } from "uuid";
 import "./styles/app.scss";
 
@@ -43,7 +44,8 @@ function App() {
             </Route>
             <Route path="/admin" element={<Outlet />}>
              <Route path="add-data" element={<AddData />} />          
-             <Route path="data" element={<WorkspacePane />} />              
+             <Route path="data" element={<WorkspacePane />} />
+             <Route path="user-feedback" element={<UserFeedbackPage />} />              
             </Route>            
             <Route path="*" element={<Navigate to={`/chatbot/playground/${uuidv4()}`} replace />} />
           </Routes>
