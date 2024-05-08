@@ -13,7 +13,8 @@ import {
   Cards,
   SpaceBetween,
   Header,
-  Link
+  Link,
+  ButtonDropdown
 } from "@cloudscape-design/components";
 import { useEffect, useState } from "react";
 import { JsonView, darkStyles } from "react-json-view-lite";
@@ -32,6 +33,8 @@ import { getSignedUrl } from "./utils";
 
 import "react-json-view-lite/dist/index.css";
 import "../../styles/app.scss";
+import { useNotifications } from "../notif-manager";
+import { Utils } from "../../common/utils";
 
 export interface ChatMessageProps {
   message: ChatBotHistoryItem;
@@ -48,13 +51,14 @@ export default function ChatMessage(props: ChatMessageProps) {
   const [documentIndex, setDocumentIndex] = useState("0");
   const [promptIndex, setPromptIndex] = useState("0");
   const [selectedIcon, setSelectedIcon] = useState<1 | 0 | null>(null);
+  const { addNotification, removeNotification } = useNotifications();
 
   useEffect(() => {
     const getSignedUrls = async () => {
       setLoading(true);
-      if (message.metadata?.files as ImageFile[]) {
+      if (message.metadata?.files) {
         const files: ImageFile[] = [];
-        for await (const file of message.metadata?.files as ImageFile[]) {
+        for await (const file of (message.metadata?.files as ImageFile[])) {
           const signedUrl = await getSignedUrl(file.key);
           files.push({
             ...file,
@@ -67,7 +71,7 @@ export default function ChatMessage(props: ChatMessageProps) {
       }
     };
 
-    if (message.metadata?.files as ImageFile[]) {
+    if (message.metadata?.files) {
       getSignedUrls();
     }
   }, [message]);
@@ -76,6 +80,8 @@ export default function ChatMessage(props: ChatMessageProps) {
     props.message.content && props.message.content.length > 0
       ? props.message.content
       : props.message.tokens?.map((v) => v.value).join("");
+
+  const showSources = props.message.metadata?.Sources && (props.message.metadata.Sources as any[]).length > 0;
 
   return (
     <div>
@@ -327,8 +333,9 @@ export default function ChatMessage(props: ChatMessageProps) {
                 variant="icon"
                 iconName={selectedIcon === 1 ? "thumbs-up-filled" : "thumbs-up"}
                 onClick={() => {
-                  // console.log("pressed thumbs up!")
                   props.onThumbsUp();
+                  const id = addNotification("success","Thank you for your valuable feedback!")
+                  Utils.delay(3000).then(() => removeNotification(id));
                   setSelectedIcon(1);
                 }}
               />
@@ -341,6 +348,8 @@ export default function ChatMessage(props: ChatMessageProps) {
                 variant="icon"
                 onClick={() => {
                   props.onThumbsDown();
+                  const id = addNotification("success","Your feedback has been submitted.")
+                  Utils.delay(3000).then(() => removeNotification(id));
                   setSelectedIcon(0);
                 }}
               />

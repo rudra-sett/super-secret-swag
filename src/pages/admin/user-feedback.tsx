@@ -11,29 +11,17 @@ import {
 } from "@aws-amplify/ui-react";
 import BaseAppLayout from "../../components/base-app-layout";
 import useOnFollow from "../../common/hooks/use-on-follow";
-import DataFileUpload from "./data-file-upload";
+import FeedbackTab from "./feedback-tab";
+import FeedbackPanel from "../../components/feedback-panel";
 import { CHATBOT_NAME } from "../../common/constants";
+import { useState } from "react";
 
-export default function AddData() {
+export default function UserFeedbackPage() {
   const onFollow = useOnFollow();
   const { tokens } = useTheme();
+  const [feedback, setFeedback] = useState<any>({});
   
-  return (
-    <Authenticator hideSignUp={true}
-    components={{
-      SignIn: {
-        Header: () => {
-          return (
-            <Heading
-              padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
-              level={3}
-            >
-              {CHATBOT_NAME}
-            </Heading>
-          );
-        },
-      },
-    }}>
+  return (    
     <BaseAppLayout
       contentType="cards"
       breadcrumbs={
@@ -46,21 +34,20 @@ export default function AddData() {
             },
 
             {
-              text: "Add Data",
-              href: "/admin/add-data",
+              text: "View Feedback",
+              href: "/admin/user-feedback",
             },
           ]}
         />
       }
+      splitPanel={<FeedbackPanel selectedFeedback={feedback}/>}
       content={
-        <ContentLayout header={<Header variant="h1">Add Data</Header>}>
+        <ContentLayout header={<Header variant="h1">View Feedback</Header>}>
           <SpaceBetween size="l">
-                        <DataFileUpload                                           
-                      />
+                <FeedbackTab updateSelectedFeedback={setFeedback}/>
           </SpaceBetween>
         </ContentLayout>
       }
     />
-    </Authenticator>
   );
 }
