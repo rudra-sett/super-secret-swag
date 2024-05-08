@@ -29,6 +29,7 @@ export class SessionsClient {
     let output = [];
     let runs = 0;
     let limit = 3;
+    let errorMessage = "Could not load sessions"
     while (!validData && runs < limit ) {
       runs += 1;
       const response = await fetch(API + '/user-session', {
@@ -39,17 +40,31 @@ export class SessionsClient {
         },
         body: JSON.stringify({ "operation": "list_sessions_by_user_id", "user_id": userId })
       });
+      if (response.status != 200) {
+        validData = false;
+        let jsonResponse = await response.json()
+        // console.log(jsonResponse);
+        errorMessage = jsonResponse;
+        // errorMessage = body.body;
+        break;
+      }
       const reader = response.body.getReader();
       const { value, done } = await reader.read();
       const decoder = new TextDecoder();
+      const parsed = decoder.decode(value)
+      console.log(parsed)
       try{
-        output = JSON.parse(decoder.decode(value));
+        output = JSON.parse(parsed);
         validData = true;
       } catch (e) {
+        // just retry, we get 3 attempts!
         console.log(e);
       }
     }
-    // console.log(output);
+    if (!validData) {
+      throw new Error(errorMessage);
+    }
+    console.log(output);
     return output;
   }
 
@@ -64,6 +79,7 @@ export class SessionsClient {
     let output;
     let runs = 0;
     let limit = 3;
+    let errorMessage = "Could not load session";
     while (!validData && runs < limit ) {
       runs += 1;
       const response = await fetch(API + '/user-session', {
@@ -78,6 +94,11 @@ export class SessionsClient {
         })
       });
       // console.log(response.body);
+      if (response.status != 200) {
+        validData = false;
+        errorMessage = await response.json()
+        break;
+      }
       const reader = response.body.getReader();
       const { value, done } = await reader.read();
       // console.log(value);
@@ -89,6 +110,9 @@ export class SessionsClient {
       } catch (e) {
         console.log(e);
       }
+    }
+    if (!validData) {
+      throw new Error(errorMessage)      
     }
     let history: ChatBotHistoryItem[] = [];
     // console.log(output);

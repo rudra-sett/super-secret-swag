@@ -14,7 +14,6 @@ import PencilSquareIcon from "../../public/images/pencil-square.jsx";
 import RouterButton from "../components/wrappers/router-button";
 import { useContext, useState, useEffect } from "react";
 import { ApiClient } from "../common/api-client/api-client";
-import { CHATBOT_NAME } from "../common/constants";
 import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
 import {SessionRefreshContext} from "../common/session-refresh-context"
@@ -52,7 +51,9 @@ export default function NavigationPanel() {
     }
   }  catch (error) {
     console.error("Failed to load sessions:", error);
-    addNotification("error", "Failed to load sessions");
+    setLoaded(true);
+    addNotification("error", "Could not load sessions:".concat(error.message));
+    addNotification("info", "Please refresh the page");
   } finally {
     setLoadingSessions(false);
   }

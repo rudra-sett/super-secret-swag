@@ -18,7 +18,7 @@ import { useNotifications } from "../notif-manager";
 
 export default function Chat(props: { sessionId?: string }) {
   const appContext = useContext(AppContext);
-  const [running, setRunning] = useState<boolean>(false);
+  const [running, setRunning] = useState<boolean>(true);
   const [session, setSession] = useState<{ id: string; loading: boolean }>({
     id: props.sessionId ?? uuidv4(),
     loading: typeof props.sessionId !== "undefined",
@@ -35,7 +35,7 @@ export default function Chat(props: { sessionId?: string }) {
     })
   );
 
-  const { notifications } = useNotifications();
+  const { notifications, addNotification } = useNotifications();
 
   const [messageHistory, setMessageHistory] = useState<ChatBotHistoryItem[]>(
     []
@@ -71,7 +71,6 @@ export default function Chat(props: { sessionId?: string }) {
 
         if (hist) {
           // console.log(hist);
-          // console.log(hist);
           ChatScrollState.skipNextHistoryUpdate = true;
           ChatScrollState.skipNextScrollEvent = true;
           // console.log("History", result.data.getSession.history);
@@ -90,12 +89,13 @@ export default function Chat(props: { sessionId?: string }) {
             behavior: "instant",
           });
         }
+        setSession({ id: props.sessionId, loading: false });
+        setRunning(false);
       } catch (error) {
         console.log(error);
+        addNotification("error",error.message)
+        addNotification("info","Please refresh the page")
       }
-
-      setSession({ id: props.sessionId, loading: false });
-      setRunning(false);
     })();
   }, [appContext, props.sessionId]);
 
@@ -128,7 +128,7 @@ export default function Chat(props: { sessionId?: string }) {
   return (
     <div className={styles.chat_container}> 
       <SpaceBetween direction="vertical" size="m">
-        {notifications.length > 0 && (
+      {notifications.length > 0 && (
           <Flashbar items={notifications.map(notif => ({
             content: notif.content,
             dismissible: notif.dismissible,
@@ -144,7 +144,8 @@ export default function Chat(props: { sessionId?: string }) {
        >
         Be mindful in validating important information. Please refrain from sending sensitive member information.
       </Alert> )}
-      <SpaceBetween direction="vertical" size="m"></SpaceBetween>
+
+      {/* <SpaceBetween direction="vertical" size="m"></SpaceBetween> */}
         {messageHistory.map((message, idx) => (
           <ChatMessage
             key={idx}
