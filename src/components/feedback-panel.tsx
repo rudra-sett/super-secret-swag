@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useEffect } from 'react';
-import { Container, ContentLayout, Header, Link, SpaceBetween, SplitPanel, TextContent, } from '@cloudscape-design/components';
+import { ColumnLayout, Container, ContentLayout, Header, Link, SpaceBetween, SplitPanel, TextContent, } from '@cloudscape-design/components';
 import { Auth } from 'aws-amplify';
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -19,7 +19,7 @@ export default function EmailPanel(props: FeedbackPanelProps) {
   return (
     <div>
         <SplitPanel header="Selected Feedback">
-          <SpaceBetween direction='horizontal' size="m">
+          <ColumnLayout columns={2}>
             <SpaceBetween size="m">
             <Container
                 header={
@@ -56,7 +56,7 @@ export default function EmailPanel(props: FeedbackPanelProps) {
               >
                 {props.selectedFeedback.ChatbotMessage? props.selectedFeedback.ChatbotMessage : "No feedback selected"}
               </Container>             
-          </SpaceBetween>
+            </ColumnLayout>
         </SplitPanel>
       </div>
   );

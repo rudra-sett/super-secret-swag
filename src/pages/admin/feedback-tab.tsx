@@ -39,7 +39,7 @@ export default function FeedbackTab(props: FeedbackTabProps) {
   // variables for filters
   const [endDate,setEndDate] = useState<Date>(new Date());
   const [startDate,setStartDate] = useState<Date>(new Date(endDate.getFullYear(),endDate.getMonth(),endDate.getDate() -1));
-  const [topic, setTopic] = useState<string>('general RIDE');
+  const [topic, setTopic] = useState<string>('other');
 
   const { items, collectionProps, paginationProps } = useCollection(pages, {
     filtering: {

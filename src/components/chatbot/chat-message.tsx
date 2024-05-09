@@ -63,7 +63,7 @@ export default function ChatMessage(props: ChatMessageProps) {
   const { addNotification, removeNotification } = useNotifications();
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedTopic, setSelectedTopic] = React.useState({label: "Select a Topic", value: "1"});
-  const [selectedFeedbackType, setSelectedFeedbackType] = React.useState({label: "Select a Topic", value: "1"});
+  const [selectedFeedbackType, setSelectedFeedbackType] = React.useState({label: "Select a Problem", value: "1"});
   const [value, setValue] = useState("");
 
   useEffect(() => {
@@ -128,7 +128,7 @@ export default function ChatMessage(props: ChatMessageProps) {
               setSelectedIcon(0);
 
               setSelectedTopic({label: "Select a Topic", value: "1"})
-              setSelectedFeedbackType({label: "Select a Topic", value: "1"})
+              setSelectedFeedbackType({label: "Select a Problem", value: "1"})
               
               
             }}}>Ok</Button>
