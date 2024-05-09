@@ -8,6 +8,7 @@ import { StorageHelper } from "../common/helpers/storage-helper";
 import { Auth } from "aws-amplify";
 import useOnFollow from "../common/hooks/use-on-follow";
 import { CHATBOT_NAME } from "../common/constants";
+import { text } from "body-parser";
 
 export default function GlobalHeader() {
   const onFollow = useOnFollow();
@@ -37,7 +38,6 @@ export default function GlobalHeader() {
       setTheme(StorageHelper.applyTheme(Mode.Dark));
     }
   };
-
   const onUserProfileClick = ({
     detail,
   }: {
@@ -61,9 +61,14 @@ export default function GlobalHeader() {
         utilities={[
           {
             type: "button",
+            text: "for internal use only- testing stage",
+          },
+          {
+            type: "button",
             text: theme === Mode.Dark ? "Light Mode" : "Dark Mode",
             onClick: onChangeThemeClick,
           },
+  
           {
             type: "menu-dropdown",
             description: userName ?? "",

@@ -14,9 +14,14 @@ import {
   SpaceBetween,
   Header,
   Link,
-  ButtonDropdown
+  ButtonDropdown,
+  Modal,
+  FormField,
+  Input,
+  Select
 } from "@cloudscape-design/components";
-import { useEffect, useState } from "react";
+import * as React from "react";
+import { useEffect, useState, ReactElement } from 'react';
 import { JsonView, darkStyles } from "react-json-view-lite";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -35,16 +40,20 @@ import "react-json-view-lite/dist/index.css";
 import "../../styles/app.scss";
 import { useNotifications } from "../notif-manager";
 import { Utils } from "../../common/utils";
+import { v4 as uuidv4 } from 'uuid';
+import {feedbackCategories, feedbackTypes} from '../../common/constants'
 
 export interface ChatMessageProps {
   message: ChatBotHistoryItem;
   configuration?: ChatBotConfiguration;
   showMetadata?: boolean;
   onThumbsUp: () => void;
-  onThumbsDown: () => void;
+  onThumbsDown: (feedbackTopic : string, feedbackType : string, feedbackMessage: string) => void;
   onSendEmail: () => void;
   isLastMessage: boolean;
 }
+
+
 
 export default function ChatMessage(props: ChatMessageProps) {
   const [loading, setLoading] = useState<boolean>(false);
@@ -54,6 +63,10 @@ export default function ChatMessage(props: ChatMessageProps) {
   const [promptIndex, setPromptIndex] = useState("0");
   const [selectedIcon, setSelectedIcon] = useState<1 | 0 | null>(null);
   const { addNotification, removeNotification } = useNotifications();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedTopic, setSelectedTopic] = React.useState({label: "Select a Topic", value: "1"});
+  const [selectedFeedbackType, setSelectedFeedbackType] = React.useState({label: "Select a Problem", value: "1"});
+  const [value, setValue] = useState("");
 
   useEffect(() => {
     const getSignedUrls = async () => {
@@ -84,43 +97,72 @@ export default function ChatMessage(props: ChatMessageProps) {
       : props.message.tokens?.map((v) => v.value).join("");
 
   const showSources = props.message.metadata?.Sources && (props.message.metadata.Sources as any[]).length > 0;
+  
 
   return (
     <div>
+      <Modal
+      onDismiss={() => setModalVisible(false)}
+      visible={modalVisible}
+      footer={
+        <Box float = "right">
+          <SpaceBetween direction="horizontal" size="xs">
+            <Button variant="link" onClick={() => {
+              setModalVisible(false)
+            setValue("")
+            setSelectedTopic({label: "Select a Topic", value: "1"})
+            setSelectedFeedbackType({label: "Select a Topic", value: "1"})
+            }}
+            >Cancel</Button>
+            <Button variant="primary" onClick={() => {
+              if (!selectedTopic.value || !selectedFeedbackType.value || selectedTopic.value === "1" || selectedFeedbackType.value === "1" || value.trim() === "") {
+                const id = addNotification("error","Please fill out all fields.")
+                Utils.delay(3000).then(() => removeNotification(id));
+                return;
+              } else {
+              setModalVisible(false)
+              setValue("")
+
+              const id = addNotification("success","Your feedback has been submitted.")
+              Utils.delay(3000).then(() => removeNotification(id));
+              
+              props.onThumbsDown(selectedTopic.value, selectedFeedbackType.value,value.trim());
+              setSelectedIcon(0);
+
+              setSelectedTopic({label: "Select a Topic", value: "1"})
+              setSelectedFeedbackType({label: "Select a Problem", value: "1"})
+              
+              
+            }}}>Ok</Button>
+          </SpaceBetween>
+        </Box>
+      }
+      header="Provide Feedback"
+      >
+        <SpaceBetween size="xs">
+        <Select
+        selectedOption = {selectedTopic}
+        onChange = {({detail}) => setSelectedTopic({label: detail.selectedOption.label,value: detail.selectedOption.value})}
+        options ={feedbackCategories}
+        />
+        <Select
+        selectedOption = {selectedFeedbackType}
+        onChange = {({detail}) => setSelectedFeedbackType({label: detail.selectedOption.label,value: detail.selectedOption.value})}
+        options ={feedbackTypes}
+        />
+        <FormField label="Please enter feedback here">
+          <Input
+          onChange={({detail}) => setValue(detail.value)}
+          value={value}
+          />
+        </FormField>
+        </SpaceBetween>
+      </Modal>
       {props.message?.type === ChatBotMessageType.AI && (
         <Container
           footer={
             showSources && (
-              // <ExpandableSection variant="footer" headerText="Sources">
-              //   <Cards
-              //     cardDefinition={{
-              //       header: item => (
-              //         <Link href={item.uri} fontSize="body-s">
-              //           {item.title}
-              //         </Link>
-              //       ),
-              //     }}
-              //     cardsPerRow={[
-              //       { cards: 1 },
-              //       { minWidth: 500, cards: 3 }
-              //     ]}
-              //     items={props.message.metadata.Sources as any[]}
-              //     loadingText="Loading sources..."
-              //     empty={
-              //       <Box
-              //         margin={{ vertical: "xs" }}
-              //         textAlign="center"
-              //         color="inherit"
-              //       >
-              //         <SpaceBetween size="m">
-              //           <b>No resources</b>
-              //           <Button>Create resource</Button>
-              //         </SpaceBetween>
-              //       </Box>
-              //     }
-              //   />
-              // </ExpandableSection>
-              <SpaceBetween direction="horizontal" size="s">
+        
               <ButtonDropdown
               items={(props.message.metadata.Sources as any[]).map((item) => { return {id: "id", disabled: false, text : item.title, href : item.uri, external : true, externalIconAriaLabel: "(opens in new tab)"}})}
         
@@ -219,10 +261,9 @@ export default function ChatMessage(props: ChatMessageProps) {
                 }
                 variant="icon"
                 onClick={() => {
-                  props.onThumbsDown();
-                  const id = addNotification("success","Your feedback has been submitted.")
-                  Utils.delay(3000).then(() => removeNotification(id));
-                  setSelectedIcon(0);
+                  // props.onThumbsDown();
+                  // setSelectedIcon(0);
+                  setModalVisible(true);
                 }}
               />
             )}

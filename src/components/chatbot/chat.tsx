@@ -16,7 +16,7 @@ import styles from "../../styles/chat.module.scss";
 import { CHATBOT_NAME } from "../../common/constants";
 import { useNotifications } from "../notif-manager";
 
-export default function Chat(props: { sessionId?: string, updateEmailFunction : React.Dispatch<React.SetStateAction<ChatBotHistoryItem[]>>}) {
+export default function Chat(props: { sessionId?: string }) {
   const appContext = useContext(AppContext);
   const [running, setRunning] = useState<boolean>(true);
   const [session, setSession] = useState<{ id: string; loading: boolean }>({
@@ -99,7 +99,7 @@ export default function Chat(props: { sessionId?: string, updateEmailFunction : 
     })();
   }, [appContext, props.sessionId]);
 
-  const handleFeedback = (feedbackType: 1 | 0, idx: number, message: ChatBotHistoryItem) => {
+  const handleFeedback = (feedbackType: 1 | 0, idx: number, message: ChatBotHistoryItem, feedbackTopic? : string, feedbackProblem? : string, feedbackMessage? : string) => {
     // if (message.metadata.sessionId) {
       console.log("submitting feedback...")
       // let prompt = "";
@@ -113,7 +113,10 @@ export default function Chat(props: { sessionId?: string, updateEmailFunction : 
         sessionId: props.sessionId, //message.metadata.sessionId as string,        
         feedback: feedbackType,
         prompt: prompt,
-        completion: completion,        
+        completion: completion,
+        topic: feedbackTopic,
+        problem: feedbackProblem,
+        comment: feedbackMessage     
       };
       addUserFeedback(feedbackData);
     // }
@@ -123,11 +126,6 @@ export default function Chat(props: { sessionId?: string, updateEmailFunction : 
     if (!appContext) return;
     const apiClient = new ApiClient(appContext);
     await apiClient.userFeedback.sendUserFeedback(feedbackData);
-  }
-
-  const handleUpdateMessageHistory = async () => {
-    console.log("updating history for email")
-    props.updateEmailFunction(messageHistory);
   }
 
   return (
@@ -149,8 +147,7 @@ export default function Chat(props: { sessionId?: string, updateEmailFunction : 
             message={message}
             showMetadata={configuration.showMetadata}
             onThumbsUp={() => handleFeedback(1,idx, message)}
-            onThumbsDown={() => handleFeedback(0,idx, message)}
-            onSendEmail={() => handleUpdateMessageHistory()}
+            onThumbsDown={(feedbackTopic : string, feedbackType : string, feedbackMessage: string) => handleFeedback(0,idx, message,feedbackTopic, feedbackType, feedbackMessage)}
             isLastMessage={idx == messageHistory.length - 1}
           />
         ))}
