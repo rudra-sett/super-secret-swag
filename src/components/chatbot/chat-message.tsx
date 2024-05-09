@@ -44,6 +44,24 @@ export interface ChatMessageProps {
   onThumbsDown: () => void;
 }
 
+function downloadFile(content, filename) {
+  
+  const blob = new Blob([content], { type: 'text/plain' });
+
+  const fileUrl = URL.createObjectURL(blob);
+
+  const link = document.createElement('a');
+  link.href = fileUrl;
+  link.download = filename;
+  document.body.appendChild(link); 
+  link.click(); 
+  document.body.removeChild(link); 
+
+ 
+  URL.revokeObjectURL(fileUrl);
+}
+
+
 export default function ChatMessage(props: ChatMessageProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [message] = useState<ChatBotHistoryItem>(props.message);
@@ -104,6 +122,7 @@ export default function ChatMessage(props: ChatMessageProps) {
             </Box>
           ) : null}
           {props.message.content.length > 0 ? (
+          <div className={styles.btn_chabot_message_actions}>
             <div className={styles.btn_chabot_message_copy}>
               <Popover
                 size="medium"
@@ -125,6 +144,14 @@ export default function ChatMessage(props: ChatMessageProps) {
                 />
               </Popover>
             </div>
+            <div className={styles.btn_chabot_message_download}>
+                <Button
+                 variant="inline-icon"
+                 iconName="download"                         //downloads just the individual message
+                 onClick={() => downloadFile(props.message.content, 'chatbot-message.txt')} //txt works better than pdf
+            />                                                    
+          </div>
+        </div>
           ) : null}
           <ReactMarkdown
             children={content}
