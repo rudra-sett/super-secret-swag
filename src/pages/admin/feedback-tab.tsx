@@ -2,14 +2,20 @@ import {
   Box,
   SpaceBetween,
   Table,
+  DateRangePicker,
   Pagination,
   Button,
   Header,
   Modal,
+  Select,
   Spinner,
+  FormField,
   Textarea,
   TextContent,
+  DateRangePickerProps,
 } from "@cloudscape-design/components";
+import { I18nProvider } from '@cloudscape-design/components/i18n';
+import messages from '@cloudscape-design/components/i18n/messages/all.all';
 import { DateTime } from "luxon";
 import { useCallback, useContext, useEffect, useState } from "react";
 import RouterButton from "../../components/wrappers/router-button";
@@ -17,11 +23,16 @@ import { RagDocumentType } from "../../common/types";
 import { TableEmptyState } from "../../components/table-empty-state";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
+import { PropertyFilterI18nStrings } from "../../common/i18n/property-filter-i18n-strings";
+// import {I18nStrings} from 
+// import { I18nProvider } from '@cloudscape-design/components/i18n';
+// import {DatePickerProps.I18nStrings} from ;
 import { getColumnDefinition } from "./columns";
+// import { I18nProviderProps } from "@cloudscape-design/components/i18n";
 import { Utils } from "../../common/utils";
 import { useCollection } from "@cloudscape-design/collection-hooks";
 import React from 'react';
-// import { FeedbackResult } from "../../../API";
+//import { FeedbackResult } from "../../../API";
 
 export interface FeedbackTabProps {
   updateSelectedFeedback : React.Dispatch<any>;
@@ -35,11 +46,17 @@ export default function FeedbackTab(props: FeedbackTabProps) {
   const [pages, setPages] = useState<any[]>([]);
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const [showModalDelete, setShowModalDelete] = useState(false);
+  
+  const [
+    selectedOption,
+    setSelectedOption
+  ] = React.useState({ label: "RIDE", value: "ride" });
+  const [value, setValue] = React.useState<DateRangePickerProps.AbsoluteValue>({
+    type:"absolute",
+    startDate:(new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate() -1)).toISOString(),
+    endDate:(new Date()).toISOString()});
 
-  // variables for filters
-  const [endDate,setEndDate] = useState<Date>(new Date());
-  const [startDate,setStartDate] = useState<Date>(new Date(endDate.getFullYear(),endDate.getMonth(),endDate.getDate() -1));
-  const [topic, setTopic] = useState<string>('other');
+
 
   const { items, collectionProps, paginationProps } = useCollection(pages, {
     filtering: {
@@ -67,7 +84,8 @@ export default function FeedbackTab(props: FeedbackTabProps) {
     async (params: {pageIndex?, nextPageToken?}) => {
       setLoading(true);      
       try {
-        const result = await apiClient.userFeedback.getUserFeedback(topic, startDate.toISOString(), endDate.toISOString(), params.nextPageToken)
+        console.log(selectedOption.value)
+        const result = await apiClient.userFeedback.getUserFeedback(selectedOption.value, value.startDate, value.endDate, params.nextPageToken)
         console.log(result);
         setPages((current) => {
           if (typeof params.pageIndex !== "undefined") {
@@ -197,6 +215,9 @@ export default function FeedbackTab(props: FeedbackTabProps) {
         ? `Feedback ${selectedItems[0].Key!}?`
         : `${selectedItems.length} Feedback?`}
     </Modal> */}
+      <I18nProvider locale="en" messages={[messages]}>
+  
+       
       <Table
         {...collectionProps}
         loading={loading}
@@ -215,6 +236,94 @@ export default function FeedbackTab(props: FeedbackTabProps) {
           <Header
             actions={
               <SpaceBetween direction="horizontal" size="xs">
+              <DateRangePicker
+                onChange={({ detail }) => {
+                  console.log(detail);
+                  setValue(detail.value as DateRangePickerProps.AbsoluteValue)}}
+                value={value as DateRangePickerProps.Value}
+                relativeOptions={[
+                  {
+                    key: "previous-5-minutes",
+                    amount: 5,
+                    unit: "minute",
+                    type: "relative"
+                  },
+                  {
+                    key: "previous-30-minutes",
+                    amount: 30,
+                    unit: "minute",
+                    type: "relative"
+                  },
+                  {
+                    key: "previous-1-hour",
+                    amount: 1,
+                    unit: "hour",
+                    type: "relative"
+                  },
+                  {
+                    key: "previous-6-hours",
+                    amount: 6,
+                    unit: "hour",
+                    type: "relative"
+                  }
+                ]}
+                isValidRange={range => {
+                  if (range.type === "absolute") {
+                    const [
+                      startDateWithoutTime
+                    ] = range.startDate.split("T");
+                    const [
+                      endDateWithoutTime
+                    ] = range.endDate.split("T");
+                    if (
+                      !startDateWithoutTime ||
+                      !endDateWithoutTime
+                    ) {
+                      return {
+                        valid: false,
+                        errorMessage:
+                          "The selected date range is incomplete. Select a start and end date for the date range."
+                      };
+                    }
+                    if (
+                      +new Date(range.startDate) - +new Date(range.endDate) > 0
+                    ) {
+                      return {
+                        valid: false,
+                        errorMessage:
+                          "The selected date range is invalid. The start date must be before the end date."
+                      };
+                    }
+                  }
+                  return { valid: true };
+                }}
+                i18nStrings={{}}
+                placeholder="Filter by a date and time range"
+                showClearButton={false}
+                timeInputFormat="hh:mm:ss"
+                rangeSelectorMode="absolute-only"
+              />
+              <FormField label="Filter Topic">
+                <Select
+                  selectedOption={selectedOption}
+                  onChange={({ detail }) =>
+                  {
+                    // Ensure label and value are defined, or set default
+                    const label = detail.selectedOption.label ?? "Default Label";
+                    const value = detail.selectedOption.value ?? "Default Value";
+                    console.log(detail);
+                    setSelectedOption({ label: detail.selectedOption.label!, value : detail.selectedOption.value});
+                    // setTopic(detail.selectedOption.value); 
+                  }}
+                  options={[
+                    {label: "TRAC", value:"trac"},
+                    {label: "RIDE", value:"ride"},
+                    {label: "MBTA", value:"mbta"},
+                    {label: "Other", value:"other"}
+                  ]}
+                />
+                 </FormField>
+
                 <Button iconName="refresh" onClick={refreshPage} />                
                 <Button
                   variant="primary"
@@ -230,6 +339,7 @@ export default function FeedbackTab(props: FeedbackTabProps) {
             description="Please expect a delay for your changes to be reflected. Press the refresh button to see the latest changes."
           >
             {"Feedback"}
+            
           </Header>
         }
         empty={
@@ -253,6 +363,9 @@ export default function FeedbackTab(props: FeedbackTabProps) {
           )
         }
       />
+     </I18nProvider>
     </>
+   
+    
   );
 }
