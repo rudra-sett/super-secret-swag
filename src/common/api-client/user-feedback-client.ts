@@ -78,4 +78,16 @@ export class UserFeedbackClient {
     return result;
   }
 
+  async deleteFeedback(topic : string, createdAt : string) {
+    const auth = await Utils.authenticate();
+    let params = new URLSearchParams({topic, createdAt});
+    await fetch(API + '/user-feedback?' + params.toString(), {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': auth
+      },      
+    });
+    
+  }
 }

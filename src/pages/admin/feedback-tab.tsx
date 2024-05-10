@@ -193,25 +193,25 @@ export default function FeedbackTab(props: FeedbackTabProps) {
   ];
   //getColumnDefinition(props.documentType);
 
-  // const deleteSelectedFeedback = async () => {
-  //   if (!appContext) return;
+  const deleteSelectedFeedback = async () => {
+    if (!appContext) return;
 
-  //   setLoading(true);
-  //   setShowModalDelete(false);
-  //   const apiClient = new ApiClient(appContext);
-  //   await Promise.all(
-  //     selectedItems.map((s) => apiClient.knowledgeManagement.deleteFeedback(s.Key!))
-  //   );
-  //   await getFeedback({ pageIndex: currentPageIndex });
-  //   setSelectedItems([])
-  //   setLoading(false);
-  // };
+    setLoading(true);
+    setShowModalDelete(false);
+    const apiClient = new ApiClient(appContext);
+    await Promise.all(
+      selectedItems.map((s) => apiClient.userFeedback.deleteFeedback(s.Topic, s.CreatedAt))
+    );
+    await getFeedback({ pageIndex: currentPageIndex });
+    setSelectedItems([])
+    setLoading(false);
+  };
 
 
 
   return (
     <>
-      {/* <Modal
+      <Modal
       onDismiss={() => setShowModalDelete(false)}
       visible={showModalDelete}
       footer={
@@ -231,9 +231,9 @@ export default function FeedbackTab(props: FeedbackTabProps) {
     >
       Do you want to delete{" "}
       {selectedItems.length == 1
-        ? `Feedback ${selectedItems[0].Key!}?`
+        ? `Feedback ${selectedItems[0].FeedbackID!}?`
         : `${selectedItems.length} Feedback?`}
-    </Modal> */}
+    </Modal>
       <I18nProvider locale="en" messages={[messages]}>
 
 
