@@ -21,8 +21,8 @@ import { getColumnDefinition } from "./columns";
 import { Utils } from "../../common/utils";
 import { useCollection } from "@cloudscape-design/collection-hooks";
 import React from 'react';
+import { useNotifications } from "../../components/notif-manager";
 // import { FeedbackResult } from "../../../API";
-
 export interface FeedbackTabProps {
   updateSelectedFeedback : React.Dispatch<any>;
 }
@@ -40,6 +40,7 @@ export default function FeedbackTab(props: FeedbackTabProps) {
   const [endDate,setEndDate] = useState<Date>(new Date());
   const [startDate,setStartDate] = useState<Date>(new Date(endDate.getFullYear(),endDate.getMonth(),endDate.getDate() -1));
   const [topic, setTopic] = useState<string>('general RIDE');
+  const { addNotification, removeNotification } = useNotifications();
 
   const { items, collectionProps, paginationProps } = useCollection(pages, {
     filtering: {
@@ -215,6 +216,14 @@ export default function FeedbackTab(props: FeedbackTabProps) {
           <Header
             actions={
               <SpaceBetween direction="horizontal" size="xs">
+                <Button 
+                variant="primary"
+                onClick={() => {
+                  apiClient.userFeedback.downloadFeedback(topic, startDate.toISOString(), endDate.toISOString());
+                  const id = addNotification("success","Your files have been downloaded.")
+                  Utils.delay(3000).then(() => removeNotification(id));
+                }}
+                >Download</Button>
                 <Button iconName="refresh" onClick={refreshPage} />                
                 <Button
                   variant="primary"
