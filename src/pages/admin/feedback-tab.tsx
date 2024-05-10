@@ -259,6 +259,7 @@ export default function FeedbackTab(props: FeedbackTabProps) {
                   <DateRangePicker
                     onChange={({ detail }) => {
                       // console.log(detail);
+                      needsRefresh.current = true;
                       setValue(detail.value as DateRangePickerProps.AbsoluteValue)
                     }}
                     value={value as DateRangePickerProps.AbsoluteValue}
