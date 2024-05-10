@@ -322,6 +322,7 @@ export default function FeedbackTab(props: FeedbackTabProps) {
                     i18nStrings={{}}
                     placeholder="Filter by a date and time range"
                     showClearButton={false}
+                    dateOnly
                     timeInputFormat="hh:mm:ss"
                     rangeSelectorMode="absolute-only"
                   />
