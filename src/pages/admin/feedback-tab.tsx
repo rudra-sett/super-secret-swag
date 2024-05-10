@@ -90,7 +90,7 @@ export default function FeedbackTab(props: FeedbackTabProps) {
       try {
         // console.log(selectedOption);
         // console.log(value);
-        const result = await apiClient.userFeedback.getUserFeedback(selectedOption.value, value.startDate, value.endDate, params.nextPageToken)
+        const result = await apiClient.userFeedback.getUserFeedback(selectedOption.value, value.startDate + "T00:00:00", value.endDate + "T23:59:59", params.nextPageToken)
         // console.log(result);
         setPages((current) => {
           if (needsRefresh.current) {
