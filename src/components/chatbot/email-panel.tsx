@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { useEffect } from 'react';
-import { Container, ContentLayout, Header, Link, SplitPanel, } from '@cloudscape-design/components';
+import { Container, ContentLayout, Header, Link, SplitPanel, Box } from '@cloudscape-design/components';
 import { ChatBotHistoryItem } from './types';
 import { Auth } from 'aws-amplify';
-import {assembleHistory} from './utils'
+import { assembleHistory } from './utils'
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import styles from "../../styles/chat.module.scss";
@@ -64,7 +64,7 @@ export default function EmailPanel(props: EmailPanelProps) {
       });
       // Event listener for incoming messages
       ws.addEventListener('message', async function incoming(data) {
-        console.log(data.data);        
+        console.log(data.data);
         if (data.data.includes("<!ERROR!>:")) {
           // addNotification("error", data.data);
           // console.log(data.data);
@@ -86,13 +86,13 @@ export default function EmailPanel(props: EmailPanelProps) {
         console.error('WebSocket error:', err);
       });
       // Handle WebSocket closure
-      ws.addEventListener('close', async function close() {      
-        setGeneratedEmail(recieved);          
+      ws.addEventListener('close', async function close() {
+        setGeneratedEmail(recieved);
         console.log('Disconnected from the WebSocket server');
       });
-      
+
     }
-    if (!firstRender.current){
+    if (!firstRender.current) {
       handleGenerateEmail();
     } else {
       firstRender.current = false;
@@ -102,9 +102,9 @@ export default function EmailPanel(props: EmailPanelProps) {
     <div>
       {props.isHidden ? null :
 
-        <SplitPanel header="Generated Email">
-
-<ReactMarkdown
+        <SplitPanel header="Generated Email" hidePreferencesButton={true}>
+          {generatedEmail == ''? <Box textAlign="center">No generated email, please click "Generate Email" in an existing chat.</Box> :
+          <ReactMarkdown
             children={generatedEmail}
             remarkPlugins={[remarkGfm]}
             components={{
@@ -141,7 +141,7 @@ export default function EmailPanel(props: EmailPanelProps) {
                 );
               },
             }}
-          />
+          />}
         </SplitPanel>
       }</div>
   );

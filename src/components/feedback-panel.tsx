@@ -18,7 +18,7 @@ export default function EmailPanel(props: FeedbackPanelProps) {
 
   return (
     <div>
-        <SplitPanel header="Selected Feedback">
+        <SplitPanel header="Selected Feedback" hidePreferencesButton={true}>
           <ColumnLayout columns={2}>
             <SpaceBetween size="m">
             <Container
