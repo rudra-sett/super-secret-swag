@@ -124,8 +124,7 @@ export default function Chat(props: { sessionId?: string }) {
     })();
   }, [appContext, props.sessionId]);
 
-  const handleFeedback = (feedbackType: 1 | 0, idx: number, message: ChatBotHistoryItem) => {
-    
+  const handleFeedback = (feedbackType: 1 | 0, idx: number, message: ChatBotHistoryItem, feedbackTopic? : string, feedbackProblem? : string, feedbackMessage? : string) => {
     // if (message.metadata.sessionId) {
       console.log("submitting feedback...")
       // let prompt = "";
@@ -139,7 +138,10 @@ export default function Chat(props: { sessionId?: string }) {
         sessionId: props.sessionId, //message.metadata.sessionId as string,        
         feedback: feedbackType,
         prompt: prompt,
-        completion: completion,        
+        completion: completion,
+        topic: feedbackTopic,
+        problem: feedbackProblem,
+        comment: feedbackMessage     
       };
       addUserFeedback(feedbackData);
     // }
@@ -226,15 +228,28 @@ export default function Chat(props: { sessionId?: string }) {
 // >>>>>>> Stashed changes
 
   return (
-    <div>
-      
-      {/* {messageHistory.length === 0 && !session?.loading && (
-        <div className={`${styles.fullscreen_center} ${styles.chatbot_name}`}>
-          <SpaceBetween direction="vertical" size="l">
-          {CHATBOT_NAME}
-            </SpaceBetween>
-            </div>
-      )} */}
+    <div className={styles.chat_container}> 
+      <SpaceBetween direction="vertical" size="m">
+        
+      {messageHistory.length == 0 && !session?.loading && (
+       <Alert
+          statusIconAriaLabel="Info"
+          header=""
+       >
+        AI Models can make mistakes. Be mindful in validating important information.
+      </Alert> )}
+
+      {/* <SpaceBetween direction="vertical" size="m"></SpaceBetween> */}
+        {messageHistory.map((message, idx) => (
+          <ChatMessage
+            key={idx}
+            message={message}
+            showMetadata={configuration.showMetadata}
+            onThumbsUp={() => handleFeedback(1,idx, message)}
+            onThumbsDown={(feedbackTopic : string, feedbackType : string, feedbackMessage: string) => handleFeedback(0,idx, message,feedbackTopic, feedbackType, feedbackMessage)}
+          />
+        ))}
+      </SpaceBetween>
       <div className={styles.welcome_text}>
         {session?.loading && (
           <center>
