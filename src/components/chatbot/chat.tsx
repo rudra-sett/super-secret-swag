@@ -5,7 +5,6 @@ import {
   ChatBotMessageType,
   FeedbackData,
 } from "./types";
-import { Auth } from "aws-amplify";
 import { SpaceBetween, StatusIndicator, Alert, Flashbar, Button } from "@cloudscape-design/components";
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
@@ -13,10 +12,7 @@ import { ApiClient } from "../../common/api-client/api-client";
 import ChatMessage from "./chat-message";
 import ChatInputPanel, { ChatScrollState } from "./chat-input-panel";
 import styles from "../../styles/chat.module.scss";
-import { CHATBOT_NAME } from "../../common/constants";
-import React from "react";
 import Box from '@cloudscape-design/components/box';
-import {ChatInputState} from "./types";
 
 
 const AIWarning = () => {
@@ -69,15 +65,6 @@ export default function Chat(props: { sessionId?: string }) {
     []
   );
 
-  // // add useEffect that sets the isNewSession to true after the first message is sent and the stream is done.
-  // useEffect(() => {
-  //   if (messageHistory.length === 0 && !running) {
-  //     console.log("First message has been rendered");
-  //     setNewSession(true);
-  //     console.log("setNewSession to true in chat");
-  //   }
-  // }, [messageHistory]);  // Dependency on messageHistory and the handled flag
-
   useEffect(() => {
     if (!appContext) return;
     setMessageHistory([]);
@@ -125,12 +112,7 @@ export default function Chat(props: { sessionId?: string }) {
   }, [appContext, props.sessionId]);
 
   const handleFeedback = (feedbackType: 1 | 0, idx: number, message: ChatBotHistoryItem, feedbackTopic? : string, feedbackProblem? : string, feedbackMessage? : string) => {
-    // if (message.metadata.sessionId) {
       console.log("submitting feedback...")
-      // let prompt = "";
-      // if (Array.isArray(message.metadata.prompts) && Array.isArray(message.metadata.prompts[0])) { 
-      //     prompt = message.metadata.prompts[0][0];
-      // }
       const prompt = messageHistory[idx - 1].content
       const completion = message.content;
       // const model = message.metadata.modelId;
@@ -147,37 +129,7 @@ export default function Chat(props: { sessionId?: string }) {
     // }
   };
 
-  // flashbar content
-  // const [items, setItems] = React.useState([
-  //   {
-  //     type: "info",
-  //     dismissible: true,
-  //     dismissLabel: "Dismiss message",
-  //     content: "The 'EEA Grants Navigator' only assists with finding not applying for grant opportunities.",
-  //     id: "message_5",
-  //     onDismiss: () =>
-  //        setItems(items =>
-  //         items.filter(item => item.id !== "message_5")
-  //       )
-  //   },
-  //   {
-  //     type: "info",
-  //     dismissible: false,
-  //     content: "AI Models can make mistakes. Be mindful in validating important information. Please refrain from including any personal information.",
-  //     id: "message_4",
-  //     onDismiss: () =>
-  //       setItems(items =>
-  //         items.filter(item => item.id !== "message_4")
-  //       )
-  //   },
-  // ]);
-
   const addUserFeedback = async (feedbackData) => {
-    // if (!appContext) return;
-
-    // const apiClient = new ApiClient(appContext);
-    // await apiClient.userFeedback.addUserFeedback({feedbackData});
-    // console.log("hi")
     const response = await fetch('https://4eyjyb4lqouzyvvvs5fh6zwwse0spnhw.lambda-url.us-east-1.on.aws/', {
       method: 'POST',
       headers: {
@@ -187,57 +139,10 @@ export default function Chat(props: { sessionId?: string }) {
     });
     console.log(response);
   }
-// =======
-  
-//   const [items, setItems] = React.useState([
-//     {
-//       type: "success",
-//       dismissible: true,
-//       dismissLabel: "Dismiss message",
-//       content: "This is a success flash message",
-//       id: "message_5",
-//       onDismiss: () =>
-//          setItems(items =>
-//           items.filter(item => item.id !== "message_5")
-//         )
-//     },
-//     {
-//       type: "warning",
-//       dismissible: true,
-//       dismissLabel: "Dismiss message",
-//       content: "This is a warning flash message",
-//       id: "message_4",
-//       onDismiss: () =>
-//         setItems(items =>
-//           items.filter(item => item.id !== "message_4")
-//         )
-//     },
-//     {
-//       type: "error",
-//       dismissible: true,
-//       dismissLabel: "Dismiss message",
-//       header: "Failed to update instance id-4890f893e",
-//       content: "This is a dismissible error message",
-//       id: "message_3",
-//       onDismiss: () =>
-//         setItems(items =>
-//           items.filter(item => item.id !== "message_3")
-//         )
-//     }
-//   ]);
-// >>>>>>> Stashed changes
 
   return (
     <div className={styles.chat_container}> 
       <SpaceBetween direction="vertical" size="m">
-        
-      {messageHistory.length == 0 && !session?.loading && (
-       <Alert
-          statusIconAriaLabel="Info"
-          header=""
-       >
-        AI Models can make mistakes. Be mindful in validating important information.
-      </Alert> )}
 
       {/* <SpaceBetween direction="vertical" size="m"></SpaceBetween> */}
         {messageHistory.map((message, idx) => (
@@ -258,33 +163,7 @@ export default function Chat(props: { sessionId?: string }) {
         )}
       </div>
       <div className={styles.input_container}>
-        {/* <SpaceBetween direction="vertical" size="m">
-          <Flashbar
-            items={items}
-            i18nStrings={{
-              ariaLabel: "Notifications",
-              notificationBarAriaLabel:
-              "View all notifications",
-              notificationBarText: "Notifications",
-              errorIconAriaLabel: "Error",
-              warningIconAriaLabel: "Warning",
-              successIconAriaLabel: "Success",
-              infoIconAriaLabel: "Info",
-              inProgressIconAriaLabel: "In progress"
-            }}
-          />
-          </SpaceBetween> */}
         <SpaceBetween direction="horizontal" size="l">
-        {/* <Alert
-          dismissible
-          statusIconAriaLabel="info"
-          type="warning"
-          header=""
-          >
-            AI Models can make mistakes. Be mindful in validating important information.
-            Please refrain from including any personal information. 
-            The 'EEA Grants Navigator' only assists with finding not applying for grant opportunities.
-            </Alert> */}
             {/* <div style={{ display: 'flex', justifyContent: 'center'}}>
               <FarmButton/>
               <BusinessButton/>

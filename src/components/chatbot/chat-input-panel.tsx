@@ -1,9 +1,6 @@
 import {
   Button,
   Container,
-  Icon,
-  Select,
-  SelectProps,
   SpaceBetween,
   Spinner,
   StatusIndicator,
@@ -21,7 +18,6 @@ import { useNavigate } from "react-router-dom";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-import { Auth } from "aws-amplify";
 import TextareaAutosize from "react-textarea-autosize";
 import { ReadyState } from "react-use-websocket";
 // import WebSocket from 'ws';
@@ -438,14 +434,11 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       if (messageHistoryRef.current.length < 3) {
         firstTime = true;
       }
-      // const wsUrl = 'wss://ngdpdxffy0.execute-api.us-east-1.amazonaws.com/test/';      
-      const TEST_URL = 'wss://caoyb4x42c.execute-api.us-east-1.amazonaws.com/test/';
 
-      // Create a new WebSocket connection
-      const TOKEN = (await Auth.currentSession()).getAccessToken().getJwtToken()  
-          
+      // Connect to WebSocketHandler
+      const wsUrl = 'wss://ngdpdxffy0.execute-api.us-east-1.amazonaws.com/test/';
+
       // console.log(TOKEN)
-      const wsUrl = TEST_URL+'?Authorization='+TOKEN;
       const ws = new WebSocket(wsUrl);
 
       let incomingMetadata: boolean = false;

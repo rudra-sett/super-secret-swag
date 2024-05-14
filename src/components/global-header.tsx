@@ -14,20 +14,6 @@ export default function GlobalHeader() {
   const [userName, setUserName] = useState<string | null>(null);
   const [theme, setTheme] = useState<Mode>(StorageHelper.getTheme());
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const result = await Auth.currentUserInfo();
-
-  //     if (!result || Object.keys(result).length === 0) {
-  //       Auth.signOut();
-  //       return;
-  //     }
-
-  //     const userName = result?.attributes?.email;
-  //     setUserName(userName);
-  //   })();
-  // }, []);
-
   const onChangeThemeClick = () => {
     if (theme === Mode.Dark) {
       setTheme(StorageHelper.applyTheme(Mode.Light));
@@ -35,16 +21,6 @@ export default function GlobalHeader() {
       setTheme(StorageHelper.applyTheme(Mode.Dark));
     }
   };
-
-  // const onUserProfileClick = ({
-  //   detail,
-  // }: {
-  //   detail: ButtonDropdownProps.ItemClickDetails;
-  // }) => {
-  //   if (detail.id === "signout") {
-  //     Auth.signOut();
-  //   }
-  // };
 
   return (
     <div
@@ -60,26 +36,9 @@ export default function GlobalHeader() {
         utilities={[
           {
             type: "button",
-            text: "for internal use only- testing stage",
-          },
-          {
-            type: "button",
             text: theme === Mode.Dark ? "Light Mode" : "Dark Mode",
             onClick: onChangeThemeClick,
           },
-          // {
-          //   type: "menu-dropdown",
-          //   description: userName ?? "",
-          //   iconName: "user-profile",
-          //   onItemClick: onUserProfileClick,
-          //   items: [
-          //     {
-          //       id: "signout",
-          //       text: "Sign out",
-          //     },
-          //   ],
-          //   onItemFollow: onFollow,
-          // },
         ]}
       />
     </div>

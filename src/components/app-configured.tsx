@@ -42,13 +42,13 @@ export default function AppConfigured() {
     })();
   }, []);
   
-  // whenever the authentication state changes, if it's changed to un-authenticated, re-verify
-  useEffect(() => {  
-    if (!authenticated && configured) {
-      console.log("No authenticated user, initiating sign-in.");
-      Auth.federatedSignIn({ customProvider: federatedIdName });
-    }
-  }, [authenticated]);
+  // // whenever the authentication state changes, if it's changed to un-authenticated, re-verify
+  // useEffect(() => {  
+  //   if (!authenticated && configured) {
+  //     console.log("No authenticated user, initiating sign-in.");
+  //     Auth.federatedSignIn({ customProvider: federatedIdName });
+  //   }
+  // }, [authenticated]);
 
   // dark/light theme
   useEffect(() => {
@@ -130,25 +130,7 @@ export default function AppConfigured() {
         }}
         colorMode={theme === Mode.Dark ? "dark" : "light"}
       >
-        {/* <Authenticator
-          hideSignUp={true}
-          components={{
-            SignIn: {
-              Header: () => {
-                return (
-                  <Heading
-                    padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
-                    level={3}
-                  >
-                    {CHATBOT_NAME}
-                  </Heading>
-                );
-              },
-            },
-          }}
-        > */}
           <App />
-        {/* </Authenticator> */}
       </ThemeProvider>
     </AppContext.Provider>
   );

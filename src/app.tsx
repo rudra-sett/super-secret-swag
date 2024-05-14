@@ -13,7 +13,7 @@ import Playground from "./pages/chatbot/playground/playground";
 import NotFound from "./pages/not-found";
 // import WorkspacePane from "./pages/admin/workspace";
 import AddData from "./pages/admin/add-data";
-import WorkspacePane from "./pages/admin/workspace";
+//import WorkspacePane from "./pages/admin/workspace";
 import UserFeedbackPage from "./pages/admin/user-feedback";
 import SessionPage from "./pages/chatbot/sessions/sessions"
 import { v4 as uuidv4 } from "uuid";
@@ -39,27 +39,7 @@ function App() {
               <Route path="playground" element={<Playground />} />
               <Route path="playground/:sessionId" element={<Playground />} />
               {/* <Route path="sessions" element={<SessionPage />} /> if we want history*/}
-            </Route>
-            {/* <Route path="/admin" element={<Outlet />}>
-             <Route path="add-data" element={<AddData />} />          
-             <Route path="data" element={<WorkspacePane />} /> */}
-              {/* <Route path="sessions" element={<SessionPage />} /> if we want history*/}
-            {/* </Route> */}
-            {/* <Route path="/rag" element={<Outlet />}>
-              <Route path="" element={<Dashboard />} />
-              <Route path="workspaces" element={<Workspaces />} />
-              <Route path="workspaces/create" element={<CreateWorkspace />} />
-              <Route
-                path="workspaces/:workspaceId"
-                element={<WorkspacePane />}
-              />
-              <Route
-                path="workspaces/:workspaceId/rss/:feedId"
-                element={<RssFeed />}
-              />
-              <Route path="workspaces/add-data" element={<AddData />} />
-            </Route> */}
-             <Route path="data" element={<WorkspacePane />} />   
+             {/* <Route path="data" element={<WorkspacePane />} />    */}
              <Route path="user-feedback" element={<UserFeedbackPage />} />                           
             </Route>            
             <Route path="*" element={<Navigate to={`/chatbot/playground/${uuidv4()}`} replace />} />
