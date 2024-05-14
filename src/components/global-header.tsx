@@ -8,7 +8,6 @@ import { StorageHelper } from "../common/helpers/storage-helper";
 import { Auth } from "aws-amplify";
 import useOnFollow from "../common/hooks/use-on-follow";
 import { CHATBOT_NAME } from "../common/constants";
-import { text } from "body-parser";
 
 export default function GlobalHeader() {
   const onFollow = useOnFollow();

@@ -19,6 +19,40 @@ export class UserFeedbackClient {
     });
   }
 
+  async downloadFeedback(topic : string, startTime? : string, endTime? : string) {
+    const auth = await Utils.authenticate();
+    const response = await fetch(API + '/user-feedback/download-feedback', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': auth
+      },
+      body: JSON.stringify({ topic, startTime, endTime })
+    });
+    const result = await response.json();
+  
+    fetch(result.download_url, {
+      method: 'GET',
+      headers: {
+        'Content-Disposition': 'attachment',
+      }
+      
+    }).then(response => response.blob())
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "data.csv";
+        document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+        a.click();
+        a.remove();  //afterwards we remove the element again
+    });
+    
+    //const blob = await file.blob();
+    
+
+  }
+
   async getUserFeedback(topic : string, startTime? : string, endTime? : string, nextPageToken? : string) {
     
     const auth = await Utils.authenticate();
@@ -44,4 +78,16 @@ export class UserFeedbackClient {
     return result;
   }
 
+  async deleteFeedback(topic : string, createdAt : string) {
+    const auth = await Utils.authenticate();
+    let params = new URLSearchParams({topic, createdAt});
+    await fetch(API + '/user-feedback?' + params.toString(), {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': auth
+      },      
+    });
+    
+  }
 }
