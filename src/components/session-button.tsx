@@ -11,12 +11,14 @@ export interface SessionButtonProps {
 }
 
 export default function SessionButton(props : SessionButtonProps) {
-
+  
   const {sessionId} = useParams()
+  // const {tokens} = useTheme();
+
 
   return(<div>
     {/* <SpaceBetween direction="horizontal" size="xxs"> */}
-    <RouterLink className={styles.session_link} href={`/chatbot/playground/${props.id}`}>{sessionId == props.id? <strong className={styles.session_link_selected}>{props.title}</strong> : <strong className={styles.session_link}>{props.title}</strong>}</RouterLink>
+    <RouterLink href={`/chatbot/playground/${props.id}`}>{sessionId == props.id? <strong>{props.title}</strong> : props.title}</RouterLink>
     {/* <ButtonDropdown items={[{id: props.id, disabled: false, text : "Delete", href : "item.uri"}]}></ButtonDropdown> */}
     {/* </SpaceBetween> */}
   </div>);
