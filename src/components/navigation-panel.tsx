@@ -91,9 +91,9 @@ export default function NavigationPanel() {
         text: "Session History",
         items: sessions.map(session => ({
           type: "link",
-          // text: `${session.title}`,
-          // href: `/chatbot/playground/${session.session_id}`,
-          info: <SessionButton title={session.title} id={session.session_id}></SessionButton>
+          text: `${session.title}`,
+          href: `/chatbot/playground/${session.session_id}`,
+          // info: <SessionButton title={session.title} id={session.session_id}></SessionButton>
         })).concat([{
           type: "link",
           info: <Box margin="xxs" textAlign="center" ><Button onClick={onReloadClick} iconName="refresh" loading={loadingSessions} variant="link">Reload Sessions</Button></Box>
