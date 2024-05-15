@@ -34,77 +34,77 @@ export default function NavigationPanel() {
 
 
   // update the list of sessions every now and then
-  const loadSessions = async () => {
-    let username;
-    try {
-    await Auth.currentAuthenticatedUser().then((value) => username = value.username);
-    if (username && needsRefresh) {
-      // let's wait for about half a second before refreshing the sessions      
-      const fetchedSessions = await apiClient.sessions.getSessions(username);  
-      updateItems(fetchedSessions);
-      console.log("fetched sessions")
-      // console.log(fetchedSessions);
-      if (!loaded) {
-        setLoaded(true);
-      }
-      setNeedsRefresh(false);
-    }
-  }  catch (error) {
-    console.error("Failed to load sessions:", error);
-    setLoaded(true);
-    // addNotification("error", "Could not load sessions:".concat(error.message));
-    // addNotification("info", "Please refresh the page");    
-    // const delay = ms => new Promise(res => setTimeout(res, ms));
-    // delay(3000).then(() => removeNotification(id));
+//   const loadSessions = async () => {
+//     let username;
+//     try {
+//     await Auth.currentAuthenticatedUser().then((value) => username = value.username);
+//     if (username && needsRefresh) {
+//       // let's wait for about half a second before refreshing the sessions      
+//       const fetchedSessions = await apiClient.sessions.getSessions(username);  
+//       updateItems(fetchedSessions);
+//       console.log("fetched sessions")
+//       // console.log(fetchedSessions);
+//       if (!loaded) {
+//         setLoaded(true);
+//       }
+//       setNeedsRefresh(false);
+//     }
+//   }  catch (error) {
+//     console.error("Failed to load sessions:", error);
+//     setLoaded(true);
+//     // addNotification("error", "Could not load sessions:".concat(error.message));
+//     // addNotification("info", "Please refresh the page");    
+//     // const delay = ms => new Promise(res => setTimeout(res, ms));
+//     // delay(3000).then(() => removeNotification(id));
     
-  } finally {
-    setLoadingSessions(false);
-  }
-}
-  useEffect(() => {
+//   } finally {
+//     setLoadingSessions(false);
+//   }
+// }
+//   useEffect(() => {
    
 
-    // const interval = setInterval(loadSessions, 1000);
-    // loadSessions();
+//     // const interval = setInterval(loadSessions, 1000);
+//     // loadSessions();
 
-    // return () => clearInterval(interval);
-    loadSessions(); 
-  }, [needsRefresh]);
-
-
-  // const onReloadClick = async () => {
-  //   await loadSessions();
-  //   const id =addNotification("success", "Sessions reloaded successfully!");
-  //   Utils.delay(3000).then(() => removeNotification(id))
-  // };
+//     // return () => clearInterval(interval);
+//     loadSessions(); 
+//   }, [needsRefresh]);
 
 
-  const updateItems = (sessions) => {
-    const newItems: SideNavigationProps.Item[] = [
-      {
-        type: "section",
-        text: "Session History",
-        items: sessions.map(session => ({
-          type: "link",
-          text: `${session.title}`,
-          href: `/chatbot/playground/${session.session_id}`,
-        })).concat([{
-          type: "link",
-          info: <Box margin="xxs" textAlign="center" ><Button iconName="refresh" loading={loadingSessions} variant="link">Reload Sessions</Button></Box>
-        }]),
-      },
-      {
-        type: "section",
-        text: "Admin",
-        items: [
-          { type: "link", text: "Update Data", href: "/admin/add-data" },
-          { type: "link", text: "Data", href: "/admin/data" },
-          { type: "link", text: "User Feedback", href: "/admin/user-feedback" }
-        ],
-      },
-    ];
-    setItems(newItems);
-  };
+//   // const onReloadClick = async () => {
+//   //   await loadSessions();
+//   //   const id =addNotification("success", "Sessions reloaded successfully!");
+//   //   Utils.delay(3000).then(() => removeNotification(id))
+//   // };
+
+
+//   const updateItems = (sessions) => {
+//     const newItems: SideNavigationProps.Item[] = [
+//       {
+//         type: "section",
+//         text: "Session History",
+//         items: sessions.map(session => ({
+//           type: "link",
+//           text: `${session.title}`,
+//           href: `/chatbot/playground/${session.session_id}`,
+//         })).concat([{
+//           type: "link",
+//           info: <Box margin="xxs" textAlign="center" ><Button iconName="refresh" loading={loadingSessions} variant="link">Reload Sessions</Button></Box>
+//         }]),
+//       },
+//       {
+//         type: "section",
+//         text: "Admin",
+//         items: [
+//           { type: "link", text: "Update Data", href: "/admin/add-data" },
+//           { type: "link", text: "Data", href: "/admin/data" },
+//           { type: "link", text: "User Feedback", href: "/admin/user-feedback" }
+//         ],
+//       },
+//     ];
+//     setItems(newItems);
+//   };
 
   // const onChange = ({
   //   detail,

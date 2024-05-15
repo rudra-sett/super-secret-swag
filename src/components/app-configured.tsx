@@ -22,7 +22,7 @@ export default function AppConfigured() {
   // this is the authentication provider that Cognito needs
   const federatedIdName : string = "AzureAD-OIDC-MassGov";
 
-  // trigger authentication state when needed
+  //trigger authentication state when needed
   useEffect(() => {
     (async () => {
       try {     
