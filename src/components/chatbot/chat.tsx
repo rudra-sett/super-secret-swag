@@ -42,7 +42,7 @@ import { useNotifications } from "../notif-manager";
 
 export default function Chat(props: { sessionId?: string }) {
   const appContext = useContext(AppContext);
-  const [running, setRunning] = useState<boolean>(true);
+  const [running, setRunning] = useState<boolean>(false);
   const [session, setSession] = useState<{ id: string; loading: boolean }>({
     id: props.sessionId ?? uuidv4(),
     loading: typeof props.sessionId !== "undefined",
@@ -144,8 +144,8 @@ export default function Chat(props: { sessionId?: string }) {
     <div className={styles.chat_container}> 
       <SpaceBetween direction="vertical" size="m">
 
-      {/* <SpaceBetween direction="vertical" size="m"></SpaceBetween> */}
-        {messageHistory.map((message, idx) => (
+      <SpaceBetween direction="vertical" size="m"></SpaceBetween>
+        {/* {messageHistory.map((message, idx) => (
           <ChatMessage
             key={idx}
             message={message}
@@ -153,7 +153,7 @@ export default function Chat(props: { sessionId?: string }) {
             onThumbsUp={() => handleFeedback(1,idx, message)}
             onThumbsDown={(feedbackTopic : string, feedbackType : string, feedbackMessage: string) => handleFeedback(0,idx, message,feedbackTopic, feedbackType, feedbackMessage)}
           />
-        ))}
+        ))} */}
       </SpaceBetween>
       <div className={styles.welcome_text}>
         {session?.loading && (

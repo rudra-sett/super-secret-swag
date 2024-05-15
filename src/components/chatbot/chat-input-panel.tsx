@@ -397,7 +397,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     ChatScrollState.userHasScrolled = false;
 
     // let username;
-    // await Auth.currentAuthenticatedUser().then((value) => username = value.username);
+    // // await Auth.currentAuthenticatedUser().then((value) => username = value.username);
     // if (!username) return;
     // const readline = require('readline').createInterface({
     //   input: process.stdin,
@@ -696,8 +696,8 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
                 // !state.models?.length ||
                 // !state.selectedModel ||
                 props.running ||
-                state.value.trim().length === 0 ||
-                props.session.loading
+                state.value.trim().length === 0 
+                // props.session.loading
               }
               onClick={handleSendMessage}
               iconAlign="left"

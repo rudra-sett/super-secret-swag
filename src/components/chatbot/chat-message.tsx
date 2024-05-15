@@ -47,8 +47,8 @@ export interface ChatMessageProps {
   message: ChatBotHistoryItem;
   configuration?: ChatBotConfiguration;
   showMetadata?: boolean;
-  onThumbsUp: () => void;
-  onThumbsDown: (feedbackTopic : string, feedbackType : string, feedbackMessage: string) => void;
+   onThumbsUp: () => void;
+   onThumbsDown: (feedbackTopic : string, feedbackType : string, feedbackMessage: string) => void;
 }
 
 function downloadFile(content, filename) {
@@ -140,7 +140,7 @@ export default function ChatMessage(props: ChatMessageProps) {
               const id = addNotification("success","Your feedback has been submitted.")
               Utils.delay(3000).then(() => removeNotification(id));
               
-              props.onThumbsDown(selectedTopic.value, selectedFeedbackType.value,value.trim());
+               props.onThumbsDown(selectedTopic.value, selectedFeedbackType.value,value.trim());
               setSelectedIcon(0);
 
               setSelectedTopic({label: "Select a Topic", value: "1"})
