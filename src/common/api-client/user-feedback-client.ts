@@ -8,24 +8,24 @@ export class UserFeedbackClient {
 
     // TODO: use API Gateway
     console.log(feedbackData);
-    const auth = await Utils.authenticate();
+    // const auth = await Utils.authenticate();
     const response = await fetch(API + '/user-feedback', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': auth, 
+        // 'Authorization': auth, 
       },
       body: JSON.stringify({ feedbackData })
     });
   }
 
   async downloadFeedback(topic : string, startTime? : string, endTime? : string) {
-    const auth = await Utils.authenticate();
+    // const auth = await Utils.authenticate();
     const response = await fetch(API + '/user-feedback/download-feedback', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': auth
+        // 'Authorization': auth
       },
       body: JSON.stringify({ topic, startTime, endTime })
     });
@@ -55,7 +55,7 @@ export class UserFeedbackClient {
 
   async getUserFeedback(topic : string, startTime? : string, endTime? : string, nextPageToken? : string) {
     
-    const auth = await Utils.authenticate();
+    // const auth = await Utils.authenticate();
     let params = new URLSearchParams({topic,startTime,endTime,nextPageToken});
     let keysForDel = [];
     params.forEach((value, key) => {
@@ -71,7 +71,7 @@ export class UserFeedbackClient {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': auth, 
+        // 'Authorization': auth, 
       },      
     });
     const result = await response.json();
@@ -79,13 +79,13 @@ export class UserFeedbackClient {
   }
 
   async deleteFeedback(topic : string, createdAt : string) {
-    const auth = await Utils.authenticate();
+    // const auth = await Utils.authenticate();
     let params = new URLSearchParams({topic, createdAt});
     await fetch(API + '/user-feedback?' + params.toString(), {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': auth
+        // 'Authorization': auth
       },      
     });
     

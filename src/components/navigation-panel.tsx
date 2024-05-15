@@ -1,36 +1,36 @@
-import {
-  SideNavigation,
-  SideNavigationProps,
-  Header,
-  Button,
-  Box,
-  SpaceBetween,
-  StatusIndicator
-} from "@cloudscape-design/components";
-import useOnFollow from "../common/hooks/use-on-follow";
-// import { useNavigationPanelState } from "../common/hooks/use-navigation-panel-state";
-import { AppContext } from "../common/app-context";
-import PencilSquareIcon from "../../public/images/pencil-square.jsx";
-import RouterButton from "../components/wrappers/router-button";
-import { useContext, useState, useEffect } from "react";
-import { ApiClient } from "../common/api-client/api-client";
-import { Auth } from "aws-amplify";
-import { v4 as uuidv4 } from "uuid";
-import {SessionRefreshContext} from "../common/session-refresh-context"
-// import { useNotifications } from "../components/notif-manager";
-import { Utils } from "../common/utils.js";
+// import {
+//   SideNavigation,
+//   SideNavigationProps,
+//   Header,
+//   Button,
+//   Box,
+//   SpaceBetween,
+//   StatusIndicator
+// } from "@cloudscape-design/components";
+// import useOnFollow from "../common/hooks/use-on-follow";
+// // import { useNavigationPanelState } from "../common/hooks/use-navigation-panel-state";
+// import { AppContext } from "../common/app-context";
+// import PencilSquareIcon from "../../public/images/pencil-square.jsx";
+// import RouterButton from "../components/wrappers/router-button";
+// import { useContext, useState, useEffect } from "react";
+// import { ApiClient } from "../common/api-client/api-client";
+// import { Auth } from "aws-amplify";
+// import { v4 as uuidv4 } from "uuid";
+// import {SessionRefreshContext} from "../common/session-refresh-context"
+// // import { useNotifications } from "../components/notif-manager";
+// import { Utils } from "../common/utils.js";
 
-export default function NavigationPanel() {
-  const appContext = useContext(AppContext);
-  const apiClient = new ApiClient(appContext);
-  const onFollow = useOnFollow();
-  // const [navigationPanelState, setNavigationPanelState] =
-  //   useNavigationPanelState();
-  const [items, setItems] = useState<SideNavigationProps.Item[]>([]);
-  const [loaded,setLoaded] = useState<boolean>(false);
-  const {needsRefresh, setNeedsRefresh} = useContext(SessionRefreshContext);
-  const [loadingSessions, setLoadingSessions] = useState(false);
-  // const { addNotification, removeNotification } = useNotifications();
+// export default function NavigationPanel() {
+//   const appContext = useContext(AppContext);
+//   const apiClient = new ApiClient(appContext);
+//   const onFollow = useOnFollow();
+//   // const [navigationPanelState, setNavigationPanelState] =
+//   //   useNavigationPanelState();
+//   const [items, setItems] = useState<SideNavigationProps.Item[]>([]);
+//   const [loaded,setLoaded] = useState<boolean>(false);
+//   const {needsRefresh, setNeedsRefresh} = useContext(SessionRefreshContext);
+//   const [loadingSessions, setLoadingSessions] = useState(false);
+//   // const { addNotification, removeNotification } = useNotifications();
 
 
   // update the list of sessions every now and then
@@ -122,26 +122,26 @@ export default function NavigationPanel() {
   // };
 
 
-  return (
-    <div>
-      <Box margin="xs" padding={{ top: "l" }} textAlign="center">
-        <RouterButton
-          iconAlign="right"
-          iconSvg={<PencilSquareIcon />}
-          variant="primary"
-          href={`/chatbot/playground/${uuidv4()}`}
-          data-alignment="right"
-          className="new-chat-button"
-          style={{ textAlign: "right"}}
-        >
-          New session
-        </RouterButton>
-      </Box>            
-      {loaded ?
-      <></>: 
-      <Box margin="xs" padding="xs" textAlign="center">
-        <StatusIndicator type="loading">Loading sessions...</StatusIndicator>
-      </Box>}
-    </div>
-  );
-}
+  // return (
+  //   <div>
+  //     <Box margin="xs" padding={{ top: "l" }} textAlign="center">
+  //       <RouterButton
+  //         iconAlign="right"
+  //         iconSvg={<PencilSquareIcon />}
+  //         variant="primary"
+  //         href={`/chatbot/playground/${uuidv4()}`}
+  //         data-alignment="right"
+  //         className="new-chat-button"
+  //         style={{ textAlign: "right"}}
+  //       >
+  //         New session
+  //       </RouterButton>
+  //     </Box>            
+  //     {loaded ?
+  //     <></>: 
+  //     <Box margin="xs" padding="xs" textAlign="center">
+  //       <StatusIndicator type="loading">Loading sessions...</StatusIndicator>
+  //     </Box>}
+  //   </div>
+  // );
+// }

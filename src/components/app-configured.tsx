@@ -15,7 +15,7 @@ import "@aws-amplify/ui-react/styles.css";
 export default function AppConfigured() {
   const [config, setConfig] = useState<AppConfig | null>(null);
   const [error, setError] = useState<boolean | null>(null);
-  const [authenticated, setAuthenticated] = useState<boolean>(null);
+  //const [authenticated, setAuthenticated] = useState<boolean>(null);
   const [theme, setTheme] = useState(StorageHelper.getTheme());
   const [configured, setConfigured] = useState<boolean>(false);  
 
@@ -32,12 +32,12 @@ export default function AppConfigured() {
         setConfigured(true);
         // const currentUser = await Auth.currentAuthenticatedUser();
         // // console.log("Authenticated user:", currentUser);
-        setAuthenticated(true);
+        //setAuthenticated(true);
         // console.log(authenticated);
         setConfig(awsExports);
       } catch (e) {
         console.error("Configuration error:", e);
-        setAuthenticated(false);
+        //setAuthenticated(false);
       }
     })();
   }, []);

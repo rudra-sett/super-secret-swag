@@ -1,4 +1,4 @@
-import { Auth } from "aws-amplify";
+// import { Auth } from "aws-amplify";
 
 import {
   ChatBotHistoryItem,
@@ -24,7 +24,7 @@ export class SessionsClient {
   async getSessions(
     userId: string
   ) {
-    const auth = await Utils.authenticate();
+    // const auth = await Utils.authenticate();
     let validData = false;
     let output = [];
     let runs = 0;
@@ -36,7 +36,7 @@ export class SessionsClient {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + auth,
+          // 'Authorization': 'Bearer ' + auth,
         },
         body: JSON.stringify({ "operation": "list_sessions_by_user_id", "user_id": userId })
       });
@@ -74,7 +74,7 @@ export class SessionsClient {
     sessionId: string,
     userId: string,
   ): Promise<ChatBotHistoryItem[]> {
-    const auth = await Utils.authenticate();
+    // const auth = await Utils.authenticate();
     let validData = false;
     let output;
     let runs = 0;
@@ -86,7 +86,7 @@ export class SessionsClient {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + auth,
+          // 'Authorization': 'Bearer ' + auth,
         },
         body: JSON.stringify({
           "operation": "get_session", "session_id": sessionId,
@@ -147,12 +147,12 @@ export class SessionsClient {
     userId: string,
   ) {
     try {
-      const auth = await Utils.authenticate();
+      // const auth = await Utils.authenticate();
       const response = await fetch(API + '/user-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + auth,
+          // 'Authorization': 'Bearer ' + auth,
         },
         body: JSON.stringify({
           "operation": "delete_session", "session_id": sessionId,

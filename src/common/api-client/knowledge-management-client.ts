@@ -17,12 +17,12 @@ export class KnowledgeManagementClient {
     }
 
     try {
-      const auth = await Utils.authenticate();
+      // const auth = await Utils.authenticate();
       const response = await fetch(API + '/signed-url', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization' : auth
+          // 'Authorization' : auth
         },
         body: JSON.stringify({ fileName, fileType })
       });
@@ -41,12 +41,12 @@ export class KnowledgeManagementClient {
 
   // Returns a list of documents in the S3 bucket (hard-coded on the backend)
   async getDocuments(continuationToken?: string, pageIndex?: number) {
-    const auth = await Utils.authenticate();
+    // const auth = await Utils.authenticate();
     const response = await fetch(API + '/s3-bucket-data', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization' : auth
+        // 'Authorization' : auth
       },
       body: JSON.stringify({
         continuationToken: continuationToken,
@@ -60,12 +60,12 @@ export class KnowledgeManagementClient {
 
   // Deletes a given file on the S3 bucket (hardcoded on the backend!)
   async deleteFile(key : string) {
-    const auth = await Utils.authenticate();
+    // const auth = await Utils.authenticate();
     await fetch(API + '/delete-s3-file', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization' : auth
+        // 'Authorization' : auth
       },
       body: JSON.stringify({
         KEY : key
@@ -75,20 +75,20 @@ export class KnowledgeManagementClient {
 
   // Runs a sync job on Kendra (hardcoded datasource as well as index on the backend)
   async syncKendra() : Promise<string> {
-    const auth = await Utils.authenticate();
+    // const auth = await Utils.authenticate();
     const response = await fetch(API + '/kendra-sync/sync-kendra', {headers: {
       'Content-Type': 'application/json',
-      'Authorization' : auth
+      // 'Authorization' : auth
     }})
     return await response.json()
   }
 
   // Checks if Kendra is currently syncing (used to disable the sync button)
   async kendraIsSyncing() : Promise<string> {
-    const auth = await Utils.authenticate();
+    // const auth = await Utils.authenticate();
     const response = await fetch(API + '/kendra-sync/still-syncing', {headers: {
       'Content-Type': 'application/json',
-      'Authorization' : auth
+      // 'Authorization' : auth
     }})
     return await response.json()
   }
