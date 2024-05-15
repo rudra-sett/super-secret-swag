@@ -30,13 +30,13 @@ export default function AppConfigured() {
         const awsExports = await result.json();
         Amplify.configure(awsExports);   
         setConfigured(true);
-        const currentUser = await Auth.currentAuthenticatedUser();
-        // console.log("Authenticated user:", currentUser);
+        // const currentUser = await Auth.currentAuthenticatedUser();
+        // // console.log("Authenticated user:", currentUser);
         setAuthenticated(true);
         // console.log(authenticated);
         setConfig(awsExports);
       } catch (e) {
-        console.error("Authentication check error:", e);
+        console.error("Configuration error:", e);
         setAuthenticated(false);
       }
     })();
