@@ -398,8 +398,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       if (messageHistoryRef.current.length < 3) {
         firstTime = true;
       }
-      // const wsUrl = 'wss://ngdpdxffy0.execute-api.us-east-1.amazonaws.com/test/';      
-      const TEST_URL = 'wss://caoyb4x42c.execute-api.us-east-1.amazonaws.com/test/';
+      // old non-auth url -> const wsUrl = 'wss://ngdpdxffy0.execute-api.us-east-1.amazonaws.com/test/'; 
+      // old shared url with auth -> wss://caoyb4x42c.execute-api.us-east-1.amazonaws.com/test/     
+      const TEST_URL = 'wss://zrkw21d01g.execute-api.us-east-1.amazonaws.com/prod/';
 
       // Create a new WebSocket connection
       const TOKEN = (await Auth.currentSession()).getAccessToken().getJwtToken()  
