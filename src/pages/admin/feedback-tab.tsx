@@ -27,7 +27,7 @@ import { PropertyFilterI18nStrings } from "../../common/i18n/property-filter-i18
 // import {I18nStrings} from 
 // import { I18nProvider } from '@cloudscape-design/components/i18n';
 // import {DatePickerProps.I18nStrings} from ;
-import { getColumnDefinition } from "./columns";
+//import { getColumnDefinition } from "./columns";
 // import { I18nProviderProps } from "@cloudscape-design/components/i18n";
 import { Utils } from "../../common/utils";
 import { useCollection } from "@cloudscape-design/collection-hooks";
