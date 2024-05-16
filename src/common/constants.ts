@@ -106,6 +106,21 @@ export abstract class Labels {
   // }
 }
 
+export const feedbackCategories = [
+  {label: "PDDG", value:"pddg", disabled: false},
+  {label: "SOP", value:"sop", disabled: false},
+  {label: "Construction", value:"construction", disabled: false},
+  {label: "Other", value:"other", disabled: false}
+]
+
+export const feedbackTypes = [
+  {label: "Accuracy", value:"accuracy", disabled: false},
+  {label: "Relevance", value:"relevance", disabled: false},
+  {label: "Clarity", value:"clarity", disabled: false},
+  {label: "Formatting", value:"completeness", disabled: false},
+  {label: "Other", value:"other", disabled: false}
+]
+
 export const API = "https://u95wm1svh0.execute-api.us-east-1.amazonaws.com/test"
 
 export const CHATBOT_NAME = "MassDOT Engineer Knowledge Hub";

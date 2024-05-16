@@ -760,11 +760,13 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
                 configuration={props.configuration}
                 setConfiguration={props.setConfiguration}
               /> */}
-              <Button
+            
+              {/*<Button
                 iconName="settings"
                 variant="icon"
                 onClick={() => setConfigDialogVisible(true)}
-              />
+                
+              />*/}
             </div>
             <StatusIndicator
               type={
