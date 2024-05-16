@@ -18,6 +18,7 @@ import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
 import {SessionRefreshContext} from "../common/session-refresh-context"
 import { useNotifications } from "../components/notif-manager";
+import { Utils } from "../common/utils.js";
 
 export default function NavigationPanel() {
   const appContext = useContext(AppContext);
@@ -29,7 +30,11 @@ export default function NavigationPanel() {
   const [loaded,setLoaded] = useState<boolean>(false);
   const {needsRefresh, setNeedsRefresh} = useContext(SessionRefreshContext);
   const [loadingSessions, setLoadingSessions] = useState(false);
-  const { addNotification } = useNotifications();
+  const { addNotification, removeNotification } = useNotifications();
+  const [activeHref, setActiveHref] = useState(
+    window.location.pathname
+  );
+
 
   // update the list of sessions every now and then
   const loadSessions = async () => {
@@ -37,9 +42,7 @@ export default function NavigationPanel() {
     try {
     await Auth.currentAuthenticatedUser().then((value) => username = value.username);
     if (username && needsRefresh) {
-      // let's wait for about half a second before refreshing the sessions
-      // const delay = ms => new Promise(res => setTimeout(res, ms));
-      // await delay(1500);
+      // let's wait for about half a second before refreshing the sessions      
       const fetchedSessions = await apiClient.sessions.getSessions(username);  
       updateItems(fetchedSessions);
       console.log("fetched sessions")
@@ -53,7 +56,10 @@ export default function NavigationPanel() {
     console.error("Failed to load sessions:", error);
     setLoaded(true);
     addNotification("error", "Could not load sessions:".concat(error.message));
-    addNotification("info", "Please refresh the page");
+    addNotification("info", "Please refresh the page");    
+    // const delay = ms => new Promise(res => setTimeout(res, ms));
+    // delay(3000).then(() => removeNotification(id));
+    
   } finally {
     setLoadingSessions(false);
   }
@@ -71,7 +77,8 @@ export default function NavigationPanel() {
 
   const onReloadClick = async () => {
     await loadSessions();
-    addNotification("success", "Sessions reloaded successfully!");
+    const id =addNotification("success", "Sessions reloaded successfully!");
+    Utils.delay(3000).then(() => removeNotification(id))
   };
 
 
@@ -102,17 +109,21 @@ export default function NavigationPanel() {
     setItems(newItems);
   };
 
-  const onChange = ({ detail }) => {
-    const sectionIndex = items.findIndex((item : SideNavigationProps.Item) => (item as SideNavigationProps.Section).text === detail.item.text);
-    const newCollapsedSections = {
-      ...navigationPanelState.collapsedSections,
-      [sectionIndex]: !navigationPanelState.collapsedSections[sectionIndex]
-    };
+  const onChange = ({
+    detail,
+  }: {
+    detail: SideNavigationProps.ChangeDetail;
+  }) => {
+    // const sectionIndex = items.findIndex(detail.item);
+    const sectionIndex = items.indexOf(detail.item);
     setNavigationPanelState({
-      ...navigationPanelState,
-      collapsedSections: newCollapsedSections
+      collapsedSections: {
+        ...navigationPanelState.collapsedSections,
+        [sectionIndex]: !detail.expanded,
+      },
     });
   };
+
 
   return (
     <div>
@@ -133,7 +144,8 @@ export default function NavigationPanel() {
         </RouterButton>
 
       </div>
-      <Header>
+  <Header>*/}
+      <Box margin="xs" padding={{ top: "l" }} textAlign="center">
         <RouterButton
           iconAlign="right"
           iconSvg={<PencilSquareIcon />}
@@ -146,29 +158,30 @@ export default function NavigationPanel() {
           New session
 
         </RouterButton>
-
-      </Header> */}
-      <Box margin="l" padding="s" textAlign="center">
-        <RouterButton
-          iconAlign="right"
-          iconSvg={<PencilSquareIcon />}
-          variant="primary"
-          href={`/chatbot/playground/${uuidv4()}`}
-          data-alignment="right"
-          className="new-chat-button"
-          style={{ textAlign: "right" }}
-        >
-          New session
-
-        </RouterButton>
-        </Box>
-      {/* </SpaceBetween> */}
+      </Box>            
       {loaded ?
       <SideNavigation
-        onFollow={onFollow}
+        activeHref={activeHref}
+        // onFollow={onFollow}
+        onFollow={event => {
+          if (!event.detail.external) {
+            event.preventDefault();
+            setActiveHref(event.detail.href);
+            onFollow(event);
+          }
+        }}
         onChange={onChange}
         // header={{ href: "/", text: "The Ride Guide AI" }}
-        items={items}  
+        // items={items.map((item, idx) => ({
+        //   ...item,
+        //   defaultExpanded: !navigationPanelState.collapsedSections[idx]
+        // }))}  
+        items={items}
+        // items={Array.isArray(items) ? items.map((item, idx) => ({
+        //   ...item,
+        //   defaultExpanded: !navigationPanelState.collapsedSections[idx]
+        // })) : []}
+        
       /> : 
       <Box margin="xs" padding="xs" textAlign="center">
         <StatusIndicator type="loading">Loading sessions...</StatusIndicator>

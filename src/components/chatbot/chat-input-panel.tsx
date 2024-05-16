@@ -165,7 +165,10 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       addNotification("warning", "Please do not attempt to share sensitive member information.")
       messageToSend = redactedMessage;
     }
-
+    if (messageToSend.length === 0) {
+      addNotification("error","Please do not submit blank text!");
+      return;          
+    }
     setState({ value: "" });
     // let start = new Date().getTime() / 1000;
     
@@ -244,12 +247,13 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       });
       // Event listener for incoming messages
       ws.addEventListener('message', async function incoming(data) {
-        console.log(data);        
+        // console.log(data);        
+        if (data.data.includes("<!ERROR!>:")) {
+          addNotification("error",data.data);          
+          ws.close();
+          return;
+        }
         if (data.data == '!<|EOF_STREAM|>!') {
-          // await apiClient.sessions.updateSession(props.session.id, "0", messageHistoryRef.current);
-          // ws.close();
-          // appContext.config.api_endpoint = "hi"
-          // console.log(appContext);
           
           incomingMetadata = true;
           return;
@@ -300,8 +304,8 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         // await apiClient.sessions.updateSession("0", props.session.id, messageHistoryRef.current);
         if (firstTime) {   
           // console.log("first time!", firstTime)
-          // console.log("did we also need a refresh?", needsRefresh)                   
-          setNeedsRefresh(true);            
+          // console.log("did we also need a refresh?", needsRefresh)
+          Utils.delay(1500).then(() => setNeedsRefresh(true));
         }
         props.setRunning(false);        
         console.log('Disconnected from the WebSocket server');
@@ -372,6 +376,105 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           </div>
         </div>
       </Container>
-    <SpaceBetween size="s"></SpaceBetween></SpaceBetween>
+      <div className={styles.input_controls}>
+        <div
+        // className={
+        //   appContext?.config.rag_enabled
+        //     ? styles.input_controls_selects_2
+        //     : styles.input_controls_selects_1
+        // }
+        >
+          {/* <Select
+            disabled={props.running}
+            statusType={state.modelsStatus}
+            loadingText="Loading models (might take few seconds)..."
+            placeholder="Select a model"
+            empty={
+              <div>
+                No models available. Please make sure you have access to Amazon
+                Bedrock or alternatively deploy a self hosted model on SageMaker
+                or add API_KEY to Secrets Manager
+              </div>
+            }
+            filteringType="auto"
+            selectedOption={state.selectedModel}
+            onChange={({ detail }) => {
+              setState((state) => ({
+                ...state,
+                selectedModel: detail.selectedOption,
+                selectedModelMetadata: getSelectedModelMetadata(
+                  state.models,
+                  detail.selectedOption
+                ),
+              }));
+              if (detail.selectedOption?.value) {
+                StorageHelper.setSelectedLLM(detail.selectedOption.value);
+              }
+            }}
+            options={modelsOptions}
+          /> */}
+          {/* {appContext?.config.rag_enabled && (
+            <Select
+              disabled={
+                props.running || !state.selectedModelMetadata?.ragSupported
+              }
+              loadingText="Loading workspaces (might take few seconds)..."
+              statusType={state.workspacesStatus}
+              placeholder="Select a workspace (RAG data source)"
+              filteringType="auto"
+              selectedOption={state.selectedWorkspace}
+              options={workspaceOptions}
+              onChange={({ detail }) => {
+                if (detail.selectedOption?.value === "__create__") {
+                  navigate("/rag/workspaces/create");
+                } else {
+                  setState((state) => ({
+                    ...state,
+                    selectedWorkspace: detail.selectedOption,
+                  }));
+
+                  StorageHelper.setSelectedWorkspaceId(
+                    detail.selectedOption?.value ?? ""
+                  );
+                }
+              }}
+              empty={"No Workspaces available"}
+            />
+          )} */}
+        </div>
+        <div className={styles.input_controls_right}>
+          <SpaceBetween direction="horizontal" size="xxs" alignItems="center">
+            <div style={{ paddingTop: "1px" }}>
+              {/* <ConfigDialog
+                sessionId={props.session.id}
+                visible={configDialogVisible}
+                setVisible={setConfigDialogVisible}
+                configuration={props.configuration}
+                setConfiguration={props.setConfiguration}
+              /> */}
+            
+              {/*<Button
+                iconName="settings"
+                variant="icon"
+                onClick={() => setConfigDialogVisible(true)}
+                
+              />*/}
+            </div>
+            <StatusIndicator
+              type={
+                readyState === ReadyState.OPEN
+                  ? "success"
+                  : readyState === ReadyState.CONNECTING ||
+                    readyState === ReadyState.UNINSTANTIATED
+                    ? "in-progress"
+                    : "error"
+              }
+            >
+              {readyState === ReadyState.OPEN ? "Connected" : connectionStatus}
+            </StatusIndicator>
+          </SpaceBetween>
+        </div>
+      </div>
+    </SpaceBetween>
   );
 }

@@ -37,7 +37,6 @@ export default function GlobalHeader() {
       setTheme(StorageHelper.applyTheme(Mode.Dark));
     }
   };
-
   const onUserProfileClick = ({
     detail,
   }: {
@@ -61,9 +60,14 @@ export default function GlobalHeader() {
         utilities={[
           {
             type: "button",
+            text: "for internal use only- testing stage",
+          },
+          {
+            type: "button",
             text: theme === Mode.Dark ? "Light Mode" : "Dark Mode",
             onClick: onChangeThemeClick,
           },
+  
           {
             type: "menu-dropdown",
             description: userName ?? "",

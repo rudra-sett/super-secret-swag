@@ -99,7 +99,7 @@ export default function Chat(props: { sessionId?: string }) {
     })();
   }, [appContext, props.sessionId]);
 
-  const handleFeedback = (feedbackType: 1 | 0, idx: number, message: ChatBotHistoryItem) => {
+  const handleFeedback = (feedbackType: 1 | 0, idx: number, message: ChatBotHistoryItem, feedbackTopic? : string, feedbackProblem? : string, feedbackMessage? : string) => {
     // if (message.metadata.sessionId) {
       console.log("submitting feedback...")
       // let prompt = "";
@@ -113,7 +113,10 @@ export default function Chat(props: { sessionId?: string }) {
         sessionId: props.sessionId, //message.metadata.sessionId as string,        
         feedback: feedbackType,
         prompt: prompt,
-        completion: completion,        
+        completion: completion,
+        topic: feedbackTopic,
+        problem: feedbackProblem,
+        comment: feedbackMessage     
       };
       addUserFeedback(feedbackData);
     // }
@@ -128,15 +131,7 @@ export default function Chat(props: { sessionId?: string }) {
   return (
     <div className={styles.chat_container}> 
       <SpaceBetween direction="vertical" size="m">
-      {notifications.length > 0 && (
-          <Flashbar items={notifications.map(notif => ({
-            content: notif.content,
-            dismissible: notif.dismissible,
-            sticky : true,
-            onDismiss: () => notif.onDismiss(),
-            type: notif.type
-          }))} />
-        )}
+        
       {messageHistory.length == 0 && !session?.loading && (
        <Alert
           statusIconAriaLabel="Info"
@@ -152,7 +147,7 @@ export default function Chat(props: { sessionId?: string }) {
             message={message}
             showMetadata={configuration.showMetadata}
             onThumbsUp={() => handleFeedback(1,idx, message)}
-            onThumbsDown={() => handleFeedback(0,idx, message)}
+            onThumbsDown={(feedbackTopic : string, feedbackType : string, feedbackMessage: string) => handleFeedback(0,idx, message,feedbackTopic, feedbackType, feedbackMessage)}
           />
         ))}
       </SpaceBetween>

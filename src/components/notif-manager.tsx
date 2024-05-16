@@ -5,14 +5,14 @@ import { v4 as uuidv4 } from 'uuid';  // Import the UUID function
 // Create a context for the notification manager
 export const NotificationContext = createContext({
   notifications: [],
-  addNotification: (type, content) => {},
+  addNotification: (type, content) => {String},
   removeNotification: (id) => {}
 });
 
 export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
 
-  const addNotification = (type, content) => {
+  const addNotification = (type, content) : String => {
     const id = uuidv4();  // Generate a UUID for each new notification
     // type: "info" | "success" | "warning" | "error"
 
@@ -24,8 +24,9 @@ export const NotificationProvider = ({ children }) => {
       dismissible: true,
       dismissLabel: "Hide notification",
       onDismiss: () => removeNotification(id)
-    }]);
+    }]);    
     console.log("Added notification", id);
+    return id;
   };
 
   const removeNotification = (id) => {
