@@ -10,9 +10,11 @@ import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
 import ChatMessage from "./chat-message";
+import Modal from "@cloudscape-design/components/modal";
 import ChatInputPanel, { ChatScrollState } from "./chat-input-panel";
 import styles from "../../styles/chat.module.scss";
 import Box from '@cloudscape-design/components/box';
+
 
 
 const AIWarning = () => {
@@ -64,6 +66,8 @@ export default function Chat(props: { sessionId?: string }) {
   const [messageHistory, setMessageHistory] = useState<ChatBotHistoryItem[]>(
     []
   );
+
+  const [modalVisible, setModalVisible] = useState(true); // State for modal visibility
 
   useEffect(() => {
     if (!appContext) return;
@@ -142,6 +146,26 @@ export default function Chat(props: { sessionId?: string }) {
 
   return (
     <div className={styles.chat_container}> 
+      <Modal
+        onDismiss={() => setModalVisible(false)}
+        visible={modalVisible}
+        size="large"
+        footer={
+          <Box float="right">
+            <SpaceBetween direction="horizontal" size="xs">
+              <Button variant="link" onClick={() => setModalVisible(false)}>
+                Cancel
+              </Button>
+              <Button variant="primary" onClick={() => setModalVisible(false)}>
+                Ok
+              </Button>
+            </SpaceBetween>
+          </Box>
+        }
+        header="Modal title"
+      >
+        Your description should go here
+      </Modal>
       <SpaceBetween direction="vertical" size="m">
 
       <SpaceBetween direction="vertical" size="m"></SpaceBetween>

@@ -24,6 +24,7 @@ export default function AppConfigured() {
 
   //trigger authentication state when needed
   useEffect(() => {
+<<<<<<< Updated upstream
     (async () => {
       try {     
         const result = await fetch("/aws-exports.json");
@@ -40,6 +41,24 @@ export default function AppConfigured() {
         //setAuthenticated(false);
       }
     })();
+=======
+    // (async () => {
+    //   try {     
+    //     const result = await fetch("/aws-exports.json");
+    //     const awsExports = await result.json();
+    //     Amplify.configure(awsExports);   
+    //     setConfigured(true);
+    //     const currentUser = await Auth.currentAuthenticatedUser();
+    //     // console.log("Authenticated user:", currentUser);
+    //     setAuthenticated(true);
+    //     // console.log(authenticated);
+    //     setConfig(awsExports);
+    //   } catch (e) {
+    //     console.error("Authentication check error:", e); ALAYNA COMMENTED OUT FOR LOCAL DEPLOYMENT 
+    //     setAuthenticated(false);
+    //   }
+    // })();
+>>>>>>> Stashed changes
   }, []);
   
   // // whenever the authentication state changes, if it's changed to un-authenticated, re-verify

@@ -136,14 +136,22 @@ export class Utils {
   //     // console.log('ID token:', currentSession.getAccessToken().getJwtToken());
   //     // console.log(Auth.currentSession())
   //     // console.log(await Auth.currentSession())
+<<<<<<< Updated upstream
   //     //const currentUser = await Auth.currentAuthenticatedUser()
+=======
+  //     const currentUser = await Auth.currentAuthenticatedUser()
+>>>>>>> Stashed changes
   //     // currentUser.
   //     // console.log(currentUser);
   //     // console.log(currentSession);
   //     // token = 'Bearer ' + currentUser.signInUserSession.idToken.jwtToken
       
   //     // for some reason
+<<<<<<< Updated upstream
   //     //token = currentUser.signInUserSession.idToken.jwtToken //currentSession.getAccessToken().getJwtToken(); 
+=======
+  //     token = currentUser.signInUserSession.idToken.jwtToken //currentSession.getAccessToken().getJwtToken(); 
+>>>>>>> Stashed changes
 
   //     // currentUser.idToken.jwtToken
       
@@ -153,6 +161,10 @@ export class Utils {
   //   } catch (error) {
   //     console.error('Error getting current user session:', error);
   //     throw new Error('Authentication failed');
+<<<<<<< Updated upstream
   //   }
+=======
+  //   } ALAYNA COMMENTED OUT 
+>>>>>>> Stashed changes
   // }
 }
