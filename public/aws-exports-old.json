@@ -2,13 +2,12 @@
 
   "Auth": {
     "region": "us-east-1",
-    "userPoolId": "us-east-1_BHned34tF",
-    "userPoolWebClientId": "4qn890ga2uh7a04ia5hkqaep3b",    
+    "userPoolId": "us-east-1_xefy2RAnM",
+    "userPoolWebClientId": "3dvmmtpll0ba9onmgq7fv1vsre",    
     "oauth": {
-      "domain": "sandbox-mass-gov.auth.us-east-1.amazoncognito.com",
+      "domain": "genaimvp-auth.auth.us-east-1.amazoncognito.com",
       "scope": ["email", "openid", "profile"],
-      "redirectSignIn": "https://auth-testing.d3est6ae7qcmwy.amplifyapp.com/",
-      "redirectSignOut": "https://myapplications.microsoft.com/",
+      "redirectSignIn": "http://localhost:3000/",      
       "responseType": "code"
     }
     
