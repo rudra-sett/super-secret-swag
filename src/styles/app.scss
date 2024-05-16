@@ -62,6 +62,7 @@ body.awsui-dark-mode {
   }
 }
 
+
 .new-session-button {
  margin-left: 20px; 
 }
@@ -78,6 +79,10 @@ new-chat-button[data-alignment = "right"] {
   font-family: "Open Sans", sans-serif;
   font-size: 1em;
   background-color: #0e1b2ac3;
+}
+
+.internal-use-only{
+  color: red;
 }
 
 .jsonStrings {
@@ -98,3 +103,5 @@ new-chat-button[data-alignment = "right"] {
   color:rgb(74, 205, 234);
   font-weight: 600;
 }
+
+

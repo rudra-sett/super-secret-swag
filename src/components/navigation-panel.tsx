@@ -31,6 +31,10 @@ export default function NavigationPanel() {
   const {needsRefresh, setNeedsRefresh} = useContext(SessionRefreshContext);
   const [loadingSessions, setLoadingSessions] = useState(false);
   const { addNotification, removeNotification } = useNotifications();
+  const [activeHref, setActiveHref] = useState(
+    window.location.pathname
+  );
+
 
 
   // update the list of sessions every now and then
@@ -139,7 +143,15 @@ export default function NavigationPanel() {
       </Box>            
       {loaded ?
       <SideNavigation
-        onFollow={onFollow}
+        activeHref={activeHref}
+        // onFollow={onFollow}
+        onFollow={event => {
+          if (!event.detail.external) {
+            event.preventDefault();
+            setActiveHref(event.detail.href);
+            onFollow(event);
+          }
+        }}
         onChange={onChange}
         // header={{ href: "/", text: "The Ride Guide AI" }}
         // items={items.map((item, idx) => ({
