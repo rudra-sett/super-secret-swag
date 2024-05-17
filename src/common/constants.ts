@@ -121,6 +121,7 @@ export const feedbackTypes = [
   {label: "Other", value:"other", disabled: false}
 ]
 // https://u95wm1svh0.execute-api.us-east-1.amazonaws.com/test
-export const API = "https://cai01tv3bi.execute-api.us-east-1.amazonaws.com"
+// https://cai01tv3bi.execute-api.us-east-1.amazonaws.com
+export const API = "https://u95wm1svh0.execute-api.us-east-1.amazonaws.com/test"
 
 export const CHATBOT_NAME = "MBTA The RIDE Guide AI";
