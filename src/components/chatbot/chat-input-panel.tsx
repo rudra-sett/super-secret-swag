@@ -401,7 +401,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       // old non-auth url -> const wsUrl = 'wss://ngdpdxffy0.execute-api.us-east-1.amazonaws.com/test/'; 
       // old shared url with auth -> wss://caoyb4x42c.execute-api.us-east-1.amazonaws.com/test/     
       // first deployment URL 'wss://zrkw21d01g.execute-api.us-east-1.amazonaws.com/prod/';
-      const TEST_URL = appContext?.wsEndpoint
+      const TEST_URL = appContext.wsEndpoint+"/"
 
       // Create a new WebSocket connection
       const TOKEN = (await Auth.currentSession()).getAccessToken().getJwtToken()  
