@@ -2,34 +2,21 @@ import { SelectProps } from "@cloudscape-design/components";
 import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth";
 
 export interface AppConfig {
-  aws_project_region: string;
-  aws_cognito_identity_pool_id: string;
-  aws_user_pools_id: string;
-  aws_user_pools_web_client_id: string;
-  config: {
-    auth_federated_provider?:
-      | { auto_redirect: boolean; custom: true; name: string }
-      | {
-          auto_redirect: boolean;
-          custom: false;
-          name: CognitoHostedUIIdentityProvider;
-        };
-    rag_enabled: boolean;
-    cross_encoders_enabled: boolean;
-    sagemaker_embeddings_enabled: boolean;
-    api_endpoint: string;
-    websocket_endpoint: string;
-    default_embeddings_model: string;
-    default_cross_encoder_model: string;
-    privateWebsite: boolean;
-  };
-  update_session : true;
-  Storage: {
-    AWSS3: {
-      bucket: string;
-      region: string;
-    };
-  };
+  Auth: {
+        region: string,
+        userPoolId: string,
+        userPoolWebClientId: string,
+        oauth: {
+          domain: string,
+          scope: string[],
+          redirectSignIn: string,
+          // redirectSignOut: "https://myapplications.microsoft.com/",
+          responseType: string,
+        }
+      },
+      httpEndpoint : string,
+      wsEndpoint : string,
+      federatedSignInProvider : string,
 }
 
 export interface NavigationPanelState {

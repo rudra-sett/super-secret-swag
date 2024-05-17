@@ -13,12 +13,18 @@ import {
   Utils
 } from "../utils"
 
-import {
-  API
-} from "../constants"
+// import {
+//   this.API
+// } from "../constants"
+
+import { AppConfig } from "../types";
 
 export class SessionsClient {
 
+  private readonly API;
+  constructor(protected _appConfig: AppConfig) {
+    this.API = _appConfig.httpEndpoint;
+  }
   // Gets all sessions tied to a given user ID
   // Return format: [{"session_id" : "string", "user_id" : "string", "time_stamp" : "dd/mm/yy", "title" : "string"}...]
   async getSessions(
@@ -32,7 +38,7 @@ export class SessionsClient {
     let errorMessage = "Could not load sessions"
     while (!validData && runs < limit ) {
       runs += 1;
-      const response = await fetch(API + '/user-session', {
+      const response = await fetch(this.API + '/user-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -82,7 +88,7 @@ export class SessionsClient {
     let errorMessage = "Could not load session";
     while (!validData && runs < limit ) {
       runs += 1;
-      const response = await fetch(API + '/user-session', {
+      const response = await fetch(this.API + '/user-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -148,7 +154,7 @@ export class SessionsClient {
   ) {
     try {
       const auth = await Utils.authenticate();
-      const response = await fetch(API + '/user-session', {
+      const response = await fetch(this.API + '/user-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
