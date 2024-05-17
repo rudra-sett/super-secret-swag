@@ -8,7 +8,7 @@ export class UserFeedbackClient {
   
   private readonly API;
   constructor(protected _appConfig: AppConfig) {
-    this.API = _appConfig.httpEndpoint;
+    this.API = _appConfig.httpEndpoint.slice(0,-1);
   }
   
   // Takes in a piece of feedback (which has a prompt, completion, session ID, and the actual feedback (1 or 0))

@@ -13,7 +13,7 @@ export class KnowledgeManagementClient {
 
   private readonly API;
   constructor(protected _appConfig: AppConfig) {
-    this.API = _appConfig.httpEndpoint;
+    this.API = _appConfig.httpEndpoint.slice(0,-1);
   }
   
   // Returns a URL from the this.API that allows one file upload to S3 with that exact filename
