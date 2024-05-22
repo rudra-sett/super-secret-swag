@@ -14,30 +14,6 @@ import ChatInputPanel, { ChatScrollState } from "./chat-input-panel";
 import styles from "../../styles/chat.module.scss";
 import Box from '@cloudscape-design/components/box';
 
-
-const AIWarning = () => {
-  return (
-    <Box textAlign="center">AI Models can make mistakes. Make sure to verify all information.</Box>
-  );
-};
-
-
-const DefaultButton = () => {
-  return <Button variant="link">Other</Button>;
-}
-const FarmButton = () => {
-  return <Button variant="link">Farm</Button>;
-}
-const BusinessButton = () => {
-  return <Button variant="link">Business</Button>;
-}
-const NonprofitButton = () => {
-  return <Button variant="link">Nonprofit</Button>;
-}
-const TownButton = () => {
-  return <Button variant="link">Town</Button>;
-}
-
 import { useNotifications } from "../notif-manager";
 
 export default function Chat(props: { sessionId?: string }) {
@@ -164,13 +140,6 @@ export default function Chat(props: { sessionId?: string }) {
       </div>
       <div className={styles.input_container}>
         <SpaceBetween direction="horizontal" size="l">
-            {/* <div style={{ display: 'flex', justifyContent: 'center'}}>
-              <FarmButton/>
-              <BusinessButton/>
-              <NonprofitButton/>
-              <TownButton/>
-              <DefaultButton/>
-            </div> */}
           </SpaceBetween> 
         <SpaceBetween direction="vertical" size="s">
           <ChatInputPanel
@@ -181,9 +150,6 @@ export default function Chat(props: { sessionId?: string }) {
             setMessageHistory={setMessageHistory}
             configuration={configuration}
             setConfiguration={setConfiguration} />
-            <div style={{ marginTop: '-22px' }}>
-              <AIWarning/>
-              </div>
         </SpaceBetween>
         <div className={styles.chat_container}>
           <SpaceBetween direction="vertical" size="m">

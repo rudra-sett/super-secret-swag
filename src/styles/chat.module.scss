@@ -14,12 +14,14 @@
   justify-content: center;
   height: 10vh; /* or the desired height of the container */
   padding: 5px 10px;
+  font-family: 'Calibri', 'Open Sans', system-ui;
 }
 
 .small_button {
   height: 30px; /* or your desired height */
   padding: 5px 10px; /* adjust padding as necessary */
   margin: 5px 0; /* add some space between buttons */
+  font-family: 'Calibri', 'Open Sans', system-ui;
 }
 
 .select_prompt {
@@ -59,6 +61,7 @@
 .welcome_text {
   color: awsui.$color-text-body-default;
   font-size: 3rem;
+  font-family: 'Calibri', 'Open Sans', system-ui;
   font-weight: bolder;
   opacity: 0.4;
 }
@@ -95,6 +98,7 @@
   width: 100%;
   height: 100%;
   font-size: 1rem;
+  font-family: 'Calibri', 'Open Sans', system-ui;
 }
 
 .input_controls {
@@ -158,7 +162,7 @@
 }
 
 .chatbot_name {
-  font-family: 'Lato', 'Open Sans', system-ui; // Example font
+  font-family: 'Calibri', 'Open Sans', system-ui; // Example font
   font-size: 45px; // Example size
   font-weight: bold; // Makes the font bold
   color: rgb(56, 133, 87); // Sets the text color
