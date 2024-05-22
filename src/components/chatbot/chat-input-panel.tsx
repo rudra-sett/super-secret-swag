@@ -4,6 +4,7 @@ import {
   SpaceBetween,
   Spinner,
   StatusIndicator,
+  Box
 } from "@cloudscape-design/components";
 import {
   Dispatch,
@@ -90,6 +91,16 @@ recommend the most relevant specific grant programs offered by the Massachusetts
 and environment office that would be a good fit for a municipality or town. Always boldly list the grant program name as a header, 
 a 2-3 sentence description and under sub-bullet points about the specific deadline date, 
 target audience, funding amount, match requirement, and contact information and relevant link listed on the relevant grant webpage.`;
+
+const AIWarning = () => {
+  return (
+    <Box textAlign="center">
+      <h4 style={{ fontFamily: 'Calibri, sans-serif', fontWeight: '500', fontSize: 15}}>
+        AI Models can make mistakes. Make sure to verify all information.
+      </h4>
+    </Box>
+  );
+};
 
 export interface ChatInputPanelProps {
   running: boolean;
@@ -655,46 +666,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           </div>
         </div>
       </Container>
-      <div className={styles.prompt_buttons_centered}>
-        <div className={styles.select_prompt}>
-        <h3>Select your organization:  </h3>
-        </div>
-        <div className={styles.small_button}>
-        <Button 
-          onClick={() => { setState({ ...state, systemPrompt: defaultPrompt }); setActiveButton('General'); }} 
-          variant={activeButton === 'General' ? 'primary' : 'normal'}>
-          General
-        </Button>
-        </div>
-        <div className={styles.small_button}>
-        <Button 
-          onClick={() => { setState({ ...state, systemPrompt: farmPrompt }); setActiveButton('Farm'); }} 
-          variant={activeButton === 'Farm' ? 'primary' : 'normal'}>
-          Farm
-        </Button>
-        </div>
-        <div className={styles.small_button}>
-        <Button 
-          onClick={() => { setState({ ...state, systemPrompt: townPrompt }); setActiveButton('Town'); }} 
-          variant={activeButton === 'Town' ? 'primary' : 'normal'}>
-          Town
-        </Button>
-        </div>
-        <div className={styles.small_button}>
-        <Button 
-          onClick={() => { setState({ ...state, systemPrompt: nonprofitPrompt }); setActiveButton('Nonprofit'); }} 
-          variant={activeButton === 'Nonprofit' ? 'primary' : 'normal'}>
-          Nonprofit
-        </Button>
-        </div>
-        <div className={styles.small_button}>
-        <Button 
-          onClick={() => { setState({ ...state, systemPrompt: businessPrompt }); setActiveButton('Business'); }} 
-          variant={activeButton === 'Business' ? 'primary' : 'normal'}>
-          Business
-        </Button>
-        </div>
-      </div>
       <div className={styles.input_controls}>
         <div
         // className={
@@ -703,65 +674,12 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         //     : styles.input_controls_selects_1
         // }
         >
-          {/* <Select
-            disabled={props.running}
-            statusType={state.modelsStatus}
-            loadingText="Loading models (might take few seconds)..."
-            placeholder="Select a model"
-            empty={
-              <div>
-                No models available. Please make sure you have access to Amazon
-                Bedrock or alternatively deploy a self hosted model on SageMaker
-                or add API_KEY to Secrets Manager
-              </div>
-            }
-            filteringType="auto"
-            selectedOption={state.selectedModel}
-            onChange={({ detail }) => {
-              setState((state) => ({
-                ...state,
-                selectedModel: detail.selectedOption,
-                selectedModelMetadata: getSelectedModelMetadata(
-                  state.models,
-                  detail.selectedOption
-                ),
-              }));
-              if (detail.selectedOption?.value) {
-                StorageHelper.setSelectedLLM(detail.selectedOption.value);
-              }
-            }}
-            options={modelsOptions}
-          /> */}
-          {/* {appContext?.config.rag_enabled && (
-            <Select
-              disabled={
-                props.running || !state.selectedModelMetadata?.ragSupported
-              }
-              loadingText="Loading workspaces (might take few seconds)..."
-              statusType={state.workspacesStatus}
-              placeholder="Select a workspace (RAG data source)"
-              filteringType="auto"
-              selectedOption={state.selectedWorkspace}
-              options={workspaceOptions}
-              onChange={({ detail }) => {
-                if (detail.selectedOption?.value === "__create__") {
-                  navigate("/rag/workspaces/create");
-                } else {
-                  setState((state) => ({
-                    ...state,
-                    selectedWorkspace: detail.selectedOption,
-                  }));
-
-                  StorageHelper.setSelectedWorkspaceId(
-                    detail.selectedOption?.value ?? ""
-                  );
-                }
-              }}
-              empty={"No Workspaces available"}
-            />
-          )} */}
+          {}
+          {}
+          <div style={{ marginTop: '-25px' }}>
+              <AIWarning/>
+          </div>
         </div>
-        
         <div className={styles.input_controls_right}>
           <SpaceBetween direction="horizontal" size="xxs" alignItems="center">
             <div style={{ paddingTop: "1px" }}>
@@ -793,8 +711,47 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
               {readyState === ReadyState.OPEN ? "Connected" : connectionStatus}
             </StatusIndicator>
           </SpaceBetween>
-          
         </div>
+        <div className={styles.prompt_buttons_centered}>
+        <div className={styles.select_prompt}>
+        <h3>Select your organization:  </h3>
+        </div>
+        <div className={styles.small_button}>
+        <Button 
+          onClick={() => { setState({ ...state, systemPrompt: farmPrompt }); setActiveButton('Farm'); }} 
+          variant={activeButton === 'Farm' ? 'primary' : 'normal'}>
+          Farm
+        </Button>
+        </div>
+        <div className={styles.small_button}>
+        <Button 
+          onClick={() => { setState({ ...state, systemPrompt: townPrompt }); setActiveButton('Town'); }} 
+          variant={activeButton === 'Town' ? 'primary' : 'normal'}>
+          Town
+        </Button>
+        </div>
+        <div className={styles.small_button}>
+        <Button 
+          onClick={() => { setState({ ...state, systemPrompt: nonprofitPrompt }); setActiveButton('Nonprofit'); }} 
+          variant={activeButton === 'Nonprofit' ? 'primary' : 'normal'}>
+          Nonprofit
+        </Button>
+        </div>
+        <div className={styles.small_button}>
+        <Button 
+          onClick={() => { setState({ ...state, systemPrompt: businessPrompt }); setActiveButton('Business'); }} 
+          variant={activeButton === 'Business' ? 'primary' : 'normal'}>
+          Business
+        </Button>
+        </div>
+        <div className={styles.small_button}>
+        <Button 
+          onClick={() => { setState({ ...state, systemPrompt: defaultPrompt }); setActiveButton('General'); }} 
+          variant={activeButton === 'General' ? 'primary' : 'normal'}>
+          Other
+        </Button>
+        </div>
+      </div>
       </div>
     </SpaceBetween>
   );

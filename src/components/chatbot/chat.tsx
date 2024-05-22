@@ -193,13 +193,6 @@ export default function Chat(props: { sessionId?: string }) {
       </div>
       <div className={styles.input_container}>
         <SpaceBetween direction="horizontal" size="l">
-            {/* <div style={{ display: 'flex', justifyContent: 'center'}}>
-              <FarmButton/>
-              <BusinessButton/>
-              <NonprofitButton/>
-              <TownButton/>
-              <DefaultButton/>
-            </div> */}
           </SpaceBetween> 
         <SpaceBetween direction="vertical" size="s">
           <ChatInputPanel
@@ -210,9 +203,6 @@ export default function Chat(props: { sessionId?: string }) {
             setMessageHistory={setMessageHistory}
             configuration={configuration}
             setConfiguration={setConfiguration} />
-            <div style={{ marginTop: '-22px' }}>
-              <AIWarning/>
-              </div>
         </SpaceBetween>
         <div className={styles.chat_container}>
           <SpaceBetween direction="vertical" size="m">
