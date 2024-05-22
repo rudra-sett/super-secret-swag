@@ -666,37 +666,15 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           </div>
         </div>
       </Container>
-      <div className={styles.input_controls}>
-        <div
-        // className={
-        //   appContext?.config.rag_enabled
-        //     ? styles.input_controls_selects_2
-        //     : styles.input_controls_selects_1
-        // }
-        >
-          {}
-          {}
-          <div style={{ marginTop: '-25px' }}>
+      <div className={styles.info_bar}>
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+          <div style={{ marginTop: '-10px' }}>
               <AIWarning/>
           </div>
         </div>
-        <div className={styles.input_controls_right}>
+        <div className={styles.info_bar_right}>
           <SpaceBetween direction="horizontal" size="xxs" alignItems="center">
             <div style={{ paddingTop: "1px" }}>
-              {/* <ConfigDialog
-                sessionId={props.session.id}
-                visible={configDialogVisible}
-                setVisible={setConfigDialogVisible}
-                configuration={props.configuration}
-                setConfiguration={props.setConfiguration}
-              /> */}
-            
-              {/*<Button
-                iconName="settings"
-                variant="icon"
-                onClick={() => setConfigDialogVisible(true)}
-                
-              />*/}
             </div>
             <StatusIndicator
               type={
@@ -712,9 +690,10 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             </StatusIndicator>
           </SpaceBetween>
         </div>
-        <div className={styles.prompt_buttons_centered}>
+      </div>
+      <div className={styles.prompt_buttons_centered}>
         <div className={styles.select_prompt}>
-        <h3>Select your organization:  </h3>
+          <h3>Select your organization:  </h3>
         </div>
         <div className={styles.small_button}>
         <Button 
@@ -751,8 +730,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           Other
         </Button>
         </div>
-      </div>
-      </div>
+        </div>
     </SpaceBetween>
   );
 }
