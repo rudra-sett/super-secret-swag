@@ -136,13 +136,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     // modelsStatus: "loading",
     // workspacesStatus: "loading",
   });
-//   <div className={styles.prompt_buttons}>
-//   <Button onClick={() => setState({...state, systemPrompt: defaultPrompt})}>Default</Button>
-//   <Button onClick={() => setState({...state, systemPrompt: farmPrompt})}>Farm</Button>
-//   <Button onClick={() => setState({...state, systemPrompt: townPrompt})}>Town</Button>
-//   <Button onClick={() => setState({...state, systemPrompt: nonprofitPrompt})}>Nonprofit</Button>
-//   <Button onClick={() => setState({...state, systemPrompt: businessPrompt})}>Business</Button>
-// </div>
+  const [activeButton, setActiveButton] = useState<string>('General');
   const [configDialogVisible, setConfigDialogVisible] = useState(false);
   const [imageDialogVisible, setImageDialogVisible] = useState(false);
   const [files, setFiles] = useState<ImageFile[]>([]);
@@ -591,68 +585,12 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     [ReadyState.UNINSTANTIATED]: "Uninstantiated",
   }[readyState];
 
-  // imagine having model options
-
-  /*
-  const modelsOptions = OptionsHelper.getSelectOptionGroups(state.models ?? []);
-
-  const workspaceOptions = [
-    ...workspaceDefaultOptions,
-    ...OptionsHelper.getSelectOptions(state.workspaces ?? []),
-  ]; 
-  */
-
   return (
     <SpaceBetween direction="vertical" size="l">
       <Container>
         <div className={styles.input_textarea_container}>
           <SpaceBetween size="xxs" direction="horizontal" alignItems="center">
-            {/* {browserSupportsSpeechRecognition ? (
-              <Button
-                iconName={listening ? "microphone-off" : "microphone"}
-                variant="icon"
-                onClick={() =>
-                  listening
-                    ? SpeechRecognition.stopListening()
-                    : SpeechRecognition.startListening()
-                }
-              />
-            ) : (
-              <Icon name="microphone-off" variant="disabled" />
-            )} */}
-            {/* 
-            image button dialogue
-            {state.selectedModelMetadata?.inputModalities.includes(
-              ChabotInputModality.Image
-            ) && (
-              <Button
-                variant="icon"
-                onClick={() => setImageDialogVisible(true)}
-                iconSvg={
-                  <svg viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
-                    <rect
-                      x="2"
-                      y="2"
-                      width="19"
-                      height="19"
-                      rx="2"
-                      ry="2"
-                    ></rect>
-                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                    <polyline points="21 15 16 10 5 21"></polyline>
-                  </svg>
-                }
-              ></Button>
-             )}*/}
           </SpaceBetween>
-          {/* <ImageDialog
-            sessionId={props.session.id}
-            visible={imageDialogVisible}
-            setVisible={setImageDialogVisible}
-            configuration={props.configuration}
-            setConfiguration={props.setConfiguration}
-            /> */
-            }
           <TextareaAutosize
             className={styles.input_textarea}
             maxRows={6}
@@ -717,6 +655,46 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           </div>
         </div>
       </Container>
+      <div className={styles.prompt_buttons_centered}>
+        <div className={styles.select_prompt}>
+        <h3>Select your organization:  </h3>
+        </div>
+        <div className={styles.small_button}>
+        <Button 
+          onClick={() => { setState({ ...state, systemPrompt: defaultPrompt }); setActiveButton('General'); }} 
+          variant={activeButton === 'General' ? 'primary' : 'normal'}>
+          General
+        </Button>
+        </div>
+        <div className={styles.small_button}>
+        <Button 
+          onClick={() => { setState({ ...state, systemPrompt: farmPrompt }); setActiveButton('Farm'); }} 
+          variant={activeButton === 'Farm' ? 'primary' : 'normal'}>
+          Farm
+        </Button>
+        </div>
+        <div className={styles.small_button}>
+        <Button 
+          onClick={() => { setState({ ...state, systemPrompt: townPrompt }); setActiveButton('Town'); }} 
+          variant={activeButton === 'Town' ? 'primary' : 'normal'}>
+          Town
+        </Button>
+        </div>
+        <div className={styles.small_button}>
+        <Button 
+          onClick={() => { setState({ ...state, systemPrompt: nonprofitPrompt }); setActiveButton('Nonprofit'); }} 
+          variant={activeButton === 'Nonprofit' ? 'primary' : 'normal'}>
+          Nonprofit
+        </Button>
+        </div>
+        <div className={styles.small_button}>
+        <Button 
+          onClick={() => { setState({ ...state, systemPrompt: businessPrompt }); setActiveButton('Business'); }} 
+          variant={activeButton === 'Business' ? 'primary' : 'normal'}>
+          Business
+        </Button>
+        </div>
+      </div>
       <div className={styles.input_controls}>
         <div
         // className={
@@ -783,6 +761,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             />
           )} */}
         </div>
+        
         <div className={styles.input_controls_right}>
           <SpaceBetween direction="horizontal" size="xxs" alignItems="center">
             <div style={{ paddingTop: "1px" }}>
@@ -814,6 +793,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
               {readyState === ReadyState.OPEN ? "Connected" : connectionStatus}
             </StatusIndicator>
           </SpaceBetween>
+          
         </div>
       </div>
     </SpaceBetween>

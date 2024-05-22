@@ -8,6 +8,24 @@
   justify-content: space-between;
 }
 
+.prompt_buttons_centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 10vh; /* or the desired height of the container */
+  padding: 5px 10px;
+}
+
+.small_button {
+  height: 30px; /* or your desired height */
+  padding: 5px 10px; /* adjust padding as necessary */
+  margin: 5px 0; /* add some space between buttons */
+}
+
+.select_prompt {
+  margin: 10px; /* adjust padding as necessary */
+}
+
 @media (min-width: 466px) {
   .chat_container {
     min-height: calc(100vh - 104px);
