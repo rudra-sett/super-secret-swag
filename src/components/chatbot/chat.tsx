@@ -24,6 +24,7 @@ const AIWarning = () => {
 };
 
 
+
 const DefaultButton = () => {
   return <Button variant="link">Other</Button>;
 }
@@ -39,6 +40,13 @@ const NonprofitButton = () => {
 const TownButton = () => {
   return <Button variant="link">Town</Button>;
 }
+
+const customModalStyle = {
+  backgroundColor: '#388557', // Change this to your desired color
+  color: '#333', // Optional: Change the text color if needed
+  padding: '20px', // Optional: Add some padding
+  borderRadius: '10px', // Optional: Add rounded corners
+};
 
 import { useNotifications } from "../notif-manager";
 
@@ -146,6 +154,7 @@ export default function Chat(props: { sessionId?: string }) {
 
   return (
     <div className={styles.chat_container}> 
+     <div className="modal custom-modal">
       <Modal
         onDismiss={() => setModalVisible(false)}
         visible={modalVisible}
@@ -153,19 +162,15 @@ export default function Chat(props: { sessionId?: string }) {
         footer={
           <Box float="right">
             <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setModalVisible(false)}>
-                Cancel
-              </Button>
-              <Button variant="primary" onClick={() => setModalVisible(false)}>
-                Ok
-              </Button>
             </SpaceBetween>
           </Box>
         }
-        header="Modal title"
+        header="Welcome to the Massachusetts EEA Grants Navigator!"
       >
-        Your description should go here
+        Your place to find out all about the grant programs offered by the EEA! Search anything from composting to
+        solar panels and our tool will tell you what grant programs are there for you! 
       </Modal>
+     </div>
       <SpaceBetween direction="vertical" size="m">
 
       <SpaceBetween direction="vertical" size="m"></SpaceBetween>

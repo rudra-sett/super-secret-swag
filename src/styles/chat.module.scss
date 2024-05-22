@@ -139,6 +139,14 @@
   z-index: 10; // Adjust as necessary to ensure it's above other content
 }
 
+.modal.custom-modal {
+  background-color: #388557 !important; // Change this to your desired color
+  color: #333 !important; // Optional: Change the text color if needed
+  padding: 20px; // Optional: Add some padding
+  border-radius: 10px; // Optional: Add rounded corners
+}
+
+
 .chatbot_name {
   font-family: 'Lato', 'Open Sans', system-ui; // Example font
   font-size: 45px; // Example size
