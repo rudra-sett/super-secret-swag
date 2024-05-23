@@ -676,24 +676,28 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           <SpaceBetween direction="horizontal" size="xxs" alignItems="center">
             <div style={{ paddingTop: "1px" }}>
             </div>
-            <StatusIndicator
-              type={
-                readyState === ReadyState.OPEN
-                  ? "success"
-                  : readyState === ReadyState.CONNECTING ||
-                    readyState === ReadyState.UNINSTANTIATED
-                    ? "in-progress"
-                    : "error"
-              }
-            >
-              {readyState === ReadyState.OPEN ? "Connected" : connectionStatus}
-            </StatusIndicator>
+            <div style={{ marginTop: '-7.5px' }}>
+             <StatusIndicator
+               type={
+                 readyState === ReadyState.OPEN
+                   ? "success"
+                   : readyState === ReadyState.CONNECTING ||
+                     readyState === ReadyState.UNINSTANTIATED
+                     ? "in-progress"
+                     : "error"
+               }
+             >
+                 {readyState === ReadyState.OPEN ? "Connected" : connectionStatus}
+              </StatusIndicator>
+            </div>  
           </SpaceBetween>
         </div>
-      </div>
+      </div> 
       <div className={styles.prompt_buttons_centered}>
         <div className={styles.select_prompt}>
-          <h3>Select your organization:  </h3>
+          <h3 style={{fontFamily: 'Calibri, sans-serif', fontWeight: '1000', fontSize: 20}}>
+            Select your organization:  
+          </h3>
         </div>
         <div className={styles.small_button}>
         <Button 
