@@ -15,16 +15,6 @@ import ChatInputPanel, { ChatScrollState } from "./chat-input-panel";
 import styles from "../../styles/chat.module.scss";
 import Box from '@cloudscape-design/components/box';
 
-
-
-const AIWarning = () => {
-  return (
-    <Box textAlign="center">AI Models can make mistakes. Make sure to verify all information.</Box>
-  );
-};
-
-
-
 const DefaultButton = () => {
   return <Button variant="link">Other</Button>;
 }
@@ -211,9 +201,6 @@ export default function Chat(props: { sessionId?: string }) {
             setMessageHistory={setMessageHistory}
             configuration={configuration}
             setConfiguration={setConfiguration} />
-            <div style={{ marginTop: '-22px' }}>
-              <AIWarning/>
-              </div>
         </SpaceBetween>
         <div className={styles.chat_container}>
           <SpaceBetween direction="vertical" size="m">
