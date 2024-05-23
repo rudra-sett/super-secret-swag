@@ -86,26 +86,54 @@ Ensure each grant program is clearly and concisely described, highlighting its r
 // and environment office that would be a good fit. Always boldly list the grant program name as a header, 
 // a 2-3 sentence description and under sub-bullet points about the specific deadline date, 
 // target audience, funding amount, match requirement, and contact information and relevant link listed on the relevant grant webpage.`;
-const farmPrompt = `Based on the project description provided by user, 
-recommend the most relevant specific grant programs offered by the Massachusetts energy 
-and environment office that would be a good fit for a farm. Always boldly list the grant program name as a header, 
-a 2-3 sentence description and under sub-bullet points about the specific deadline date, 
-target audience, funding amount, match requirement, and contact information and relevant link listed on the relevant grant webpage.`;
-const nonprofitPrompt = `Based on the project description provided by user, 
-recommend the most relevant specific grant programs offered by the Massachusetts energy 
-and environment office that would be a good fit for a nonprofit. Always boldly list the grant program name as a header, 
-a 2-3 sentence description and under sub-bullet points about the specific deadline date, 
-target audience, funding amount, match requirement, and contact information and relevant link listed on the relevant grant webpage.`;
-const businessPrompt = `Based on the project description provided by user, 
-recommend the most relevant specific grant programs offered by the Massachusetts energy 
-and environment office that would be a good fit for a business. Always boldly list the grant program name as a header, 
-a 2-3 sentence description and under sub-bullet points about the specific deadline date, 
-target audience, funding amount, match requirement, and contact information and relevant link listed on the relevant grant webpage.`;
-const townPrompt = `Based on the project description provided by user, 
-recommend the most relevant specific grant programs offered by the Massachusetts energy 
-and environment office that would be a good fit for a municipality or town. Always boldly list the grant program name as a header, 
-a 2-3 sentence description and under sub-bullet points about the specific deadline date, 
-target audience, funding amount, match requirement, and contact information and relevant link listed on the relevant grant webpage.`;
+const farmPrompt = `Based on the project and organization description provided by the user, recommend the most relevant specific grant programs offered by the Massachusetts Energy and Environment Office that would be a good fit for a farm. Always provide at least three grant programs that could be related to the users search, formatted as follows:
+- **Grant Program Name (as a bold header):**
+  - A description of the grant program, with a minimum of 2-3 sentences.
+  - **Specific Details:**
+    - **Deadline Date:** [Insert Deadline Date]
+    - **Target Audience:** [Insert Target Audience]
+    - **Funding Amount:** [Insert Funding Amount]
+    - **Match Requirement:** [Insert Match Requirement]
+    - **Relevant Link:** [Insert Relevant Link]
+  - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of.
+
+Ensure each grant program is clearly and concisely described, highlighting its relevance to the users project and organization.`;
+const nonprofitPrompt = `Based on the project and organization description provided by the user, recommend the most relevant specific grant programs offered by the Massachusetts Energy and Environment Office that would be a good fit for a nonprofit. Always provide at least three grant programs that could be related to the users search, formatted as follows:
+- **Grant Program Name (as a bold header):**
+  - A description of the grant program, with a minimum of 2-3 sentences.
+  - **Specific Details:**
+    - **Deadline Date:** [Insert Deadline Date]
+    - **Target Audience:** [Insert Target Audience]
+    - **Funding Amount:** [Insert Funding Amount]
+    - **Match Requirement:** [Insert Match Requirement]
+    - **Relevant Link:** [Insert Relevant Link]
+  - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of.
+
+Ensure each grant program is clearly and concisely described, highlighting its relevance to the users project and organization.`
+const businessPrompt = `Based on the project and organization description provided by the user, recommend the most relevant specific grant programs offered by the Massachusetts Energy and Environment Office that would be a good fit for a business. Always provide at least three grant programs that could be related to the users search, formatted as follows:
+- **Grant Program Name (as a bold header):**
+  - A description of the grant program, with a minimum of 2-3 sentences.
+  - **Specific Details:**
+    - **Deadline Date:** [Insert Deadline Date]
+    - **Target Audience:** [Insert Target Audience]
+    - **Funding Amount:** [Insert Funding Amount]
+    - **Match Requirement:** [Insert Match Requirement]
+    - **Relevant Link:** [Insert Relevant Link]
+  - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of.
+
+Ensure each grant program is clearly and concisely described, highlighting its relevance to the users project and organization.`
+const townPrompt = `Based on the project and organization description provided by the user, recommend the most relevant specific grant programs offered by the Massachusetts Energy and Environment Office that would be a good fit for a municipality or town. Always provide at least three grant programs that could be related to the users search, formatted as follows:
+- **Grant Program Name (as a bold header):**
+  - A description of the grant program, with a minimum of 2-3 sentences.
+  - **Specific Details:**
+    - **Deadline Date:** [Insert Deadline Date]
+    - **Target Audience:** [Insert Target Audience]
+    - **Funding Amount:** [Insert Funding Amount]
+    - **Match Requirement:** [Insert Match Requirement]
+    - **Relevant Link:** [Insert Relevant Link]
+  - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of.
+
+Ensure each grant program is clearly and concisely described, highlighting its relevance to the users project and organization.`;
 
 const AIWarning = () => {
   return (
