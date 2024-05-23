@@ -167,8 +167,9 @@ export default function Chat(props: { sessionId?: string }) {
         }
         header="Welcome to the Massachusetts EEA Grants Navigator!"
       >
-        Your place to find out all about the grant programs offered by the EEA! Search anything from composting to
-        solar panels and our tool will tell you what grant programs are there for you! 
+        Discover the grants offered by the EEA from Agriculture, Energy, Environmental, and more! 
+        Enter your search term, composting, for example into the search bar and see which grant programs are there for composting.
+        Select your organization before searching so the results are tailored to you!
       </Modal>
      </div>
       <SpaceBetween direction="vertical" size="m">
@@ -193,6 +194,13 @@ export default function Chat(props: { sessionId?: string }) {
       </div>
       <div className={styles.input_container}>
         <SpaceBetween direction="horizontal" size="l">
+            {/* <div style={{ display: 'flex', justifyContent: 'center'}}>
+              <FarmButton/>
+              <BusinessButton/>
+              <NonprofitButton/>
+              <TownButton/>
+              <DefaultButton/>
+            </div> */}
           </SpaceBetween> 
         <SpaceBetween direction="vertical" size="s">
           <ChatInputPanel
@@ -203,6 +211,9 @@ export default function Chat(props: { sessionId?: string }) {
             setMessageHistory={setMessageHistory}
             configuration={configuration}
             setConfiguration={setConfiguration} />
+            <div style={{ marginTop: '-22px' }}>
+              <AIWarning/>
+              </div>
         </SpaceBetween>
         <div className={styles.chat_container}>
           <SpaceBetween direction="vertical" size="m">

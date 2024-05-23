@@ -102,46 +102,33 @@
   font-family: 'Calibri', 'Open Sans', system-ui;
 }
 
-.info_bar {
-  display: flex;
-  align-items: center;
+.input_controls {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: minmax(300px, 800px) minmax(180px, auto);
   gap: awsui.$space-scaled-xs;
-  margin-top: -5px;
-}
-
-.info_bar_right {
-  display: flex;
   align-items: center;
-  margin-left: auto; /* Pushes the right content to the far right */
+
+  .input_controls_selects_2 {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: awsui.$space-scaled-xs;
+  }
+
+  .input_controls_selects_1 {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: awsui.$space-scaled-xs;
+  }
+
+  .input_controls_right {
+    justify-self: end;
+  }
 }
-
-// .input_controls {
-//   display: grid;
-//   grid-template-rows: 1fr;
-//   grid-template-columns: minmax(300px, 800px) minmax(180px, auto);
-//   gap: awsui.$space-scaled-xs;
-//   align-items: center;
-
-//   .input_controls_selects_2 {
-//     width: 100%;
-//     display: grid;
-//     grid-template-columns: 1fr 1fr;
-//     align-items: center;
-//     gap: awsui.$space-scaled-xs;
-//   }
-
-//   .input_controls_selects_1 {
-//     width: 100%;
-//     display: grid;
-//     grid-template-columns: 1fr;
-//     align-items: center;
-//     gap: awsui.$space-scaled-xs;
-//   }
-
-//   .input_controls_right {
-//     justify-self: end;
-//   }
-// }
 
 .btn_chabot_message_copy {
   float: right;
@@ -161,6 +148,10 @@
 .img_chabot_message {
   max-width: 30%;
   border-radius: 8px;
+}
+
+.calibri-font {
+  font-family: 'Calibri', sans-serif;
 }
 
 .fullscreen_center {
