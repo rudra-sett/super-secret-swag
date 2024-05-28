@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { useEffect } from 'react';
+import { useEffect ,useContext } from 'react';
 import { Container, ContentLayout, Header, Link, SplitPanel, Box } from '@cloudscape-design/components';
 import { ChatBotHistoryItem } from './types';
 import { Auth } from 'aws-amplify';
@@ -7,6 +7,8 @@ import { assembleHistory } from './utils'
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import styles from "../../styles/chat.module.scss";
+import { AppContext } from "../../common/app-context";
+
 
 export interface EmailPanelProps {
   isHidden: boolean
@@ -17,6 +19,7 @@ export default function EmailPanel(props: EmailPanelProps) {
 
   const [generatedEmail, setGeneratedEmail] = useState<string>('');
   const firstRender = useRef(true);
+  const appContext = useContext(AppContext);
 
   useEffect(() => {
     const handleGenerateEmail = async () => {
@@ -26,7 +29,8 @@ export default function EmailPanel(props: EmailPanelProps) {
       await Auth.currentAuthenticatedUser().then((value) => username = value.username);
       if (!username) return;
 
-      const TEST_URL = 'wss://caoyb4x42c.execute-api.us-east-1.amazonaws.com/test/';
+      // const TEST_URL = 'wss://caoyb4x42c.execute-api.us-east-1.amazonaws.com/test/';
+      const TEST_URL = appContext.wsEndpoint+"/";
 
       // Create a new WebSocket connection
       const TOKEN = (await Auth.currentSession()).getAccessToken().getJwtToken()
