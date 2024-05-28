@@ -479,7 +479,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       }
 
       // Connect to WebSocketHandler
-      const wsUrl = 'wss://ngdpdxffy0.execute-api.us-east-1.amazonaws.com/test/';
+      const wsUrl = appContext.wsEndpoint+"/"
 
       // console.log(TOKEN)
       const ws = new WebSocket(wsUrl);
