@@ -68,12 +68,12 @@ import { useNotifications } from "../notif-manager";
 // All information must be up-to-date and accurately reflect the data listed on the relevant webpage. Include any additional key parameters essential for understanding or applying to the grant program.`
 const defaultPrompt = `Based on the project and organization description provided by the user, recommend the most relevant specific grant programs offered by the Massachusetts Energy and Environment Office that would be a good fit. Always provide more than three grant programs that could be related to the users search, formatted as follows:
 - **Grant Program Name (as a bold header):**
-  - A description of the grant program, with a minimum of 3 sentences.
+  - A 3 sentence description of the grant program.
   - **Specific Details:**
     - **Deadline Date:** [Insert Deadline Date] Be as specific as possible
     - **Target Audience:** [Insert Target Audience]
     - **Funding Amount:** [Insert Funding Amount]
-      - **Match Requirement:** [Insert Match Requirement]
+    - **Match Requirement:** [Insert Match Requirement]
   - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of.
 
 Ensure each grant program is clearly and concisely described, highlighting its relevance to the users project and organization.`
@@ -87,45 +87,45 @@ Ensure each grant program is clearly and concisely described, highlighting its r
 // target audience, funding amount, match requirement, and contact information and relevant link listed on the relevant grant webpage.`;
 const farmPrompt = `Based on the project and organization description provided by the user, recommend the most relevant specific grant programs offered by the Massachusetts Energy and Environment Office that would be a good fit for a farm. Always provide more than 3 grant programs that could be related to the users search, formatted as follows:
 - **Grant Program Name (as a bold header):**
-  - A description of the grant program, with a minimum of 3 sentences.
+  - A 3 sentence description of the grant program.
   - **Specific Details:**
     - **Deadline Date:** [Insert Deadline Date] Be as specific as possible
     - **Target Audience:** [Insert Target Audience]
     - **Funding Amount:** [Insert Funding Amount]
-      - **Match Requirement:** [Insert Match Requirement]
+    - **Match Requirement:** [Insert Match Requirement]
   - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of.
 
 Ensure each grant program is clearly and concisely described, highlighting its relevance to the users project and organization.`;
 const nonprofitPrompt = `Based on the project and organization description provided by the user, recommend the most relevant specific grant programs offered by the Massachusetts Energy and Environment Office that would be a good fit for a nonprofit. Always provide more than three grant programs that could be related to the users search, formatted as follows:
 - **Grant Program Name (as a bold header):**
-  - A description of the grant program, with a minimum of 3 sentences.
+  - A 3 sentence description of the grant program.
   - **Specific Details:**
     - **Deadline Date:** [Insert Deadline Date] Be as specific as possible
     - **Target Audience:** [Insert Target Audience]
     - **Funding Amount:** [Insert Funding Amount]
-      - **Match Requirement:** [Insert Match Requirement]
+    - **Match Requirement:** [Insert Match Requirement]
   - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of.
 
 Ensure each grant program is clearly and concisely described, highlighting its relevance to the users project and organization.`
 const businessPrompt = `Based on the project and organization description provided by the user, recommend the most relevant specific grant programs offered by the Massachusetts Energy and Environment Office that would be a good fit for a business. Always provide more than three grant programs that could be related to the users search, formatted as follows:
 - **Grant Program Name (as a bold header):**
-  - A description of the grant program, with a minimum of 3 sentences.
+  - A 3 sentence description of the grant program.
   - **Specific Details:**
     - **Deadline Date:** [Insert Deadline Date] Be as specific as possible
     - **Target Audience:** [Insert Target Audience]
     - **Funding Amount:** [Insert Funding Amount]
-      - **Match Requirement:** [Insert Match Requirement]
+    - **Match Requirement:** [Insert Match Requirement]
   - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of.
 
 Ensure each grant program is clearly and concisely described, highlighting its relevance to the users project and organization.`
 const townPrompt = `Based on the project and organization description provided by the user, recommend the most relevant specific grant programs offered by the Massachusetts Energy and Environment Office that would be a good fit for a municipality or town. Always provide more than three grant programs that could be related to the users search, formatted as follows:
 - **Grant Program Name (as a bold header):**
-  - A description of the grant program, with a minimum of 3 sentences.
+  - A 3 sentence description of the grant program.
   - **Specific Details:**
     - **Deadline Date:** [Insert Deadline Date] Be as specific as possible
     - **Target Audience:** [Insert Target Audience]
     - **Funding Amount:** [Insert Funding Amount]
-      - **Match Requirement:** [Insert Match Requirement]
+    - **Match Requirement:** [Insert Match Requirement]
   - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of.
 
 Ensure each grant program is clearly and concisely described, highlighting its relevance to the users project and organization.`;
