@@ -74,7 +74,6 @@ const defaultPrompt = `Based on the project and organization description provide
     - **Target Audience:** [Insert Target Audience]
     - **Funding Amount:** [Insert Funding Amount]
     - **Match Requirement:** [Insert Match Requirement]
-    - **Relevant Link:** [Insert Relevant Link]
   - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of.
 
 Ensure each grant program is clearly and concisely described, highlighting its relevance to the users project and organization.`
@@ -94,7 +93,6 @@ const farmPrompt = `Based on the project and organization description provided b
     - **Target Audience:** [Insert Target Audience]
     - **Funding Amount:** [Insert Funding Amount]
     - **Match Requirement:** [Insert Match Requirement]
-    - **Relevant Link:** [Insert Relevant Link]
   - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of.
 
 Ensure each grant program is clearly and concisely described, highlighting its relevance to the users project and organization.`;
@@ -106,7 +104,6 @@ const nonprofitPrompt = `Based on the project and organization description provi
     - **Target Audience:** [Insert Target Audience]
     - **Funding Amount:** [Insert Funding Amount]
     - **Match Requirement:** [Insert Match Requirement]
-    - **Relevant Link:** [Insert Relevant Link]
   - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of.
 
 Ensure each grant program is clearly and concisely described, highlighting its relevance to the users project and organization.`
@@ -118,7 +115,6 @@ const businessPrompt = `Based on the project and organization description provid
     - **Target Audience:** [Insert Target Audience]
     - **Funding Amount:** [Insert Funding Amount]
     - **Match Requirement:** [Insert Match Requirement]
-    - **Relevant Link:** [Insert Relevant Link]
   - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of.
 
 Ensure each grant program is clearly and concisely described, highlighting its relevance to the users project and organization.`
@@ -130,7 +126,6 @@ const townPrompt = `Based on the project and organization description provided b
     - **Target Audience:** [Insert Target Audience]
     - **Funding Amount:** [Insert Funding Amount]
     - **Match Requirement:** [Insert Match Requirement]
-    - **Relevant Link:** [Insert Relevant Link]
   - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of.
 
 Ensure each grant program is clearly and concisely described, highlighting its relevance to the users project and organization.`;
