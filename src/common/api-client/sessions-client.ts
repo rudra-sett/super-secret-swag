@@ -23,7 +23,7 @@ export class SessionsClient {
 
   private readonly API;
   constructor(protected _appConfig: AppConfig) {
-    this.API = _appConfig.httpEndpoint.slice(0,-1);
+    this.API = _appConfig.httpEndpoint.slice(0, -1);
   }
   // Gets all sessions tied to a given user ID
   // Return format: [{"session_id" : "string", "user_id" : "string", "time_stamp" : "dd/mm/yy", "title" : "string"}...]
@@ -36,7 +36,7 @@ export class SessionsClient {
     let runs = 0;
     let limit = 3;
     let errorMessage = "Could not load sessions"
-    while (!validData && runs < limit ) {
+    while (!validData && runs < limit) {
       runs += 1;
       const response = await fetch(this.API + '/user-session', {
         method: 'POST',
@@ -59,7 +59,7 @@ export class SessionsClient {
       const decoder = new TextDecoder();
       const parsed = decoder.decode(value)
       console.log(parsed)
-      try{
+      try {
         output = JSON.parse(parsed);
         validData = true;
       } catch (e) {
@@ -86,7 +86,7 @@ export class SessionsClient {
     let runs = 0;
     let limit = 3;
     let errorMessage = "Could not load session";
-    while (!validData && runs < limit ) {
+    while (!validData && runs < limit) {
       runs += 1;
       const response = await fetch(this.API + '/user-session', {
         method: 'POST',
@@ -106,19 +106,32 @@ export class SessionsClient {
         break;
       }
       const reader = response.body.getReader();
-      const { value, done } = await reader.read();
-      // console.log(value);
-      const decoder = new TextDecoder();
-      // console.log(decoder.decode(value));    
+      let received = new Uint8Array(0);
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) {
+          break;
+        }
+        if (value) {
+          let temp = new Uint8Array(received.length + value.length);
+          temp.set(received);
+          temp.set(value, received.length);
+          received = temp;
+        }
+      }
+      // Decode the complete data
+      const decoder = new TextDecoder('utf-8');
+      const decoded = decoder.decode(received);
       try {
-        output = JSON.parse(decoder.decode(value)).chat_history! as any[];
+        output = JSON.parse(decoded).chat_history! as any[];
         validData = true;
       } catch (e) {
         console.log(e);
       }
     }
     if (!validData) {
-      throw new Error(errorMessage)      
+      throw new Error(errorMessage)
     }
     let history: ChatBotHistoryItem[] = [];
     // console.log(output);
