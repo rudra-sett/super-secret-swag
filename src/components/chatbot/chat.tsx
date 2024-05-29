@@ -159,7 +159,7 @@ export default function Chat(props: { sessionId?: string }) {
       >
         Discover the grants offered by the EEA from Agriculture, Energy, Environmental, and more!<br />
         - Enter your search term. For example: "Composting", into the search bar and see which grant programs relate to composting.<br />
-        - Select your organization before searching so the results are tailored to you!
+        - <strong>Select your organization before searching so the results are tailored to you!</strong>
 
       </Modal>
      </div>
