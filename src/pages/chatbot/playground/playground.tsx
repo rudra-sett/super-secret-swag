@@ -11,10 +11,12 @@ export default function Playground() {
   const { sessionId } = useParams();
   const [emailPanelShown, setEmailPanelShown] = useState<boolean>(false);
   const [messageHistoryForEmail, setMessageHistoryForEmail] = useState<ChatBotHistoryItem[]>([]);
+  const [splitPanelOpen, setSplitPanelOpen] = useState<boolean>(false);
 
   useEffect(() => {
     console.log("email history updated")
     console.log(messageHistoryForEmail);
+    setSplitPanelOpen(true);
   },[messageHistoryForEmail])
   return (    
     <BaseAppLayout
@@ -47,6 +49,7 @@ export default function Playground() {
         </HelpPanel>
       }
       toolsWidth={300}
+      splitPanelOpen={splitPanelOpen}
       splitPanel={<EmailPanel isHidden={false} messageHistory={messageHistoryForEmail}/>}
       content={
        <div>

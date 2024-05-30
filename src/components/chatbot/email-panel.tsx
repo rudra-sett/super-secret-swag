@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { useEffect ,useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { Container, ContentLayout, Header, Link, SplitPanel, Box } from '@cloudscape-design/components';
 import { ChatBotHistoryItem } from './types';
 import { Auth } from 'aws-amplify';
@@ -18,19 +18,23 @@ export interface EmailPanelProps {
 export default function EmailPanel(props: EmailPanelProps) {
 
   const [generatedEmail, setGeneratedEmail] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+
   const firstRender = useRef(true);
   const appContext = useContext(AppContext);
 
   useEffect(() => {
     const handleGenerateEmail = async () => {
+      if (loading) return;
       setGeneratedEmail('');
+      setLoading(true);
       console.log("generating email!")
       let username;
       await Auth.currentAuthenticatedUser().then((value) => username = value.username);
       if (!username) return;
 
       // const TEST_URL = 'wss://caoyb4x42c.execute-api.us-east-1.amazonaws.com/test/';
-      const TEST_URL = appContext.wsEndpoint+"/";
+      const TEST_URL = appContext.wsEndpoint + "/";
 
       // Create a new WebSocket connection
       const TOKEN = (await Auth.currentSession()).getAccessToken().getJwtToken()
@@ -68,7 +72,7 @@ export default function EmailPanel(props: EmailPanelProps) {
       });
       // Event listener for incoming messages
       ws.addEventListener('message', async function incoming(data) {
-        console.log(data.data);
+        // console.log(data.data);
         if (data.data.includes("<!ERROR!>:")) {
           // addNotification("error", data.data);
           // console.log(data.data);
@@ -77,6 +81,7 @@ export default function EmailPanel(props: EmailPanelProps) {
         }
         recieved += data.data;
         setGeneratedEmail(recieved);
+        setLoading(false);
         // if (data.data == '!<|EOF_STREAM|>!') {
 
         //   incomingMetadata = true;
@@ -106,46 +111,46 @@ export default function EmailPanel(props: EmailPanelProps) {
     <div>
       {props.isHidden ? null :
 
-        <SplitPanel header="Generated Email" hidePreferencesButton={true}>
-          {generatedEmail == ''? <Box textAlign="center">No generated email, please click "Generate Email" in an existing chat.</Box> :
-          <ReactMarkdown
-            children={generatedEmail}
-            remarkPlugins={[remarkGfm]}
-            components={{
-              pre(props) {
-                const { children, ...rest } = props;
-                return (
-                  <pre {...rest} className={styles.codeMarkdown}>
-                    {children}
-                  </pre>
-                );
-              },
-              table(props) {
-                const { children, ...rest } = props;
-                return (
-                  <table {...rest} className={styles.markdownTable}>
-                    {children}
-                  </table>
-                );
-              },
-              th(props) {
-                const { children, ...rest } = props;
-                return (
-                  <th {...rest} className={styles.markdownTableCell}>
-                    {children}
-                  </th>
-                );
-              },
-              td(props) {
-                const { children, ...rest } = props;
-                return (
-                  <td {...rest} className={styles.markdownTableCell}>
-                    {children}
-                  </td>
-                );
-              },
-            }}
-          />}
+        <SplitPanel header="Generated Email" hidePreferencesButton={true}>          
+          {generatedEmail == '' ? (<Box textAlign="center">No generated email, please click "Generate Email" in an existing chat.</Box>) :
+            (<ReactMarkdown
+              children={generatedEmail}
+              remarkPlugins={[remarkGfm]}
+              components={{
+                pre(props) {
+                  const { children, ...rest } = props;
+                  return (
+                    <pre {...rest} className={styles.codeMarkdown}>
+                      {children}
+                    </pre>
+                  );
+                },
+                table(props) {
+                  const { children, ...rest } = props;
+                  return (
+                    <table {...rest} className={styles.markdownTable}>
+                      {children}
+                    </table>
+                  );
+                },
+                th(props) {
+                  const { children, ...rest } = props;
+                  return (
+                    <th {...rest} className={styles.markdownTableCell}>
+                      {children}
+                    </th>
+                  );
+                },
+                td(props) {
+                  const { children, ...rest } = props;
+                  return (
+                    <td {...rest} className={styles.markdownTableCell}>
+                      {children}
+                    </td>
+                  );
+                },
+              }}
+            />)}
         </SplitPanel>
       }</div>
   );
