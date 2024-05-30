@@ -3,6 +3,7 @@ import {
   ContentLayout,
   Header,
   SpaceBetween,
+  Alert
 } from "@cloudscape-design/components";
 import {
   Authenticator,
@@ -13,27 +14,59 @@ import BaseAppLayout from "../../components/base-app-layout";
 import useOnFollow from "../../common/hooks/use-on-follow";
 import DataFileUpload from "./data-file-upload";
 import { CHATBOT_NAME } from "../../common/constants";
+import { useState, useEffect } from "react";
+import { Auth } from "aws-amplify";
 
 export default function AddData() {
   const onFollow = useOnFollow();
   const { tokens } = useTheme();
-  
-  return (
-    <Authenticator hideSignUp={true}
-    components={{
-      SignIn: {
-        Header: () => {
-          return (
-            <Heading
-              padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
-              level={3}
-            >
-              {CHATBOT_NAME}
-            </Heading>
-          );
-        },
-      },
-    }}>
+  const [admin, setAdmin] = useState<boolean>(false);
+
+  useEffect(() => {
+    (async () => {
+      const result = await Auth.currentAuthenticatedUser();
+      // console.log(result);  
+      if (!result || Object.keys(result).length === 0) {
+        console.log("Signed out!")
+        Auth.signOut();
+        return;
+      }
+
+      try {
+        const result = await Auth.currentAuthenticatedUser();
+        const admin = result?.signInUserSession?.idToken?.payload["custom:role"]
+        if (admin) {
+          const data = JSON.parse(admin);
+          if (data[0] == "Admin") {
+            setAdmin(true);
+          }
+        }
+      }
+      catch (e){
+        // const userName = result?.attributes?.email;
+        console.log(e);
+      }
+    })();
+  }, []);
+
+  if (!admin) {
+    return (
+      <div
+        style={{
+          height: "100%",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Alert header="Configuration error" type="error">
+          You are not authorized to view this page!
+        </Alert>
+      </div>
+    );
+  }
+  return (    
     <BaseAppLayout
       contentType="cards"
       breadcrumbs={
@@ -60,7 +93,6 @@ export default function AddData() {
           </SpaceBetween>
         </ContentLayout>
       }
-    />
-    </Authenticator>
+    />    
   );
 }

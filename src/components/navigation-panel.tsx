@@ -100,6 +100,7 @@ export default function NavigationPanel() {
         }]),
       },      
     ];
+    try {
     const result = await Auth.currentAuthenticatedUser();
     const admin = result?.signInUserSession?.idToken?.payload["custom:role"]
     if (admin) {
@@ -117,6 +118,9 @@ export default function NavigationPanel() {
         },)
       }
     }
+  } catch (e) {
+    console.log(e)
+  }
     setItems(newItems);
   };
 
