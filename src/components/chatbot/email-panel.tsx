@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useEffect, useContext } from 'react';
-import { Container, ContentLayout, Header, Link, SplitPanel, Box } from '@cloudscape-design/components';
+import { Spinner, Container, ContentLayout, Header, Link, SplitPanel, Box } from '@cloudscape-design/components';
 import { ChatBotHistoryItem } from './types';
 import { Auth } from 'aws-amplify';
 import { assembleHistory } from './utils'
@@ -112,7 +112,8 @@ export default function EmailPanel(props: EmailPanelProps) {
       {props.isHidden ? null :
 
         <SplitPanel header="Generated Email" hidePreferencesButton={true}>          
-          {generatedEmail == '' ? (<Box textAlign="center">No generated email, please click "Generate Email" in an existing chat.</Box>) :
+          {!loading? <>
+          {(generatedEmail == '') ? (<Box textAlign="center">No generated email, please click "Generate Email" in an existing chat.</Box>) :
             (<ReactMarkdown
               children={generatedEmail}
               remarkPlugins={[remarkGfm]}
@@ -150,7 +151,12 @@ export default function EmailPanel(props: EmailPanelProps) {
                   );
                 },
               }}
-            />)}
+            />)}</> : <div style={{
+              display : "flex",
+              justifyContent : "center",
+              alignItems : "center",
+              width: "100%"
+            }}><Spinner size="large"></Spinner></div>}
         </SplitPanel>
       }</div>
   );
