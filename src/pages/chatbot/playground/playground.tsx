@@ -55,6 +55,9 @@ export default function Playground() {
       }
       toolsWidth={300}
       splitPanelOpen={splitPanelOpen}
+      onSplitPanelToggle={({ detail }) =>
+        setSplitPanelOpen(detail.open)
+      }
       splitPanel={<EmailPanel isHidden={false} messageHistory={messageHistoryForEmail}/>}
       content={
        <div>
