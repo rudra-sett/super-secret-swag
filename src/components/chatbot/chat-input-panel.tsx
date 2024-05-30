@@ -74,7 +74,7 @@ const defaultPrompt = `Based on the project and organization description provide
     - **Target Audience:** [Insert Target Audience]
     - **Funding Amount:** [Insert Funding Amount]
     - **Match Requirement:** [Insert Match Requirement]
-  - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of.
+  - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of. Do not include a link unless certain of its validity.
 
 Ensure each grant program is clearly and concisely described, highlighting its relevance to the users project and organization.`
 
@@ -93,7 +93,7 @@ const farmPrompt = `Based on the project and organization description provided b
     - **Target Audience:** [Insert Target Audience]
     - **Funding Amount:** [Insert Funding Amount]
     - **Match Requirement:** [Insert Match Requirement]
-  - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of.
+  - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of. Do not include a link unless certain of its validity.
 
 Ensure each grant program is clearly and concisely described, highlighting its relevance to the users project and organization.`;
 const nonprofitPrompt = `Based on the project and organization description provided by the user, recommend the most relevant specific grant programs offered by the Massachusetts Energy and Environment Office that would be a good fit for a nonprofit. Always provide more than three grant programs that could be related to the users search, formatted as follows:
@@ -104,7 +104,7 @@ const nonprofitPrompt = `Based on the project and organization description provi
     - **Target Audience:** [Insert Target Audience]
     - **Funding Amount:** [Insert Funding Amount]
     - **Match Requirement:** [Insert Match Requirement]
-  - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of.
+  - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of. Do not include a link unless certain of its validity.
 
 Ensure each grant program is clearly and concisely described, highlighting its relevance to the users project and organization.`
 const businessPrompt = `Based on the project and organization description provided by the user, recommend the most relevant specific grant programs offered by the Massachusetts Energy and Environment Office that would be a good fit for a business. Always provide more than three grant programs that could be related to the users search, formatted as follows:
@@ -115,7 +115,7 @@ const businessPrompt = `Based on the project and organization description provid
     - **Target Audience:** [Insert Target Audience]
     - **Funding Amount:** [Insert Funding Amount]
     - **Match Requirement:** [Insert Match Requirement]
-  - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of.
+  - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of. Do not include a link unless certain of its validity.
 
 Ensure each grant program is clearly and concisely described, highlighting its relevance to the users project and organization.`
 const townPrompt = `Based on the project and organization description provided by the user, recommend the most relevant specific grant programs offered by the Massachusetts Energy and Environment Office that would be a good fit for a municipality or town. Always provide more than three grant programs that could be related to the users search, formatted as follows:
@@ -126,7 +126,7 @@ const townPrompt = `Based on the project and organization description provided b
     - **Target Audience:** [Insert Target Audience]
     - **Funding Amount:** [Insert Funding Amount]
     - **Match Requirement:** [Insert Match Requirement]
-  - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of.
+  - **Additional Information:** Include any extra information that might be important for potential applicants to be aware of. Do not include a link unless certain of its validity.
 
 Ensure each grant program is clearly and concisely described, highlighting its relevance to the users project and organization.`;
 
