@@ -36,8 +36,8 @@ export default function AddData() {
         const result = await Auth.currentAuthenticatedUser();
         const admin = result?.signInUserSession?.idToken?.payload["custom:role"]
         if (admin) {
-          const data = JSON.parse(admin);
-          if (data[0] == "Admin") {
+          const data = JSON.parse(admin) as string[];
+          if (data.includes("Admin")) {
             setAdmin(true);
           }
         }

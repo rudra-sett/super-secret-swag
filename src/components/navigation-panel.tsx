@@ -105,7 +105,7 @@ export default function NavigationPanel() {
     const admin = result?.signInUserSession?.idToken?.payload["custom:role"]
     if (admin) {
       const data = JSON.parse(admin);
-      if (data[0] == "Admin") {
+      if (data.includes("Admin")) {
         console.log("admin found!")
         newItems.push({
           type: "section",
