@@ -469,7 +469,15 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         if (!incomingMetadata) {
           receivedData += data.data;
         } else {
-          sources = { "Sources": JSON.parse(data.data) }
+          let sourceData = JSON.parse(data.data);
+          sourceData = sourceData.map((item) => {
+            if (item.title == "") {
+              return {title: item.uri.slice((item.uri as string).lastIndexOf("/") + 1), uri: item.uri}
+            } else {
+              return item
+            }
+          })
+          sources = { "Sources": sourceData}
           console.log(sources);
         }
 
