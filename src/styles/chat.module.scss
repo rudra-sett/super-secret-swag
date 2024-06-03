@@ -10,6 +10,7 @@
 
 .prompt_buttons_centered {
   display: flex;
+  flex-wrap: wrap; /* Allow buttons to wrap */
   align-items: center;
   justify-content: center;
   height: 10vh; /* or the desired height of the container */
@@ -27,6 +28,44 @@
 
 .select_prompt {
   margin-top: 10px; /* adjust padding as necessary */
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .prompt_buttons_centered {
+    height: 8vh; /* reduce height */
+    padding: 4px 8px; /* adjust padding */
+  }
+  
+  .small_button {
+    height: 25px; /* reduce button height */
+    padding: 4px 8px; /* adjust padding */
+    font-size: 0.9em; /* reduce font size */
+  }
+  
+  .select_prompt {
+    margin-top: 8px; /* adjust margin */
+    font-size: 0.9em; /* reduce font size */
+  }
+}
+
+/* Media query for even smaller screens */
+@media (max-width: 480px) {
+  .prompt_buttons_centered {
+    height: 6vh; /* further reduce height */
+    padding: 3px 6px; /* adjust padding */
+  }
+  
+  .small_button {
+    height: 20px; /* further reduce button height */
+    padding: 3px 6px; /* adjust padding */
+    font-size: 0.8em; /* further reduce font size */
+  }
+  
+  .select_prompt {
+    margin-top: 6px; /* adjust margin */
+    font-size: 0.8em; /* further reduce font size */
+  }
 }
 
 @media (min-width: 466px) {

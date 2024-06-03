@@ -50,7 +50,7 @@ import {
 } from "./utils";
 // import { receiveMessages } from "../../graphql/subscriptions";
 import { Utils } from "../../common/utils";
-import {SessionRefreshContext} from "../../common/session-refresh-context"
+import { SessionRefreshContext } from "../../common/session-refresh-context"
 import { useNotifications } from "../notif-manager";
 
 // different prompts for different users
@@ -133,7 +133,7 @@ Ensure each grant program is clearly and concisely described, highlighting its r
 const AIWarning = () => {
   return (
     <Box textAlign="center">
-      <h4 style={{ fontFamily: 'Calibri, sans-serif', fontWeight: '500', fontSize: 15}}>
+      <h4 style={{ fontFamily: 'Calibri, sans-serif', fontWeight: '500', fontSize: 15 }}>
         AI Models can make mistakes. Make sure to verify all information.
       </h4>
     </Box>
@@ -171,7 +171,7 @@ export abstract class ChatScrollState {
 
 export default function ChatInputPanel(props: ChatInputPanelProps) {
   const appContext = useContext(AppContext);
-  const {needsRefresh, setNeedsRefresh} = useContext(SessionRefreshContext);
+  const { needsRefresh, setNeedsRefresh } = useContext(SessionRefreshContext);
   const apiClient = new ApiClient(appContext);
   const navigate = useNavigate();
   const { transcript, listening, browserSupportsSpeechRecognition } =
@@ -448,11 +448,11 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     // });    
 
     const messageToSend = state.value.trim();
-    setState({ value: "" , systemPrompt: defaultPrompt});
+    setState({ value: "", systemPrompt: defaultPrompt });
     try {
       props.setRunning(true);
-      let receivedData = '';      
-      
+      let receivedData = '';
+
       messageHistoryRef.current = [
         ...messageHistoryRef.current,
 
@@ -487,16 +487,18 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       let incomingMetadata: boolean = false;
       let sources = {};
 
-      setTimeout(() => {if (receivedData == '') {
-        ws.close()
-        messageHistoryRef.current.pop();
-        messageHistoryRef.current.push({
-          type: ChatBotMessageType.AI,
-          tokens: [],
-          content: 'Response timed out!',
-          metadata: {},
-        })
-      }},60000)
+      setTimeout(() => {
+        if (receivedData == '') {
+          ws.close()
+          messageHistoryRef.current.pop();
+          messageHistoryRef.current.push({
+            type: ChatBotMessageType.AI,
+            tokens: [],
+            content: 'Response timed out!',
+            metadata: {},
+          })
+        }
+      }, 60000)
 
       // Event listener for when the connection is open
       ws.addEventListener('open', function open() {
@@ -514,7 +516,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             // On a new bulletpointed line, state the deadline of the grants. Ten on a new bulletpointed line, state the funding available for the grants.
             // Then on a new bulletpointed line, list the match requirement. Then on a new bulletpointed line, list relevant contact information for the person in charge of that particular grant program. 
             // Then, include a link to the webpage where this information was found.
-             //After each grant, include a link to the webpage where this information was found.
+            //After each grant, include a link to the webpage where this information was found.
             //a new line that lists the deadline 
             //use language like "then"
             projectId: 'rkdg062824'
@@ -535,7 +537,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           return;
         }
         if (data.data == '!<|EOF_STREAM|>!') {
-          
+
           incomingMetadata = true;
           return;
           // return;
@@ -583,12 +585,12 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       // Handle WebSocket closure
       ws.addEventListener('close', async function close() {
         // await apiClient.sessions.updateSession("0", props.session.id, messageHistoryRef.current);
-        if (firstTime) {   
+        if (firstTime) {
           // console.log("first time!", firstTime)
           // console.log("did we also need a refresh?", needsRefresh)
           Utils.delay(1500).then(() => setNeedsRefresh(true));
         }
-        props.setRunning(false);        
+        props.setRunning(false);
         console.log('Disconnected from the WebSocket server');
       });
 
@@ -636,30 +638,73 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
 
   return (
     <SpaceBetween direction="vertical" size="l">
-      <Container>
-        <div className={styles.input_textarea_container}>
-          <SpaceBetween size="xxs" direction="horizontal" alignItems="center">
-          </SpaceBetween>
-          <TextareaAutosize
-            className={styles.input_textarea}
-            maxRows={6}
-            minRows={1}
-            spellCheck={true}
-            autoFocus
-            onChange={(e) =>
-              setState((state) => ({ ...state, value: e.target.value }))
-            }
-            onKeyDown={(e) => {
-              if (e.key == "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                handleSendMessage();
+      <div className={styles.prompt_buttons_centered}>
+        <div className={styles.select_prompt}>
+          <h3 style={{ fontFamily: 'Calibri, sans-s`erif', fontWeight: '10000', fontSize: 20 }}>
+            Select to customize results:
+          </h3>
+        </div>
+        <div className={styles.small_button}>
+          <Button
+            onClick={() => { setState({ ...state, systemPrompt: farmPrompt }); setActiveButton('Farm'); }}
+            variant={activeButton === 'Farm' ? 'primary' : 'normal'}>
+            Farm
+          </Button>
+        </div>
+        <div className={styles.small_button}>
+          <Button
+            onClick={() => { setState({ ...state, systemPrompt: townPrompt }); setActiveButton('Town'); }}
+            variant={activeButton === 'Town' ? 'primary' : 'normal'}>
+            Town
+          </Button>
+        </div>
+        <div className={styles.small_button}>
+          <Button
+            onClick={() => { setState({ ...state, systemPrompt: nonprofitPrompt }); setActiveButton('Nonprofit'); }}
+            variant={activeButton === 'Nonprofit' ? 'primary' : 'normal'}>
+            Nonprofit
+          </Button>
+        </div>
+        <div className={styles.small_button}>
+          <Button
+            onClick={() => { setState({ ...state, systemPrompt: businessPrompt }); setActiveButton('Business'); }}
+            variant={activeButton === 'Business' ? 'primary' : 'normal'}>
+            Business
+          </Button>
+        </div>
+        <div className={styles.small_button}>
+          <Button
+            onClick={() => { setState({ ...state, systemPrompt: defaultPrompt }); setActiveButton('General'); }}
+            variant={activeButton === 'General' ? 'primary' : 'normal'}>
+            Other
+          </Button>
+        </div>
+      </div>
+      <div style={{ marginTop: '20px' }}>
+        <Container>
+          <div className={styles.input_textarea_container}>
+            <SpaceBetween size="xxs" direction="horizontal" alignItems="center">
+            </SpaceBetween>
+            <TextareaAutosize
+              className={styles.input_textarea}
+              maxRows={6}
+              minRows={1}
+              spellCheck={true}
+              autoFocus
+              onChange={(e) =>
+                setState((state) => ({ ...state, value: e.target.value }))
               }
-            }}
-            value={state.value}
-            placeholder={"Enter Search ex. \"Grants for new farmers\""}
-          />
-          <div style={{ marginLeft: "8px" }}>
-            {/* {state.selectedModelMetadata?.inputModalities.includes(
+              onKeyDown={(e) => {
+                if (e.key == "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSendMessage();
+                }
+              }}
+              value={state.value}
+              placeholder={"Enter Search ex. \"Grants for new farmers\""}
+            />
+            <div style={{ marginLeft: "8px" }}>
+              {/* {state.selectedModelMetadata?.inputModalities.includes(
               ChabotInputModality.Image
             ) &&
               files.length > 0 &&
@@ -677,170 +722,61 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
                   }}
                 />
               ))} */}
-            <Button
-              disabled={
-                readyState !== ReadyState.OPEN ||
-                // !state.models?.length ||
-                // !state.selectedModel ||
-                props.running ||
-                state.value.trim().length === 0 
-                // props.session.loading
-              }
-              onClick={handleSendMessage}
-              iconAlign="left"
-              iconName={!props.running ? "search" : undefined}
-              variant="primary"
+              <Button
+                disabled={
+                  readyState !== ReadyState.OPEN ||
+                  // !state.models?.length ||
+                  // !state.selectedModel ||
+                  props.running ||
+                  state.value.trim().length === 0
+                  // props.session.loading
+                }
+                onClick={handleSendMessage}
+                iconAlign="left"
+                iconName={!props.running ? "search" : undefined}
+                variant="primary"
               //variant="primary"
-            >
-              {props.running ? (
-                <>
-                  Loading&nbsp;&nbsp;
-                  <Spinner />
-                </>
-              ) : (
-                "Search"
-              )}
-            </Button>
-          </div>
-        </div>
-      </Container>
-      <div className={styles.info_bar}>
-        <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-          <div style={{ marginTop: '-10px' }}>
-              <AIWarning/>
-          </div>
-        </div>
-        <div className={styles.info_bar_right}>
-          <SpaceBetween direction="horizontal" size="xxs" alignItems="center">
-            <div style={{ paddingTop: "1px" }}>
+              >
+                {props.running ? (
+                  <>
+                    Loading&nbsp;&nbsp;
+                    <Spinner />
+                  </>
+                ) : (
+                  "Search"
+                )}
+              </Button>
             </div>
-            <div style={{ marginTop: '-7.5px' }}>
-             <StatusIndicator
-               type={
-                 readyState === ReadyState.OPEN
-                   ? "success"
-                   : readyState === ReadyState.CONNECTING ||
-                     readyState === ReadyState.UNINSTANTIATED
-                     ? "in-progress"
-                     : "error"
-               }
-             >
-                 {readyState === ReadyState.OPEN ? "Connected" : connectionStatus}
-              </StatusIndicator>
-            </div>  
-          </SpaceBetween>
+          </div>
+        </Container>
+        <div className={styles.info_bar}>
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+            <div style={{ marginTop: '0px' }}>
+              <AIWarning />
+            </div>
+          </div>
+          <div className={styles.info_bar_right}>
+            <SpaceBetween direction="horizontal" size="xxs" alignItems="center">
+              <div style={{ paddingTop: "1px" }}>
+              </div>
+              <div style={{ marginTop: '-7.5px' }}>
+                <StatusIndicator
+                  type={
+                    readyState === ReadyState.OPEN
+                      ? "success"
+                      : readyState === ReadyState.CONNECTING ||
+                        readyState === ReadyState.UNINSTANTIATED
+                        ? "in-progress"
+                        : "error"
+                  }
+                >
+                  {readyState === ReadyState.OPEN ? "Connected" : connectionStatus}
+                </StatusIndicator>
+              </div>
+            </SpaceBetween>
+          </div>
         </div>
-      </div> 
-      <div className={styles.prompt_buttons_centered}>
-        <div className={styles.select_prompt}>
-          <h3 style={{fontFamily: 'Calibri, sans-serif', fontWeight: '10000', fontSize: 20}}>
-            Select your organization:  
-          </h3>
-        </div>
-        <div className={styles.small_button}>
-        <Button 
-          onClick={() => { setState({ ...state, systemPrompt: farmPrompt }); setActiveButton('Farm'); }} 
-          variant={activeButton === 'Farm' ? 'primary' : 'normal'}>
-          Farm
-        </Button>
-        </div>
-        <div className={styles.small_button}>
-        <Button 
-          onClick={() => { setState({ ...state, systemPrompt: townPrompt }); setActiveButton('Town'); }} 
-          variant={activeButton === 'Town' ? 'primary' : 'normal'}>
-          Town
-        </Button>
-        </div>
-        <div className={styles.small_button}>
-        <Button 
-          onClick={() => { setState({ ...state, systemPrompt: nonprofitPrompt }); setActiveButton('Nonprofit'); }} 
-          variant={activeButton === 'Nonprofit' ? 'primary' : 'normal'}>
-          Nonprofit
-        </Button>
-        </div>
-        <div className={styles.small_button}>
-        <Button 
-          onClick={() => { setState({ ...state, systemPrompt: businessPrompt }); setActiveButton('Business'); }} 
-          variant={activeButton === 'Business' ? 'primary' : 'normal'}>
-          Business
-        </Button>
-        </div>
-        <div className={styles.small_button}>
-        <Button 
-          onClick={() => { setState({ ...state, systemPrompt: defaultPrompt }); setActiveButton('General'); }} 
-          variant={activeButton === 'General' ? 'primary' : 'normal'}>
-          Other
-        </Button>
-        </div>
-        </div>
+      </div>
     </SpaceBetween>
   );
 }
-
-
-// function getSelectedModelOption(models: Model[]): SelectProps.Option | null {
-//   let selectedModelOption: SelectProps.Option | null = null;
-//   const savedModel = StorageHelper.getSelectedLLM();
-
-//   if (savedModel) {
-//     const savedModelDetails = OptionsHelper.parseValue(savedModel);
-//     const targetModel = models.find(
-//       (m) =>
-//         m.name === savedModelDetails.name &&
-//         m.provider === savedModelDetails.provider
-//     );
-
-//     if (targetModel) {
-//       selectedModelOption = OptionsHelper.getSelectOptionGroups([
-//         targetModel,
-//       ])[0].options[0];
-//     }
-//   }
-
-//   let candidate: Model | undefined = undefined;
-//   if (!selectedModelOption) {
-//     const bedrockModels = models.filter((m) => m.provider === "bedrock");
-//     const sageMakerModels = models.filter((m) => m.provider === "sagemaker");
-//     const openAIModels = models.filter((m) => m.provider === "openai");
-
-//     candidate = bedrockModels.find((m) => m.name === "anthropic.claude-v2");
-//     if (!candidate) {
-//       candidate = bedrockModels.find((m) => m.name === "anthropic.claude-v1");
-//     }
-
-//     if (!candidate) {
-//       candidate = bedrockModels.find(
-//         (m) => m.name === "amazon.titan-tg1-large"
-//       );
-//     }
-
-//     if (!candidate) {
-//       candidate = bedrockModels.find((m) => m.name.startsWith("amazon.titan-"));
-//     }
-
-//     if (!candidate && sageMakerModels.length > 0) {
-//       candidate = sageMakerModels[0];
-//     }
-
-//     if (openAIModels.length > 0) {
-//       if (!candidate) {
-//         candidate = openAIModels.find((m) => m.name === "gpt-4");
-//       }
-
-//       if (!candidate) {
-//         candidate = openAIModels.find((m) => m.name === "gpt-3.5-turbo-16k");
-//       }
-//     }
-
-//     if (!candidate && bedrockModels.length > 0) {
-//       candidate = bedrockModels[0];
-//     }
-
-//     if (candidate) {
-//       selectedModelOption = OptionsHelper.getSelectOptionGroups([candidate])[0]
-//         .options[0];
-//     }
-//   }
-
-//   return selectedModelOption;
-// }

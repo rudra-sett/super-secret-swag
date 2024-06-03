@@ -176,13 +176,13 @@ export default function Chat(props: { sessionId?: string }) {
           />
         ))} */}
       </SpaceBetween>
-      <div className={styles.welcome_text}>
+      {/* <div className={styles.welcome_text}>
         {session?.loading && (
           <center>
             <StatusIndicator type="loading">Loading session</StatusIndicator>
           </center>
         )}
-      </div>
+      </div> */}
       <div className={styles.input_container}>
         <SpaceBetween direction="horizontal" size="l">
             {/* <div style={{ display: 'flex', justifyContent: 'center'}}>
