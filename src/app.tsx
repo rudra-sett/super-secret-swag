@@ -18,13 +18,10 @@ import SessionPage from "./pages/chatbot/sessions/sessions"
 import { v4 as uuidv4 } from "uuid";
 import "./styles/app.scss";
 
-// hello
-
-// hello
 
 function App() {
   const appContext = useContext(AppContext);
-  const Router = appContext?.config.privateWebsite ? HashRouter : BrowserRouter;
+  const Router = BrowserRouter;
 
   return (
     <div style={{ height: "100%" }}>

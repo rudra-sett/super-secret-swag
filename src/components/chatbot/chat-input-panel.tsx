@@ -207,7 +207,8 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       const TOKEN = (await Auth.currentSession()).getAccessToken().getJwtToken()  
           
       // console.log(TOKEN)
-      const wsUrl = TEST_URL+'?Authorization='+TOKEN;
+      //const wsUrl = TEST_URL+'?Authorization='+TOKEN;
+      const wsUrl = appContext.wsEndpoint+"/"
       const ws = new WebSocket(wsUrl);
 
       let incomingMetadata: boolean = false;

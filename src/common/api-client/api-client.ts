@@ -16,7 +16,7 @@ export class ApiClient {
 
   public get knowledgeManagement() {
     if (!this._knowledgeManagementClient) {
-      this._knowledgeManagementClient = new KnowledgeManagementClient();
+      this._knowledgeManagementClient = new KnowledgeManagementClient(this._appConfig);
     }
 
     return this._knowledgeManagementClient;
@@ -25,7 +25,7 @@ export class ApiClient {
 
   public get sessions() {
     if (!this._sessionsClient) {
-      this._sessionsClient = new SessionsClient();
+      this._sessionsClient = new SessionsClient(this._appConfig);
     }
 
     return this._sessionsClient;
@@ -35,7 +35,7 @@ export class ApiClient {
 
   public get userFeedback() {
     if (!this._userFeedbackClient) {
-      this._userFeedbackClient = new UserFeedbackClient();
+      this._userFeedbackClient = new UserFeedbackClient(this._appConfig);
     }
 
     return this._userFeedbackClient;
