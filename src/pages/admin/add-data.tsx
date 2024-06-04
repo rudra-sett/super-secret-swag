@@ -17,23 +17,53 @@ import { CHATBOT_NAME } from "../../common/constants";
 export default function AddData() {
   const onFollow = useOnFollow();
   const { tokens } = useTheme();
-  
-  return (
-    <Authenticator hideSignUp={true}
-    components={{
-      SignIn: {
-        Header: () => {
-          return (
-            <Heading
-              padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
-              level={3}
-            >
-              {CHATBOT_NAME}
-            </Heading>
-          );
-        },
-      },
-    }}>
+  const [admin, setAdmin] = useState<boolean>(false);
+
+  useEffect(() => {
+    (async () => {
+      const result = await Auth.currentAuthenticatedUser();
+      // console.log(result);  
+      if (!result || Object.keys(result).length === 0) {
+        console.log("Signed out!")
+        Auth.signOut();
+        return;
+      }
+
+      try {
+        const result = await Auth.currentAuthenticatedUser();
+        const admin = result?.signInUserSession?.idToken?.payload["custom:role"]
+        if (admin) {
+          const data = JSON.parse(admin);
+          if (data.includes("Admin")) {
+            setAdmin(true);
+          }
+        }
+      }
+      catch (e){
+        // const userName = result?.attributes?.email;
+        console.log(e);
+      }
+    })();
+  }, []);
+
+  if (!admin) {
+    return (
+      <div
+        style={{
+          height: "90vh",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Alert header="Configuration error" type="error">
+          You are not authorized to view this page!
+        </Alert>
+      </div>
+    );
+  }
+  return (    
     <BaseAppLayout
       contentType="cards"
       breadcrumbs={
