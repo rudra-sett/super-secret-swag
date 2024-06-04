@@ -47,7 +47,7 @@ export default function WorkspacePane() {
     return (
       <div
         style={{
-          height: "100%",
+          height: "90vh",
           width: "100%",
           display: "flex",
           justifyContent: "center",
