@@ -39,7 +39,7 @@ export default function DocumentsTab(props: DocumentsTabProps) {
       empty: (
         <Box margin={{ vertical: "xs" }} textAlign="center" color="inherit">
           <SpaceBetween size="m">
-            <b>No sessions</b>
+            <b>No files</b>
           </SpaceBetween>
         </Box>
       ),
@@ -139,17 +139,18 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     const getStatus = async () => {
       try {
         const result = await apiClient.knowledgeManagement.kendraIsSyncing();
-        setSyncing(result == "STILL SYNCING");
+        console.log(result);
+        setSyncing(result != "DONE SYNCING");
       } catch (error) {
         console.error(error);
       }
     };
 
-    const interval = setInterval(getStatus, 5000);
+    const interval = setInterval(getStatus, 10000);
     getStatus();
 
     return () => clearInterval(interval);
-  });
+  },[]);
 
   const syncKendra = async () => {    
     if (syncing) {
@@ -158,8 +159,8 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     }
     setSyncing(true);
     try {
-      await apiClient.knowledgeManagement.syncKendra();
-      
+      const state = await apiClient.knowledgeManagement.syncKendra();
+      console.log(state);
     } catch (error) {
       console.log(error);
       setSyncing(false)
@@ -183,7 +184,7 @@ export default function DocumentsTab(props: DocumentsTabProps) {
           </SpaceBetween>{" "}
         </Box>
       }
-      header={"Delete session" + (selectedItems.length > 1 ? "s" : "")}
+      header={"Delete file" + (selectedItems.length > 1 ? "s" : "")}
     >
       Do you want to delete{" "}
       {selectedItems.length == 1
