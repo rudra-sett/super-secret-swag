@@ -201,14 +201,13 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         firstTime = true;
       }
       // const wsUrl = 'wss://ngdpdxffy0.execute-api.us-east-1.amazonaws.com/test/';      
-      const TEST_URL = 'wss://caoyb4x42c.execute-api.us-east-1.amazonaws.com/test/';
-
+      const TEST_URL = appContext.wsEndpoint+"/"
       // Create a new WebSocket connection
       const TOKEN = (await Auth.currentSession()).getAccessToken().getJwtToken()  
           
       // console.log(TOKEN)
-      //const wsUrl = TEST_URL+'?Authorization='+TOKEN;
-      const wsUrl = appContext.wsEndpoint+"/"
+      const wsUrl = TEST_URL+'?Authorization='+TOKEN;
+      //const wsUrl = appContext.wsEndpoint+"/"
       const ws = new WebSocket(wsUrl);
 
       let incomingMetadata: boolean = false;
