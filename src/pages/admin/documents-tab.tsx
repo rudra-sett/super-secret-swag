@@ -17,7 +17,7 @@ import { AppContext } from "../../common/app-context";
 import { getColumnDefinition } from "./columns";
 import { Utils } from "../../common/utils";
 import { useCollection } from "@cloudscape-design/collection-hooks";
-// import { DocumentsResult } from "../../../API";
+import { useNotifications } from "../../components/notif-manager";
 
 export interface DocumentsTabProps {
   // workspaceId?: string;
@@ -33,6 +33,7 @@ export default function DocumentsTab(props: DocumentsTabProps) {
   const [pages, setPages] = useState<any[]>([]);
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const [showModalDelete, setShowModalDelete] = useState(false);
+  const { addNotification, removeNotification } = useNotifications();
 
   const { items, collectionProps, paginationProps } = useCollection(pages, {
     filtering: {
@@ -142,6 +143,7 @@ export default function DocumentsTab(props: DocumentsTabProps) {
         console.log(result);
         setSyncing(result != "DONE SYNCING");
       } catch (error) {
+        addNotification("error","Error checking sync status, please try again later.")
         console.error(error);
       }
     };
@@ -161,8 +163,12 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     try {
       const state = await apiClient.knowledgeManagement.syncKendra();
       console.log(state);
+      if (state != "STARTED SYNCING") {
+        addNotification("error","Error running sync, please try again later.")
+      }
     } catch (error) {
       console.log(error);
+      addNotification("error","Error running sync, please try again later.")
       setSyncing(false)
     }
   }

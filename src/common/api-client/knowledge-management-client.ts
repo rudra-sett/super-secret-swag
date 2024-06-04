@@ -87,6 +87,9 @@ export class KnowledgeManagementClient {
       'Content-Type': 'application/json',
       'Authorization' : auth
     }})
+    if (!response.ok) {
+      throw new Error('Failed to sync');
+    }
     return await response.json()
   }
 
@@ -97,6 +100,9 @@ export class KnowledgeManagementClient {
       'Content-Type': 'application/json',
       'Authorization' : auth
     }})
+    if (!response.ok) {
+      throw new Error('Failed to check sync status');
+    }
     return await response.json()
   }
 
