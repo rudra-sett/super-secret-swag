@@ -3,6 +3,7 @@ import {
   ContentLayout,
   Header,
   SpaceBetween,
+  Alert
 } from "@cloudscape-design/components";
 import {
   Authenticator,
@@ -14,7 +15,9 @@ import useOnFollow from "../../common/hooks/use-on-follow";
 import FeedbackTab from "./feedback-tab";
 import FeedbackPanel from "../../components/feedback-panel";
 import { CHATBOT_NAME } from "../../common/constants";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Auth } from "aws-amplify";
+
 
 export default function UserFeedbackPage() {
   const onFollow = useOnFollow();
@@ -53,7 +56,7 @@ export default function UserFeedbackPage() {
     return (
       <div
         style={{
-          height: "90vh",
+          height: "100%",
           width: "100%",
           display: "flex",
           justifyContent: "center",

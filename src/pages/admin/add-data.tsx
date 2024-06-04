@@ -3,6 +3,7 @@ import {
   ContentLayout,
   Header,
   SpaceBetween,
+  Alert
 } from "@cloudscape-design/components";
 import {
   Authenticator,
@@ -13,6 +14,8 @@ import BaseAppLayout from "../../components/base-app-layout";
 import useOnFollow from "../../common/hooks/use-on-follow";
 import DataFileUpload from "./data-file-upload";
 import { CHATBOT_NAME } from "../../common/constants";
+import { useState, useEffect } from "react";
+import { Auth } from "aws-amplify";
 
 export default function AddData() {
   const onFollow = useOnFollow();
@@ -50,7 +53,7 @@ export default function AddData() {
     return (
       <div
         style={{
-          height: "90vh",
+          height: "100%",
           width: "100%",
           display: "flex",
           justifyContent: "center",
@@ -90,7 +93,6 @@ export default function AddData() {
           </SpaceBetween>
         </ContentLayout>
       }
-    />
-    </Authenticator>
+    />    
   );
 }

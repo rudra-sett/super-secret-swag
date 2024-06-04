@@ -3,11 +3,14 @@ import {
   ContentLayout,
   Header,
   SpaceBetween,
+  Alert
 } from "@cloudscape-design/components";
 import useOnFollow from "../../common/hooks/use-on-follow";
 import BaseAppLayout from "../../components/base-app-layout";
 import DocumentsTab from "./documents-tab";
 import { CHATBOT_NAME } from "../../common/constants";
+import { useState, useEffect } from "react";
+import { Auth } from "aws-amplify";
 
 export default function WorkspacePane() {
   const onFollow = useOnFollow();
@@ -44,7 +47,7 @@ export default function WorkspacePane() {
     return (
       <div
         style={{
-          height: "90vh",
+          height: "100%",
           width: "100%",
           display: "flex",
           justifyContent: "center",
