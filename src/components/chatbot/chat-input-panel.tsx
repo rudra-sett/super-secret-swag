@@ -641,7 +641,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       <div className={styles.prompt_buttons_centered}>
         <div className={styles.select_prompt}>
           <h3 style={{ fontFamily: 'Calibri, sans-s`erif', fontWeight: '10000', fontSize: 20 }}>
-            Select to customize results:
+            I Am A:
           </h3>
         </div>
         <div className={styles.small_button}>
