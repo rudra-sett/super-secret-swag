@@ -462,7 +462,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
                 }}
                 placeholder="Select type"
               />
-              <span style={{ fontFamily: 'Calibri, sans-serif', fontSize: 18 }}>looking for grants</span>
+              <span style={{ fontFamily: 'Calibri, sans-serif', fontSize: 18 }}>looking for grants for</span>
               <TextareaAutosize
                 className={styles.input_textarea}
                 style={{ width: '400px' }} //size of input area
