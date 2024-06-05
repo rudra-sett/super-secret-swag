@@ -110,8 +110,7 @@ export default function NavigationPanel() {
         newItems.push({
           type: "section",
           text: "Admin",
-          items: [
-            { type: "link", text: "Update Data", href: "/admin/add-data" },
+          items: [            
             { type: "link", text: "Data", href: "/admin/data" },
             { type: "link", text: "User Feedback", href: "/admin/user-feedback" }
           ],
