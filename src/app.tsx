@@ -10,9 +10,7 @@ import {
 import { AppContext } from "./common/app-context";
 import GlobalHeader from "./components/global-header";
 import Playground from "./pages/chatbot/playground/playground";
-import NotFound from "./pages/not-found";
-import AddData from "./pages/admin/add-data";
-import WorkspacePane from "./pages/admin/workspace";
+import DataPage from "./pages/admin/data-view-page";
 import UserFeedbackPage from "./pages/admin/user-feedback";
 import SessionPage from "./pages/chatbot/sessions/sessions"
 import { v4 as uuidv4 } from "uuid";
@@ -38,9 +36,8 @@ function App() {
               <Route path="playground/:sessionId" element={<Playground />} />
               <Route path="sessions" element={<SessionPage />} />              
             </Route>
-            <Route path="/admin" element={<Outlet />}>
-             <Route path="add-data" element={<AddData />} />          
-             <Route path="data" element={<WorkspacePane />} />   
+            <Route path="/admin" element={<Outlet />}>                 
+             <Route path="data" element={<DataPage />} />   
              <Route path="user-feedback" element={<UserFeedbackPage />} />                           
             </Route>            
             <Route path="*" element={<Navigate to={`/chatbot/playground/${uuidv4()}`} replace />} />
