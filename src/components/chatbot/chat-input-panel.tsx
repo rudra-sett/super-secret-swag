@@ -510,23 +510,10 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             userMessage: messageToSend,
             chatHistory: assembleHistory(messageHistoryRef.current.slice(0, -2)),
             systemPrompt: state.systemPrompt,
-            // You are a navigator of grants offered by the Massachusetts Executive Office of Energy and Enviornmental Affairs(EEA). With each
-            // user input, you will return the relevant grants offered by the EEA that are most relevant to the user input. The response should be formatted to include
-            // the name of the grant as a bolded subheading, a 2-3 sentence description of the grant.
-            // On a new bulletpointed line, state the deadline of the grants. Ten on a new bulletpointed line, state the funding available for the grants.
-            // Then on a new bulletpointed line, list the match requirement. Then on a new bulletpointed line, list relevant contact information for the person in charge of that particular grant program. 
-            // Then, include a link to the webpage where this information was found.
-            //After each grant, include a link to the webpage where this information was found.
-            //a new line that lists the deadline 
-            //use language like "then"
             projectId: 'rkdg062824'
           }
         });
-        // readline.close();
-        // Replace 'Hello, world!' with your message
         ws.send(message);
-        // console.log('Message sent:', message);
-        // });
       });
       // Event listener for incoming messages
       ws.addEventListener('message', async function incoming(data) {
