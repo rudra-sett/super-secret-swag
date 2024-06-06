@@ -52,11 +52,11 @@ export default function FeedbackTab(props: FeedbackTabProps) {
   const [
     selectedOption,
     setSelectedOption
-  ] = React.useState(undefined);
+  ] = React.useState({label: "Any", value: "any"});
   const [value, setValue] = React.useState<DateRangePickerProps.AbsoluteValue>({
     type: "absolute",
-    startDate: (new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 1)).toISOString(),
-    endDate: (new Date()).toISOString()
+    startDate: (new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 1)).toISOString().split("T")[0],
+    endDate: (new Date()).toISOString().split("T")[0]
   });
 
 
@@ -258,7 +258,7 @@ export default function FeedbackTab(props: FeedbackTabProps) {
                 <SpaceBetween direction="horizontal" size="xs">
                   <DateRangePicker
                     onChange={({ detail }) => {
-                      // console.log(detail);
+                      console.log(detail);
                       needsRefresh.current = true;
                       setValue(detail.value as DateRangePickerProps.AbsoluteValue)
                     }}
