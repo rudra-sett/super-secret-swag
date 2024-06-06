@@ -8,29 +8,10 @@
   justify-content: space-between;
 }
 
-.small_button {
-  height: 30px; /* or your desired height */
-  padding: 5px 10px; /* adjust padding as necessary */
-  margin: 5px 0; /* add some space between buttons */
-  font-family: 'Calibri', 'Open Sans', system-ui;
-}
-
 @media (min-width: 466px) {
   .chat_container {
     min-height: calc(100vh - 104px);
   }
-}
-
-.new-session-button {
-  background-color: #4CAF50; /* Green background */
-  color: white; /* White text */
-  padding: 10px 20px;
-  border-radius: 5px;
-  transition: background-color 0.3s; /* Smooth transition for hover effect */
-}
-
-.new-session-button:hover {
-  background-color: #5045a0; /* Darker blue on hover */
 }
 
 @media (min-width: 689px) {
@@ -48,32 +29,16 @@
 .welcome_text {
   color: awsui.$color-text-body-default;
   font-size: 3rem;
-  font-family: 'Calibri', 'Open Sans', system-ui;
   font-weight: bolder;
   opacity: 0.4;
 }
 
-.input_container {
-  position: sticky;
-  bottom: 0;
-  padding-bottom: awsui.$space-scaled-l;
-  padding-top: awsui.$space-scaled-xxl;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    awsui.$color-background-container-content 20%
-  );
-  margin-left: -8px;
-  margin-right: -8px;
-  container-type: inline-size;
-  container-name: input_container;
-}
-
 .input_textarea_container {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
+  display: flex;
+  flex-direction: row; /* Ensures elements are in a row */
+  align-items: center; /* Align items vertically in the center */
   gap: 4px;
+  width: 100%;
 }
 
 .input_textarea {
@@ -82,24 +47,64 @@
   padding: 12px 12px 12px 4px;
   background-color: transparent;
   outline: none;
-  width: 100%;
-  height: 100%;
+  flex-grow: 1; /* Ensures the text area grows to take available space */
   font-size: 1rem;
   font-family: 'Calibri', 'Open Sans', system-ui;
 }
 
 .info_bar{
-    display: flex;
-    align-items: center;
-    gap: awsui.$space-scaled-xs;
-    margin-top: -5px;
+  display: flex;
+  align-items: center;
+  gap: awsui.$space-scaled-xs;
+  margin-top: -5px;
 }
 
 .info_bar_right {
-  display: flex;
-  align-items: center;
-  margin-left: auto; /* Pushes the right content to the far right */
+display: flex;
+align-items: center;
+margin-left: auto; /* Pushes the right content to the far right */
 }
+
+@media (max-width: 768px) {
+  .input_textarea_container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .input_textarea {
+    width: 100%;
+    font-size: 0.9rem;
+  }
+
+  .input_textarea_container > * {
+    margin-bottom: 8px;
+  }
+
+  .info_bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .info_bar_right {
+    margin-left: 0;
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .input_textarea {
+    font-size: 0.8rem;
+    padding: 8px;
+  }
+
+  .input_textarea_container {
+    gap: 8px;
+  }
+
+  .info_bar {
+    gap: 8px;
+  }
+} 
 
 .btn_chabot_message_copy {
   float: right;
@@ -143,7 +148,6 @@
   padding: 20px; // Optional: Add some padding
   border-radius: 10px; // Optional: Add rounded corners
 }
-
 
 .chatbot_name {
   font-family: 'Calibri', 'Open Sans', system-ui; // Example font
@@ -233,83 +237,4 @@
 .thumbsIcon.selected {
   opacity: 1 !important;
   pointer-events: none; /* Disable pointer events for the selected icon */
-}
-
-@media (max-width: 768px) {
-  .input_textarea_container {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .input_textarea {
-    width: 100%;
-    font-size: 0.9rem;
-  }
-
-  .input_textarea_container > * {
-    margin-bottom: 8px;
-  }
-
-  .info_bar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .info_bar_right {
-    margin-left: 0;
-    margin-top: 8px;
-  }
-}
-
-@media (max-width: 480px) {
-  .input_textarea {
-    font-size: 0.8rem;
-    padding: 8px;
-  }
-
-  .input_textarea_container {
-    gap: 8px;
-  }
-
-  .info_bar {
-    gap: 8px;
-  }
-} 
-/* Responsive styles for smaller screens */
-@media (max-width: 768px) {
-  .prompt_buttons_centered {
-    height: 8vh;
-    padding: 4px 8px;
-  }
-  
-  .small_button {
-    height: 25px;
-    padding: 4px 8px;
-    font-size: 0.9em;
-  }
-  
-  .select_prompt {
-    margin-top: 8px;
-    font-size: 0.9em;
-  }
-}
-
-/* Responsive styles for even smaller screens */
-@media (max-width: 480px) {
-  .prompt_buttons_centered {
-    height: 6vh;
-    padding: 3px 6px;
-  }
-  
-  .small_button {
-    height: 20px;
-    padding: 3px 6px;
-    font-size: 0.8em;
-  }
-  
-  .select_prompt {
-    margin-top: 6px;
-    font-size: 0.8em;
-  }
 }

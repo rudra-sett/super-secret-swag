@@ -54,6 +54,7 @@ import {
 import { Utils } from "../../common/utils";
 import { SessionRefreshContext } from "../../common/session-refresh-context"
 import { useNotifications } from "../notif-manager";
+import { Autocomplete } from "@aws-amplify/ui-react";
 
 const defaultPrompt = `Based on the project and organization description provided by the user, recommend the most relevant specific grant programs offered by the Massachusetts Energy and Environment Office that would be a good fit. Always provide more than three grant programs that could be related to the users search, formatted as follows:
 - **Grant Program Name (as a bold header):**
@@ -450,8 +451,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     <SpaceBetween direction="vertical" size="l">
       <div style={{ marginTop: '20px' }}>
         <Container>
-          <div className={styles.input_textarea_container}>
-            <SpaceBetween size="xs" direction="horizontal" alignItems="center">
+          <div className={`${styles.input_textarea_container} input_textarea_container`}>
               <span style={{ fontFamily: 'Calibri, sans-serif', fontSize: 18 }}>I am a</span>
               <Select
                 options={typeOptions}
@@ -462,10 +462,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
                 }}
                 placeholder="Select type"
               />
-              <span style={{ fontFamily: 'Calibri, sans-serif', fontSize: 18 }}>looking for grants for</span>
+              <span style={{ fontFamily: 'Calibri, sans-serif', fontSize: 18, marginLeft: '10px'}}>looking for grants for</span>
               <TextareaAutosize
-                className={styles.input_textarea}
-                style={{ width: '400px' }} //size of input area
+                className={`${styles.input_textarea} input_textarea`}
                 maxRows={6}
                 minRows={1}
                 spellCheck={true}
@@ -482,7 +481,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
                 value={state.value}
                 placeholder={"Enter Search ex. \"Grants for new farmers\""}
               />
-              <div style={{ marginLeft: "8px" }}>
                 <Button
                   disabled={
                     readyState !== ReadyState.OPEN ||
@@ -503,8 +501,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
                     "Search"
                   )}
                 </Button>
-              </div>
-            </SpaceBetween>
           </div>
         </Container>
         <div className={styles.info_bar}>
