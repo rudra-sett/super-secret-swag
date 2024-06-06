@@ -4,7 +4,9 @@ import {
   SpaceBetween,
   Spinner,
   StatusIndicator,
-  Box
+  Box,
+  Select,
+  SelectProps
 } from "@cloudscape-design/components";
 import {
   Dispatch,
@@ -52,20 +54,8 @@ import {
 import { Utils } from "../../common/utils";
 import { SessionRefreshContext } from "../../common/session-refresh-context"
 import { useNotifications } from "../notif-manager";
+import { Autocomplete } from "@aws-amplify/ui-react";
 
-// different prompts for different users
-// const defaultPrompt = `Based on the project and organization description provided by the user, identify the most relevant grant programs offered by the Massachusetts Energy and Environment Office. For each recommended grant program, ensure the output includes:
-
-// Grant Program Name: Displayed as a header.
-// Description: Provide a concise 2-3 sentence overview of the grant program.
-// Details: List the following items as sub-bullet points:
-// Deadline Date: Specific cutoff for application submission.
-// Target Audience: The primary group or sector intended for the grant.
-// Funding Amount: Total funds available for the program.
-// Match Requirement: Any matching funds required from the grantee.
-// Contact Information: Direct contact details for inquiries, ensuring 100% accuracy as per the provided context.
-// Relevant Link: URL to the specific grant's webpage, ensuring it is precisely the same as listed on the official site.
-// All information must be up-to-date and accurately reflect the data listed on the relevant webpage. Include any additional key parameters essential for understanding or applying to the grant program.`
 const defaultPrompt = `Based on the project and organization description provided by the user, recommend the most relevant specific grant programs offered by the Massachusetts Energy and Environment Office that would be a good fit. Always provide more than three grant programs that could be related to the users search, formatted as follows:
 - **Grant Program Name (as a bold header):**
   - A 3 sentence description of the grant program.
@@ -78,13 +68,6 @@ const defaultPrompt = `Based on the project and organization description provide
 
 Ensure each grant program is clearly and concisely described, highlighting its relevance to the users project and organization.`
 
-
-
-// 'Based on the project and organization description provided by user, 
-// recommend the most relevant specific grant programs offered by the Massachusetts energy 
-// and environment office that would be a good fit. Always boldly list the grant program name as a header, 
-// a 2-3 sentence description and under sub-bullet points about the specific deadline date, 
-// target audience, funding amount, match requirement, and contact information and relevant link listed on the relevant grant webpage.`;
 const farmPrompt = `Based on the project and organization description provided by the user, recommend the most relevant specific grant programs offered by the Massachusetts Energy and Environment Office that would be a good fit for a farm. Always provide more than 3 grant programs that could be related to the users search, formatted as follows:
 - **Grant Program Name (as a bold header):**
   - A 3 sentence description of the grant program.
@@ -156,19 +139,6 @@ export abstract class ChatScrollState {
   static skipNextHistoryUpdate = false;
 }
 
-// const workspaceDefaultOptions: SelectProps.Option[] = [
-//   // {
-//   //   label: "No workspace (RAG data source)",
-//   //   value: "",
-//   //   iconName: "close",
-//   // },
-//   {
-//     label: "Create new workspace",
-//     value: "__create__",
-//     iconName: "add-plus",
-//   },
-// ];
-
 export default function ChatInputPanel(props: ChatInputPanelProps) {
   const appContext = useContext(AppContext);
   const { needsRefresh, setNeedsRefresh } = useContext(SessionRefreshContext);
@@ -179,118 +149,20 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
   const [state, setState] = useState<ChatInputState>({
     value: "",
     systemPrompt: defaultPrompt,
-    // selectedModel: null,
-    // selectedModelMetadata: null,
-    // selectedWorkspace: workspaceDefaultOptions[0],
-    // modelsStatus: "loading",
-    // workspacesStatus: "loading",
   });
   const [activeButton, setActiveButton] = useState<string>('General');
+  const [selectedType, setSelectedType] = useState<SelectProps.Option | null>(null);
   const [configDialogVisible, setConfigDialogVisible] = useState(false);
   const [imageDialogVisible, setImageDialogVisible] = useState(false);
   const [files, setFiles] = useState<ImageFile[]>([]);
   const [readyState, setReadyState] = useState<ReadyState>(
     ReadyState.OPEN
   );
-  // const [firstTime, setFirstTime] = useState<boolean>(false);
   const messageHistoryRef = useRef<ChatBotHistoryItem[]>([]);
 
   useEffect(() => {
     messageHistoryRef.current = props.messageHistory;
-    // // console.log(messageHistoryRef.current.length)
-    // if (messageHistoryRef.current.length < 3) {
-    //   setFirstTime(true);
-    // } else {
-    //   setFirstTime(false);
-    // }
   }, [props.messageHistory]);
-
-  // THIS PART OF THE CODE HANDLES READY STATE
-  // it is currently forced to say OPEN
-
-  // useEffect(() => {
-  //   async function subscribe() {
-  //     console.log("Subscribing to AppSync");
-  //     setReadyState(ReadyState.CONNECTING);
-  //     const sub = await API.graphql<
-  //       GraphQLSubscription<ReceiveMessagesSubscription>
-  //     >({
-  //       query: receiveMessages,
-  //       variables: {
-  //         sessionId: props.session.id,
-  //       },
-  //       authMode: "AMAZON_COGNITO_USER_POOLS",
-  //     }).subscribe({
-  //       next: ({ value }) => {
-  //         const data = value.data!.receiveMessages?.data;
-  //         if (data !== undefined && data !== null) {
-  //           const response: ChatBotMessageResponse = JSON.parse(data);
-  //           console.log("message data", response.data);
-  //           if (response.action === ChatBotAction.Heartbeat) {
-  //             console.log("Heartbeat pong!");
-  //             return;
-  //           }
-  //           updateMessageHistoryRef(
-  //             props.session.id,
-  //             messageHistoryRef.current,
-  //             response
-  //           );
-
-  //           if (
-  //             response.action === ChatBotAction.FinalResponse ||
-  //             response.action === ChatBotAction.Error
-  //           ) {
-  //             console.log("Final message received");
-  //             props.setRunning(false);
-  //           }
-  //           props.setMessageHistory([...messageHistoryRef.current]);
-  //         }
-  //       },
-  //       error: (error) => console.warn(error),
-  //     });
-  //     return sub;
-  //   }
-
-  //   const sub = subscribe();
-  //   sub
-  //     .then(() => {
-  //       setReadyState(ReadyState.OPEN);
-  //       console.log(`Subscribed to session ${props.session.id}`);
-  //       const request: ChatBotHeartbeatRequest = {
-  //         action: ChatBotAction.Heartbeat,
-  //         modelInterface: ChatBotModelInterface.Langchain,
-  //         data: {
-  //           sessionId: props.session.id,
-  //         },
-  //       };
-  //       const result = API.graphql({
-  //         query: sendQuery,
-  //         variables: {
-  //           data: JSON.stringify(request),
-  //         },
-  //       });
-  //       Promise.all([result])
-  //         .then((x) => console.log(`Query successful`, x))
-  //         .catch((err) => console.log(err));
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       setReadyState(ReadyState.CLOSED);
-  //     });
-
-  //   return () => {
-  //     sub
-  //       .then((s) => {
-  //         console.log(`Unsubscribing from ${props.session.id}`);
-  //         s.unsubscribe();
-  //       })
-  //       .catch((err) => console.log(err));
-  //   };
-  //   // eslint-disable-next-line
-  // }, [props.session.id]);
-
-
-  // uhhh I think this handles speech stuff??
 
   useEffect(() => {
     if (transcript) {
@@ -298,154 +170,12 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     }
   }, [transcript]);
 
-  // this handles models/workspaces
-
-  // useEffect(() => {
-  //   if (!appContext) return;
-
-  //   (async () => {
-  //     const apiClient = new ApiClient(appContext);
-  //     let workspaces: Workspace[] = [];
-  //     let workspacesStatus: LoadingStatus = "finished";
-  //     let modelsResult: GraphQLResult<any>;
-  //     let workspacesResult: GraphQLResult<any>;
-  //     try {
-  //       if (appContext?.config.rag_enabled) {
-  //         [modelsResult, workspacesResult] = await Promise.all([
-  //           apiClient.models.getModels(),
-  //           apiClient.workspaces.getWorkspaces(),
-  //         ]);
-  //         workspaces = workspacesResult.data?.listWorkspaces;
-  //         workspacesStatus =
-  //           workspacesResult.errors === undefined ? "finished" : "error";
-  //       } else {
-  //         modelsResult = await apiClient.models.getModels();
-  //       }
-
-  //       const models = modelsResult.data ? modelsResult.data.listModels : [];
-
-  //       const selectedModelOption = getSelectedModelOption(models);
-  //       const selectedModelMetadata = getSelectedModelMetadata(
-  //         models,
-  //         selectedModelOption
-  //       );
-  //       const selectedWorkspaceOption = appContext?.config.rag_enabled
-  //         ? getSelectedWorkspaceOption(workspaces)
-  //         : workspaceDefaultOptions[0];
-
-  //       setState((state) => ({
-  //         ...state,
-  //         models,
-  //         workspaces,
-  //         selectedModel: selectedModelOption,
-  //         selectedModelMetadata,
-  //         selectedWorkspace: selectedWorkspaceOption,
-  //         modelsStatus: "finished",
-  //         workspacesStatus: workspacesStatus,
-  //       }));
-  //     } catch (error) {
-  //       console.log(Utils.getErrorMessage(error));
-  //       setState((state) => ({
-  //         ...state,
-  //         modelsStatus: "error",
-  //       }));
-  //     }
-  //   })();
-  // }, [appContext, state.modelsStatus]);
-
-  useEffect(() => {
-    const onWindowScroll = () => {
-      if (ChatScrollState.skipNextScrollEvent) {
-        ChatScrollState.skipNextScrollEvent = false;
-        return;
-      }
-
-      const isScrollToTheEnd =
-        Math.abs(
-          window.innerHeight +
-          window.scrollY -
-          document.documentElement.scrollHeight
-        ) <= 10;
-
-      if (!isScrollToTheEnd) {
-        ChatScrollState.userHasScrolled = true;
-      } else {
-        ChatScrollState.userHasScrolled = false;
-      }
-    };
-
-    window.addEventListener("scroll", onWindowScroll);
-
-    return () => {
-      window.removeEventListener("scroll", onWindowScroll);
-    };
-  }, []);
-
-  useLayoutEffect(() => {
-    if (ChatScrollState.skipNextHistoryUpdate) {
-      ChatScrollState.skipNextHistoryUpdate = false;
-      return;
-    }
-
-    if (!ChatScrollState.userHasScrolled && props.messageHistory.length > 0) {
-      ChatScrollState.skipNextScrollEvent = true;
-      window.scrollTo({
-        top: document.documentElement.scrollHeight + 1000,
-        behavior: "instant",
-      });
-    }
-  }, [props.messageHistory]);
-
-  // this probably handles image file uploads?
-
-  // useEffect(() => {
-  //   const getSignedUrls = async () => {
-  //     if (props.configuration?.files as ImageFile[]) {
-  //       const files: ImageFile[] = [];
-  //       for await (const file of props.configuration?.files ?? []) {
-  //         const signedUrl = await getSignedUrl(file.key);
-  //         files.push({
-  //           ...file,
-  //           url: signedUrl,
-  //         });
-  //       }
-
-  //       setFiles(files);
-  //     }
-  //   };
-
-  //   if (props.configuration.files?.length) {
-  //     getSignedUrls();
-  //   }
-  // }, [props.configuration]);
-
-  // images I guess?
-
-  // const hasImagesInChatHistory = function (): boolean {
-  //   return (
-  //     messageHistoryRef.current.filter(
-  //       (x) =>
-  //         x.type == ChatBotMessageType.Human &&
-  //         x.metadata?.files &&
-  //         (x.metadata.files as object[]).length > 0
-  //     ).length > 0
-  //   );
-  // };
-
   // THIS IS THE ALL-IMPORTANT MESSAGE SENDING FUNCTION
   const handleSendMessage = async () => {
     // if (!state.selectedModel) return;
     if (props.running) return;
     if (readyState !== ReadyState.OPEN) return
     ChatScrollState.userHasScrolled = false;
-
-    // let username;
-    // // await Auth.currentAuthenticatedUser().then((value) => username = value.username);
-    // if (!username) return;
-    // const readline = require('readline').createInterface({
-    //   input: process.stdin,
-    //   output: process.stdout
-    // });    
 
     const messageToSend = state.value.trim();
     setState({ value: "", systemPrompt: defaultPrompt });
@@ -522,11 +252,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
             projectId: 'rkdg062824'
           }
         });
-        // readline.close();
-        // Replace 'Hello, world!' with your message
         ws.send(message);
-        // console.log('Message sent:', message);
-        // });
       });
       // Event listener for incoming messages
       ws.addEventListener('message', async function incoming(data) {
@@ -548,8 +274,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
           sources = { "Sources": JSON.parse(data.data) }
           console.log(sources);
         }
-
-
 
         // console.log(data.data);
         // Update the chat history state with the new message        
@@ -573,10 +297,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
         ];
         // console.log(messageHistoryRef.current)
         props.setMessageHistory(messageHistoryRef.current);
-        // if (data.data == '') {
-        //   ws.close()
-        // }
-
       });
       // Handle possible errors
       ws.addEventListener('error', function error(err) {
@@ -586,8 +306,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       ws.addEventListener('close', async function close() {
         // await apiClient.sessions.updateSession("0", props.session.id, messageHistoryRef.current);
         if (firstTime) {
-          // console.log("first time!", firstTime)
-          // console.log("did we also need a refresh?", needsRefresh)
           Utils.delay(1500).then(() => setNeedsRefresh(true));
         }
         props.setRunning(false);
@@ -600,32 +318,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       alert('Sorry, something has gone horribly wrong! Please try again or refresh the page.');
       props.setRunning(false);
     }
-
-    // THIS RESETS THE MESSAGE BOX ONCE A RESPONSE IS DONE
-    // commented because if you type out your next query while a message is streaming,
-    // it'll delete that query which sucks
-
-    // setState((state) => ({
-    //   ...state,
-    //   value: "",
-    // }));
-    // setFiles([]);
-
-    // no idea what this does
-
-    // props.setConfiguration({
-    //   ...props.configuration,
-    //   files: [],
-    // });
-
-    // graphQL things we don't need anymore
-
-    // API.graphql({
-    //   query: sendQuery,
-    //   variables: {
-    //     data: JSON.stringify(request),
-    //   },
-    // });    
   };
 
   const connectionStatus = {
@@ -636,57 +328,121 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     [ReadyState.UNINSTANTIATED]: "Uninstantiated",
   }[readyState];
 
+  const addMayflowerStyles = () => {
+    const stylesheets = [
+      "https://unpkg.com/@massds/mayflower-assets@13.1.0/css/global.min.css",
+      "https://unpkg.com/@massds/mayflower-assets@13.1.0/css/layout.min.css",
+      "https://unpkg.com/@massds/mayflower-assets@13.1.0/css/brand-banner.min.css",
+      "https://unpkg.com/@massds/mayflower-assets@13.1.0/css/footer-slim.css",
+    ];
+
+    stylesheets.forEach((href) => {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = href;
+      document.head.appendChild(link);
+    });
+  };
+
+  const addFooter = () => {
+    const footerHTML = `
+      <footer data-nosnippet="true" class="ma__footer-new" id="footer">
+        <div class="ma__footer-new__container">
+          <div class="ma__footer-new__logo">
+            <a href="/" title="Mass.gov home page">
+              <img
+                src="https://unpkg.com/@massds/mayflower-assets@13.1.0/static/images/logo/stateseal.png"
+                alt="Massachusetts State Seal"
+                width="100"
+                height="100"
+              />
+            </a>
+          </div>
+          <div class="ma__footer-new__content">
+            <nav class="ma__footer-new__navlinks" aria-label="site navigation">
+              <div index="0">
+                <a href="https://www.mass.gov/topics/massachusetts-topics">
+                  All Topics
+                </a>
+              </div>
+              <div index="1">
+                <a href="https://www.mass.gov/massgov-site-policies">Site Policies</a>
+              </div>
+              <div index="2">
+                <a href="https://www.mass.gov/topics/public-records-requests">
+                  Public Records Requests
+                </a>
+              </div>
+            </nav>
+            <div class="ma__footer-new__copyright">
+              <div class="ma__footer-new__copyright--bold">
+                © 2024 Commonwealth of Massachusetts.
+              </div>
+              <span>
+                Mass.gov® is a registered service mark of the Commonwealth of
+                Massachusetts.
+              </span>
+              <a href="https://www.mass.gov/privacypolicy">Mass.gov Privacy Policy</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    `;
+    const footer = document.createElement("div");
+    footer.innerHTML = footerHTML;
+    document.body.appendChild(footer);
+  };
+
+  useEffect(() => {
+    addMayflowerStyles();
+    addFooter();
+  }, []);
+
+  const selectPrompt = (type: string) => {
+    setActiveButton(type);
+    switch (type) {
+      case 'Farm':
+        setState({ ...state, systemPrompt: farmPrompt });
+        break;
+      case 'Town':
+        setState({ ...state, systemPrompt: townPrompt });
+        break;
+      case 'Nonprofit':
+        setState({ ...state, systemPrompt: nonprofitPrompt });
+        break;
+      case 'Business':
+        setState({ ...state, systemPrompt: businessPrompt });
+        break;
+      default:
+        setState({ ...state, systemPrompt: defaultPrompt });
+    }
+  };
+
+  const typeOptions: SelectProps.Option[] = [
+    { label: "Farm", value: "Farm" },
+    { label: "Town", value: "Town" },
+    { label: "Nonprofit", value: "Nonprofit" },
+    { label: "Business", value: "Business" },
+    { label: "Other", value: "General" },
+  ];
+
   return (
     <SpaceBetween direction="vertical" size="l">
-      <div className={styles.prompt_buttons_centered}>
-        <div className={styles.select_prompt}>
-          <h3 style={{ fontFamily: 'Calibri, sans-s`erif', fontWeight: '10000', fontSize: 20 }}>
-            I Am A:
-          </h3>
-        </div>
-        <div className={styles.small_button}>
-          <Button
-            onClick={() => { setState({ ...state, systemPrompt: farmPrompt }); setActiveButton('Farm'); }}
-            variant={activeButton === 'Farm' ? 'primary' : 'normal'}>
-            Farm
-          </Button>
-        </div>
-        <div className={styles.small_button}>
-          <Button
-            onClick={() => { setState({ ...state, systemPrompt: townPrompt }); setActiveButton('Town'); }}
-            variant={activeButton === 'Town' ? 'primary' : 'normal'}>
-            Town
-          </Button>
-        </div>
-        <div className={styles.small_button}>
-          <Button
-            onClick={() => { setState({ ...state, systemPrompt: nonprofitPrompt }); setActiveButton('Nonprofit'); }}
-            variant={activeButton === 'Nonprofit' ? 'primary' : 'normal'}>
-            Nonprofit
-          </Button>
-        </div>
-        <div className={styles.small_button}>
-          <Button
-            onClick={() => { setState({ ...state, systemPrompt: businessPrompt }); setActiveButton('Business'); }}
-            variant={activeButton === 'Business' ? 'primary' : 'normal'}>
-            Business
-          </Button>
-        </div>
-        <div className={styles.small_button}>
-          <Button
-            onClick={() => { setState({ ...state, systemPrompt: defaultPrompt }); setActiveButton('General'); }}
-            variant={activeButton === 'General' ? 'primary' : 'normal'}>
-            Other
-          </Button>
-        </div>
-      </div>
-      <div style={{ marginTop: '20px' }}>
-        <Container>
-          <div className={styles.input_textarea_container}>
-            <SpaceBetween size="xxs" direction="horizontal" alignItems="center">
-            </SpaceBetween>
+      <Container>
+        <div className={`${styles.input_textarea_container} input_textarea_container`}>
+            <span style={{ fontFamily: 'Calibri, sans-serif', fontSize: 18 }}>I am a</span>
+            <Select
+              options={typeOptions}
+              selectedOption={selectedType}
+              onChange={({ detail }) => {
+                setSelectedType(detail.selectedOption);
+                selectPrompt(detail.selectedOption.value || 'General');
+              }}
+              placeholder="Select type"
+            />
+            <span style={{ fontFamily: 'Calibri, sans-serif', fontSize: 18, marginLeft: '10px' }}>looking for grants for</span>
             <TextareaAutosize
-              className={styles.input_textarea}
+              className={`${styles.input_textarea} input_textarea`}
               maxRows={6}
               minRows={1}
               spellCheck={true}
@@ -703,39 +459,16 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
               value={state.value}
               placeholder={"Enter Search ex. \"Grants for new farmers\""}
             />
-            <div style={{ marginLeft: "8px" }}>
-              {/* {state.selectedModelMetadata?.inputModalities.includes(
-              ChabotInputModality.Image
-            ) &&
-              files.length > 0 &&
-              files.map((file, idx) => (
-                <img
-                  key={idx}
-                  onClick={() => setImageDialogVisible(true)}
-                  src={file.url}
-                  style={{
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    maxHeight: "30px",
-                    float: "left",
-                    marginRight: "8px",
-                  }}
-                />
-              ))} */}
               <Button
                 disabled={
                   readyState !== ReadyState.OPEN ||
-                  // !state.models?.length ||
-                  // !state.selectedModel ||
                   props.running ||
                   state.value.trim().length === 0
-                  // props.session.loading
                 }
                 onClick={handleSendMessage}
                 iconAlign="left"
                 iconName={!props.running ? "search" : undefined}
                 variant="primary"
-              //variant="primary"
               >
                 {props.running ? (
                   <>
@@ -746,34 +479,12 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
                   "Search"
                 )}
               </Button>
-            </div>
-          </div>
-        </Container>
-        <div className={styles.info_bar}>
-          <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-            <div style={{ marginTop: '0px' }}>
-              <AIWarning />
-            </div>
-          </div>
-          <div className={styles.info_bar_right}>
-            <SpaceBetween direction="horizontal" size="xxs" alignItems="center">
-              <div style={{ paddingTop: "1px" }}>
-              </div>
-              <div style={{ marginTop: '-7.5px' }}>
-                <StatusIndicator
-                  type={
-                    readyState === ReadyState.OPEN
-                      ? "success"
-                      : readyState === ReadyState.CONNECTING ||
-                        readyState === ReadyState.UNINSTANTIATED
-                        ? "in-progress"
-                        : "error"
-                  }
-                >
-                  {readyState === ReadyState.OPEN ? "Connected" : connectionStatus}
-                </StatusIndicator>
-              </div>
-            </SpaceBetween>
+        </div>
+      </Container>
+      <div className={styles.info_bar}>
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+          <div style={{ marginTop: '30px' }}>
+            <AIWarning />
           </div>
         </div>
       </div>
