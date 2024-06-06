@@ -106,5 +106,18 @@ export class KnowledgeManagementClient {
     return await response.json()
   }
 
+  // Checks if Kendra is currently syncing (used to disable the sync button)
+  async lastKendraSync() : Promise<string> {
+    const auth = await Utils.authenticate();
+    const response = await fetch(this.API + '/kendra-sync/get-last-sync', {headers: {
+      'Content-Type': 'application/json',
+      'Authorization' : auth
+    }})
+    if (!response.ok) {
+      throw new Error('Failed to check last status');
+    }
+    return await response.json()
+  }
+
   
 }

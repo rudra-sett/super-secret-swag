@@ -22,6 +22,7 @@ import { useNotifications } from "../../components/notif-manager";
 export interface DocumentsTabProps {
   // workspaceId?: string;
   documentType: RagDocumentType;
+  statusRefreshFunction: () => void;
 }
 
 export default function DocumentsTab(props: DocumentsTabProps) {
@@ -60,11 +61,9 @@ export default function DocumentsTab(props: DocumentsTabProps) {
   const getDocuments = useCallback(
     async (params: { continuationToken?: string; pageIndex?: number }) => {
       setLoading(true);
-
-
       try {
         const result = await apiClient.knowledgeManagement.getDocuments(params?.continuationToken, params?.pageIndex)
-
+        await props.statusRefreshFunction();
         setPages((current) => {
           if (typeof params.pageIndex !== "undefined") {
             current[params.pageIndex - 1] = result;

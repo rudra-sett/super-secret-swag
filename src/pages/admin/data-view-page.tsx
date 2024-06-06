@@ -11,14 +11,28 @@ import useOnFollow from "../../common/hooks/use-on-follow";
 import BaseAppLayout from "../../components/base-app-layout";
 import DocumentsTab from "./documents-tab";
 import { CHATBOT_NAME } from "../../common/constants";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Auth } from "aws-amplify";
 import DataFileUpload from "./file-upload-tab";
+import { ApiClient } from "../../common/api-client/api-client";
+import { AppContext } from "../../common/app-context";
 
 export default function DataPage() {
   const onFollow = useOnFollow();
   const [admin, setAdmin] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState("file");
+  const appContext = useContext(AppContext);
+  const apiClient = new ApiClient(appContext);
+  const [lastSyncTime, setLastSyncTime] = useState("")
+
+  const refreshSyncTime = async () => {
+    try {
+      const lastSync = await apiClient.knowledgeManagement.lastKendraSync();
+      setLastSyncTime(lastSync);
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   useEffect(() => {
     (async () => {
@@ -43,8 +57,8 @@ export default function DataPage() {
       catch (e) {
         // const userName = result?.attributes?.email;
         console.log(e);
-      }
-    })();
+      }      
+    })();    
   }, []);
 
   if (!admin) {
@@ -94,16 +108,17 @@ export default function DataPage() {
         >
           <SpaceBetween size="l">
             <Container
-              // header={
-              //   <Header
-              //     variant="h4"
-              //     // description="Container description"
-              //   >
-              //     Manage the chatbot's data here. You can view, add, or remove data for the chatbot to reference.
-              //   </Header>
-              // }
+              header={
+                // <Header
+                //   variant="h4"
+                //   // description="Container description"
+                // >
+                //   Manage the chatbot's data here. You can view, add, or remove data for the chatbot to reference.
+                // </Header>
+                "Manage the chatbot's data here. You can view, add, or remove data for the chatbot to reference."
+              }
             >              
-            Manage the chatbot's data here. You can view, add, or remove data for the chatbot to reference.
+            Last successful sync: {lastSyncTime}
             </Container>
             <Tabs
               tabs={[
@@ -113,6 +128,7 @@ export default function DataPage() {
                   content: (
                     <DocumentsTab
                       documentType="file"
+                      statusRefreshFunction={refreshSyncTime}
                     />
                   ),
                 },
