@@ -344,8 +344,9 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     });
   };
 
-  const addFooter = () => {
-    const footerHTML = `
+  const addFooterOnce = () => {
+    if (!document.getElementById('footer')) {
+      const footerHTML = `
       <footer data-nosnippet="true" class="ma__footer-new" id="footer">
         <div class="ma__footer-new__container">
           <div class="ma__footer-new__logo">
@@ -391,11 +392,12 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     const footer = document.createElement("div");
     footer.innerHTML = footerHTML;
     document.body.appendChild(footer);
+    }
   };
 
   useEffect(() => {
     addMayflowerStyles();
-    addFooter();
+    addFooterOnce();
   }, []);
 
   const selectPrompt = (type: string) => {
@@ -430,7 +432,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     <SpaceBetween direction="vertical" size="l">
       <Container>
         <div className={`${styles.input_textarea_container} input_textarea_container`}>
-            <span style={{ fontFamily: 'Calibri, sans-serif', fontSize: 18 }}>I am a</span>
+            <span style={{ fontFamily: 'Calibri, sans-serif', fontSize: 18, marginRight: '8px' }}>I am a</span>
             <Select
               options={typeOptions}
               selectedOption={selectedType}
@@ -440,7 +442,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
               }}
               placeholder="Select type"
             />
-            <span style={{ fontFamily: 'Calibri, sans-serif', fontSize: 18, marginLeft: '10px' }}>looking for grants for</span>
+            <span style={{ fontFamily: 'Calibri, sans-serif', fontSize: 18, marginLeft: '8px' }}>looking for grants for</span>
             <TextareaAutosize
               className={`${styles.input_textarea} input_textarea`}
               maxRows={6}
@@ -491,3 +493,18 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
     </SpaceBetween>
   );
 }
+
+// Ensure the footer is at the bottom with CSS
+const style = document.createElement('style');
+style.innerHTML = `
+  .chat-input-panel-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ma__footer-new {
+    margin-top: auto;
+  }
+`;
+document.head.appendChild(style);
