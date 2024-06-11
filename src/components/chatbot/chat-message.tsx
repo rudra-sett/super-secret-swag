@@ -1,19 +1,12 @@
 import {
-  Alert,
   Box,
   Button,
   Container,
-  ExpandableSection,
   Popover,
   Spinner,
   StatusIndicator,
-  Tabs,
   TextContent,
-  Textarea,
-  Cards,
   SpaceBetween,
-  Header,
-  Link,
   ButtonDropdown,
   Modal,
   FormField,
@@ -21,8 +14,7 @@ import {
   Select
 } from "@cloudscape-design/components";
 import * as React from "react";
-import { useEffect, useState, ReactElement } from 'react';
-import { JsonView, darkStyles } from "react-json-view-lite";
+import { useState } from 'react';
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import styles from "../../styles/chat.module.scss";
@@ -30,23 +22,17 @@ import {
   ChatBotConfiguration,
   ChatBotHistoryItem,
   ChatBotMessageType,
-  ImageFile,
-  RagDocument,
 } from "./types";
 
-import { getSignedUrl } from "./utils";
 
 import "react-json-view-lite/dist/index.css";
 import "../../styles/app.scss";
 import { useNotifications } from "../notif-manager";
 import { Utils } from "../../common/utils";
-import { v4 as uuidv4 } from 'uuid';
 import {feedbackCategories, feedbackTypes} from '../../common/constants'
 
 export interface ChatMessageProps {
-  message: ChatBotHistoryItem;
-  configuration?: ChatBotConfiguration;
-  showMetadata?: boolean;
+  message: ChatBotHistoryItem;  
   onThumbsUp: () => void;
   onThumbsDown: (feedbackTopic : string, feedbackType : string, feedbackMessage: string) => void;
 }
@@ -55,10 +41,6 @@ export interface ChatMessageProps {
 
 export default function ChatMessage(props: ChatMessageProps) {
   const [loading, setLoading] = useState<boolean>(false);
-  const [message] = useState<ChatBotHistoryItem>(props.message);
-  const [files, setFiles] = useState<ImageFile[]>([] as ImageFile[]);
-  const [documentIndex, setDocumentIndex] = useState("0");
-  const [promptIndex, setPromptIndex] = useState("0");
   const [selectedIcon, setSelectedIcon] = useState<1 | 0 | null>(null);
   const { addNotification, removeNotification } = useNotifications();
   const [modalVisible, setModalVisible] = useState(false);
@@ -66,33 +48,11 @@ export default function ChatMessage(props: ChatMessageProps) {
   const [selectedFeedbackType, setSelectedFeedbackType] = React.useState({label: "Select a Problem", value: "1"});
   const [value, setValue] = useState("");
 
-  useEffect(() => {
-    const getSignedUrls = async () => {
-      setLoading(true);
-      if (message.metadata?.files) {
-        const files: ImageFile[] = [];
-        for await (const file of (message.metadata?.files as ImageFile[])) {
-          const signedUrl = await getSignedUrl(file.key);
-          files.push({
-            ...file,
-            url: signedUrl as string,
-          });
-        }
-
-        setLoading(false);
-        setFiles(files);
-      }
-    };
-
-    if (message.metadata?.files) {
-      getSignedUrls();
-    }
-  }, [message]);
 
   const content =
     props.message.content && props.message.content.length > 0
       ? props.message.content
-      : props.message.tokens?.map((v) => v.value).join("");
+      : "";
 
   const showSources = props.message.metadata?.Sources && (props.message.metadata.Sources as any[]).length > 0;
   
@@ -267,25 +227,7 @@ export default function ChatMessage(props: ChatMessageProps) {
         <Box float="left">
           <Spinner />
         </Box>
-      )}
-      {files && !loading && (
-        <>
-          {files.map((file, idx) => (
-            <a
-              key={idx}
-              href={file.url as string}
-              target="_blank"
-              rel="noreferrer"
-              style={{ marginLeft: "5px", marginRight: "5px" }}
-            >
-              <img
-                src={file.url as string}
-                className={styles.img_chabot_message}
-              />
-            </a>
-          ))}
-        </>
-      )}
+      )}      
       {props.message?.type === ChatBotMessageType.Human && (
         <TextContent>
           <strong>{props.message.content}</strong>

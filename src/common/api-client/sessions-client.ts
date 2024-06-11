@@ -128,17 +128,14 @@ export class SessionsClient {
         type: ChatBotMessageType.Human,
         content: value.user,
         metadata: {
-        },
-        tokens: [],
+        },        
       },
         {
-          type: ChatBotMessageType.AI,
-          tokens: [],
+          type: ChatBotMessageType.AI,          
           content: value.chatbot,
           metadata: metadata,
         },)
-    })
-    // console.log(history);
+    })    
     return history;
   }
 
