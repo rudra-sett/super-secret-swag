@@ -1,9 +1,9 @@
 import { AppLayout, AppLayoutProps, Flashbar } from "@cloudscape-design/components";
 import { useNavigationPanelState } from "../common/hooks/use-navigation-panel-state";
 import NavigationPanel from "./navigation-panel";
-import { ReactElement, useState, useContext } from "react";
-import {SessionRefreshContext} from "../common/session-refresh-context"
-import { NotificationProvider, useNotifications } from "./notif-manager";
+import { ReactElement, useState } from "react";
+import { SessionRefreshContext } from "../common/session-refresh-context"
+import { NotificationProvider } from "./notif-manager";
 import NotificationBar from "./notif-flashbar"
 
 export default function BaseAppLayout(
@@ -11,31 +11,29 @@ export default function BaseAppLayout(
 ) {
   const [navigationPanelState, setNavigationPanelState] =
     useNavigationPanelState();
-  const [toolsOpen, setToolsOpen] = useState(false);
-  // const {needsRefreshContext, setNeedsRefreshContext} = useContext(SessionRefreshContext);
+  const [toolsOpen, setToolsOpen] = useState(false);  
   const [needsRefresh, setNeedsRefresh] = useState(true);
-  const { notifications, addNotification } = useNotifications();
-  
+
 
   return (
-    <SessionRefreshContext.Provider value={{needsRefresh,setNeedsRefresh}}>
+    <SessionRefreshContext.Provider value={{ needsRefresh, setNeedsRefresh }}>
       <NotificationProvider>
-    <AppLayout
-      headerSelector="#awsui-top-navigation"
-      navigation={<NavigationPanel />}
-      navigationOpen={!navigationPanelState.collapsed}
-      onNavigationChange={({ detail }) =>
-        setNavigationPanelState({ collapsed: !detail.open })
-      }
-      toolsHide={props.info === undefined ? true : false}
-      tools={props.info}
-      toolsOpen={toolsOpen}
-      stickyNotifications={true}
-      notifications={<NotificationBar/>}
-      onToolsChange={({ detail }) => setToolsOpen(detail.open)}
-      {...props}
-    />
-    </NotificationProvider>
+        <AppLayout
+          headerSelector="#awsui-top-navigation"
+          navigation={<NavigationPanel />}
+          navigationOpen={!navigationPanelState.collapsed}
+          onNavigationChange={({ detail }) =>
+            setNavigationPanelState({ collapsed: !detail.open })
+          }
+          toolsHide={props.info === undefined ? true : false}
+          tools={props.info}
+          toolsOpen={toolsOpen}
+          stickyNotifications={true}
+          notifications={<NotificationBar />}
+          onToolsChange={({ detail }) => setToolsOpen(detail.open)}
+          {...props}
+        />
+      </NotificationProvider>
     </SessionRefreshContext.Provider>
   );
 }
