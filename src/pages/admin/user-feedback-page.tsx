@@ -20,11 +20,11 @@ import { Auth } from "aws-amplify";
 
 
 export default function UserFeedbackPage() {
-  const onFollow = useOnFollow();
-  const { tokens } = useTheme();
+  const onFollow = useOnFollow();  
   const [feedback, setFeedback] = useState<any>({});
   const [admin, setAdmin] = useState<boolean>(false);
 
+  /** Check if the signed-in user is an admin */
   useEffect(() => {
     (async () => {
       const result = await Auth.currentAuthenticatedUser();
@@ -52,6 +52,7 @@ export default function UserFeedbackPage() {
     })();
   }, []);
 
+  /** If they are not an admin, show a page indicating so */
   if (!admin) {
     return (
       <div

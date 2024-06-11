@@ -9,9 +9,7 @@ import {
   Spinner,
 } from "@cloudscape-design/components";
 import { useCallback, useContext, useEffect, useState } from "react";
-import RouterButton from "../../components/wrappers/router-button";
-import { RagDocumentType } from "../../common/types";
-import { TableEmptyState } from "../../components/table-empty-state";
+import { AdminDataType } from "../../common/types";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { getColumnDefinition } from "./columns";
@@ -20,8 +18,8 @@ import { useCollection } from "@cloudscape-design/collection-hooks";
 import { useNotifications } from "../../components/notif-manager";
 
 export interface DocumentsTabProps {
-  // workspaceId?: string;
-  documentType: RagDocumentType;
+  tabChangeFunction: () => void;
+  documentType: AdminDataType;
   statusRefreshFunction: () => void;
 }
 
@@ -36,6 +34,10 @@ export default function DocumentsTab(props: DocumentsTabProps) {
   const [showModalDelete, setShowModalDelete] = useState(false);
   const { addNotification, removeNotification } = useNotifications();
 
+  /** Pagination, but this is currently not working.
+   * You will likely need to take the items object from useCollection in the
+   * Cloudscape component, but it currently just takes in pages directly.
+   */
   const { items, collectionProps, paginationProps } = useCollection(pages, {
     filtering: {
       empty: (
@@ -58,6 +60,7 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     selection: {},
   });
 
+  /** Function to get documents */
   const getDocuments = useCallback(
     async (params: { continuationToken?: string; pageIndex?: number }) => {
       setLoading(true);
@@ -82,11 +85,12 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     [appContext, props.documentType]
   );
 
-
+  /** Whenever the memoized function changes, call it again */
   useEffect(() => {
     getDocuments({});
   }, [getDocuments]);
 
+  /** Handle clicks on the next page button, as well as retrievals of new pages if needed*/
   const onNextPageClick = async () => {
     const continuationToken = pages[currentPageIndex - 1]?.NextContinuationToken;
 
@@ -98,13 +102,14 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     }
   };
 
-
+  /** Handle clicks on the previous page button */
   const onPreviousPageClick = async () => {
     setCurrentPageIndex((current) =>
       Math.max(1, Math.min(pages.length - 1, current - 1))
     );
   };
 
+  /** Handle refreshes */
   const refreshPage = async () => {
     // console.log(pages[Math.min(pages.length - 1, currentPageIndex - 1)]?.Contents!)
     if (currentPageIndex <= 1) {
@@ -115,23 +120,33 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     }
   };
 
-
   const columnDefinitions = getColumnDefinition(props.documentType);
 
+  /** Deletes selected files */
   const deleteSelectedFiles = async () => {
     if (!appContext) return;
-
     setLoading(true);
     setShowModalDelete(false);
+
     const apiClient = new ApiClient(appContext);
-    await Promise.all(
-      selectedItems.map((s) => apiClient.knowledgeManagement.deleteFile(s.Key!))
-    );
+    try {
+      await Promise.all(
+        selectedItems.map((s) => apiClient.knowledgeManagement.deleteFile(s.Key!))
+      );
+    } catch (e) {
+      addNotification("error", "Error deleting files")
+      console.error(e);
+    }
+    // refresh the documents after deletion
     await getDocuments({ pageIndex: currentPageIndex });
+
     setSelectedItems([])
     setLoading(false);
   };
 
+  /** Start a 10-second interval on which to check sync status and disable the button if 
+   * syncing is not completed
+   */
   useEffect(() => {
     if (!appContext) return;
     const apiClient = new ApiClient(appContext);
@@ -140,9 +155,12 @@ export default function DocumentsTab(props: DocumentsTabProps) {
       try {
         const result = await apiClient.knowledgeManagement.kendraIsSyncing();
         console.log(result);
+        /** If the status is anything other than DONE SYNCING, then just
+         * keep the button disabled as if a sync is still running
+         */
         setSyncing(result != "DONE SYNCING");
       } catch (error) {
-        addNotification("error","Error checking sync status, please try again later.")
+        addNotification("error", "Error checking sync status, please try again later.")
         console.error(error);
       }
     };
@@ -151,9 +169,10 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     getStatus();
 
     return () => clearInterval(interval);
-  },[]);
+  }, []);
 
-  const syncKendra = async () => {    
+  /** Function to run a sync */
+  const syncKendra = async () => {
     if (syncing) {
       // setSyncing(false)
       return;
@@ -163,11 +182,12 @@ export default function DocumentsTab(props: DocumentsTabProps) {
       const state = await apiClient.knowledgeManagement.syncKendra();
       console.log(state);
       if (state != "STARTED SYNCING") {
-        addNotification("error","Error running sync, please try again later.")
+        addNotification("error", "Error running sync, please try again later.")
+        setSyncing(false)
       }
     } catch (error) {
       console.log(error);
-      addNotification("error","Error running sync, please try again later.")
+      addNotification("error", "Error running sync, please try again later.")
       setSyncing(false)
     }
   }
@@ -214,12 +234,11 @@ export default function DocumentsTab(props: DocumentsTabProps) {
             actions={
               <SpaceBetween direction="horizontal" size="xs">
                 <Button iconName="refresh" onClick={refreshPage} />
-                <RouterButton
-                  // href={`/rag/workspaces/add-data?workspaceId=${props.workspaceId}&tab=${props.documentType}`}
-                  href={`/admin/add-data`}
+                <Button
+                  onClick={props.tabChangeFunction}
                 >
                   {'Add Files'}
-                </RouterButton>
+                </Button>
                 <Button
                   variant="primary"
                   disabled={selectedItems.length == 0}
@@ -254,12 +273,7 @@ export default function DocumentsTab(props: DocumentsTabProps) {
           </Header>
         }
         empty={
-          <TableEmptyState
-            resourceName={"File"}
-            // createHref={`/rag/workspaces/add-data?workspaceId=${props.workspaceId}&tab=${props.documentType}`}
-            createHref={`/admin/add-data`}
-            createText={"Add Files"}
-          />
+          <Box textAlign="center">No files available</Box>
         }
         pagination={
           pages.length === 0 ? null : (

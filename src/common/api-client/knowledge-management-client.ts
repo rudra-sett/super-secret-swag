@@ -1,8 +1,3 @@
-
-// import {
-//   this.API
-// } from "../constants"
-
 import {
   Utils
 } from "../utils"
@@ -60,7 +55,9 @@ export class KnowledgeManagementClient {
         pageIndex: pageIndex,
       }),
     });
-
+    if (!response.ok) {
+      throw new Error('Failed to get files');
+    }
     const result = await response.json();
     return result;
   }
@@ -68,7 +65,7 @@ export class KnowledgeManagementClient {
   // Deletes a given file on the S3 bucket (hardcoded on the backend!)
   async deleteFile(key : string) {
     const auth = await Utils.authenticate();
-    await fetch(this.API + '/delete-s3-file', {
+    const response = await fetch(this.API + '/delete-s3-file', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -78,6 +75,10 @@ export class KnowledgeManagementClient {
         KEY : key
       }),
     });
+    if (!response.ok) {
+      throw new Error('Failed to delete file');
+    }
+    return await response.json()
   }
 
   // Runs a sync job on Kendra (hardcoded datasource as well as index on the backend)
@@ -106,7 +107,7 @@ export class KnowledgeManagementClient {
     return await response.json()
   }
 
-  // Checks if Kendra is currently syncing (used to disable the sync button)
+  // Checks the last time Kendra was synced
   async lastKendraSync() : Promise<string> {
     const auth = await Utils.authenticate();
     const response = await fetch(this.API + '/kendra-sync/get-last-sync', {headers: {

@@ -1,21 +1,12 @@
-import { Auth } from "aws-amplify";
-
 import {
   ChatBotHistoryItem,
   ChatBotMessageType,
 } from "../../components/chatbot/types";
 
 import {
-  assembleHistory
-} from "../../components/chatbot/utils"
-
-import {
   Utils
 } from "../utils"
 
-// import {
-//   this.API
-// } from "../constants"
 
 import { AppConfig } from "../types";
 
@@ -48,17 +39,15 @@ export class SessionsClient {
       });
       if (response.status != 200) {
         validData = false;
-        let jsonResponse = await response.json()
-        // console.log(jsonResponse);
-        errorMessage = jsonResponse;
-        // errorMessage = body.body;
+        let jsonResponse = await response.json()        
+        errorMessage = jsonResponse;        
         break;
       }
       const reader = response.body.getReader();
       const { value, done } = await reader.read();
       const decoder = new TextDecoder();
       const parsed = decoder.decode(value)
-      console.log(parsed)
+      // console.log(parsed)
       try {
         output = JSON.parse(parsed);
         validData = true;
@@ -75,7 +64,7 @@ export class SessionsClient {
   }
 
   // Returns a chat history given a specific user ID and session ID
-  // Return format: a list of ChatBotHistoryItems
+  // Return format: ChatBotHistoryItem[]
   async getSession(
     sessionId: string,
     userId: string,
@@ -86,6 +75,8 @@ export class SessionsClient {
     let runs = 0;
     let limit = 3;
     let errorMessage = "Could not load session";
+
+    /** Attempt to load a session up to 3 times or until it is validated */
     while (!validData && runs < limit) {
       runs += 1;
       const response = await fetch(this.API + '/user-session', {
@@ -99,7 +90,7 @@ export class SessionsClient {
           "user_id": userId
         })
       });
-      // console.log(response.body);
+      /** Check for errors */
       if (response.status != 200) {
         validData = false;
         errorMessage = await response.json()
@@ -108,6 +99,7 @@ export class SessionsClient {
       const reader = response.body.getReader();
       let received = new Uint8Array(0);
 
+      /** Read the response stream */
       while (true) {
         const { value, done } = await reader.read();
         if (done) {
@@ -147,17 +139,18 @@ export class SessionsClient {
         type: ChatBotMessageType.Human,
         content: value.user,
         metadata: {
-        },        
+        },
       },
         {
-          type: ChatBotMessageType.AI,          
+          type: ChatBotMessageType.AI,
           content: value.chatbot,
           metadata: metadata,
         },)
-    })    
+    })
     return history;
   }
 
+  /**Deletes a given session but this is not exposed in the UI */
   async deleteSession(
     sessionId: string,
     userId: string,

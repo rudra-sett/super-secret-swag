@@ -1,10 +1,6 @@
-import { Link, StatusIndicator } from "@cloudscape-design/components";
-import { RagDocumentType } from "../../common/types";
-import { Labels } from "../../common/constants";
+import { AdminDataType } from "../../common/types";
 import { DateTime } from "luxon";
 import { Utils } from "../../common/utils";
-import React from 'react';
-// import { Document } from "../../../API";
 
 const FILES_COLUMN_DEFINITIONS = [
   {
@@ -13,15 +9,6 @@ const FILES_COLUMN_DEFINITIONS = [
     cell: (item) => item.Key!,
     isRowHeader: true,
   },
-  // {
-  //   id: "status",
-  //   header: "Status",
-  //   cell: (item: Document) => (
-  //     <StatusIndicator type={Labels.statusTypeMap[item.status!]}>
-  //       {Labels.statusMap[item.status!]}
-  //     </StatusIndicator>
-  //   ),
-  // },
   {
     id: "createdAt",
     header: "Upload date",
@@ -36,144 +23,46 @@ const FILES_COLUMN_DEFINITIONS = [
     cell: (item) => Utils.bytesToSize(item.Size!),
   },
 ];
-/*
-const TEXTS_COLUMN_DEFINITIONS = [
-  {
-    id: "title",
-    header: "Title",
-    cell: (item: Document) => <>{Utils.textEllipsis(item.title ?? "", 100)}</>,
-    isRowHeader: true,
-  },
-  {
-    id: "status",
-    header: "Status",
-    cell: (item: Document) => (
-      <StatusIndicator type={Labels.statusTypeMap[item.status!]}>
-        {Labels.statusMap[item.status!]}
-      </StatusIndicator>
-    ),
-  },
-  {
-    id: "createdAt",
-    header: "Upload date",
-    cell: (item: Document) =>
-      DateTime.fromISO(new Date(item.createdAt).toISOString()).toLocaleString(
-        DateTime.DATETIME_SHORT
-      ),
-  },
-];
 
-const RSS_COLUMN_DEFINITIONS = [
+const FEEDBACK_COLUMN_DEFINITIONS = [
   {
-    id: "title",
-    header: "RSS Feed Title",
-    cell: (item: Document) => (
-      <Link href={item.workspaceId + "/rss/" + item.id + "/"}>
-        {Utils.textEllipsis(item.title ?? "", 100)}
-      </Link>
-    ),
+    id: "problem",
+    header: "Problem",
+    cell: (item) => item.Problem,
     isRowHeader: true,
   },
   {
-    id: "path",
-    header: "RSS Feed URL",
-    cell: (item: Document) => <>{Utils.textEllipsis(item.path ?? "", 100)}</>,
-    isRowHeader: true,
-  },
-  {
-    id: "status",
-    header: "RSS Subscription Status",
-    cell: (item: Document) => (
-      <StatusIndicator type={Labels.statusTypeMap[item.status!]}>
-        {Labels.statusMap[item.status!]}
-      </StatusIndicator>
-    ),
-  },
-];
-
-const QNA_COLUMN_DEFINITIONS = [
-  {
-    id: "title",
-    header: "Question",
-    cell: (item: Document) => <>{Utils.textEllipsis(item.title ?? "", 100)}</>,
-    isRowHeader: true,
-  },
-  {
-    id: "status",
-    header: "Status",
-    cell: (item: Document) => (
-      <StatusIndicator type={Labels.statusTypeMap[item.status!]}>
-        {Labels.statusMap[item.status!]}
-      </StatusIndicator>
-    ),
+    id: "topic",
+    header: "Topic",
+    cell: (item) => item.Topic,
     isRowHeader: true,
   },
   {
     id: "createdAt",
-    header: "Upload date",
-    cell: (item: Document) =>
-      DateTime.fromISO(new Date(item.createdAt).toISOString()).toLocaleString(
+    header: "Submission date",
+    cell: (item) =>
+      DateTime.fromISO(new Date(item.CreatedAt).toISOString()).toLocaleString(
         DateTime.DATETIME_SHORT
       ),
-    isRowHeader: true,
   },
+  {
+    id: "prompt",
+    header: "User Prompt",
+    cell: (item) => item.UserPrompt,
+    isRowHeader: true
+  },
+
 ];
 
-const WEBSITES_COLUMN_DEFINITIONS = [
-  {
-    id: "name",
-    header: "Name",
-    cell: (item: Document) =>
-      item.path!.length > 100
-        ? item.path!.substring(0, 100) + "..."
-        : item.path,
-    isRowHeader: true,
-  },
-  {
-    id: "status",
-    header: "Status",
-    cell: (item: Document) => (
-      <StatusIndicator type={Labels.statusTypeMap[item.status!]}>
-        {Labels.statusMap[item.status!]}
-      </StatusIndicator>
-    ),
-  },
-  {
-    id: "subType",
-    header: "Type",
-    cell: (item: Document) => (
-      <>{item.subType == "sitemap" ? "sitemap" : "website"}</>
-    ),
-    isRowHeader: true,
-  },
-  {
-    id: "subDocuments",
-    header: "Pages",
-    cell: (item: Document) => item.subDocuments,
-    isRowHeader: true,
-  },
-  {
-    id: "createdAt",
-    header: "Upload date",
-    cell: (item: Document) =>
-      DateTime.fromISO(new Date(item.createdAt).toISOString()).toLocaleString(
-        DateTime.DATETIME_SHORT
-      ),
-  },
-];*/
-
-export function getColumnDefinition(documentType: RagDocumentType) {
+/** This is exposed as a function because the code that this is based off of
+ * originally supported many more distinct file types.
+ */
+export function getColumnDefinition(documentType: AdminDataType) {
   switch (documentType) {
     case "file":
-      return FILES_COLUMN_DEFINITIONS;
-    /*case "text":
-      return TEXTS_COLUMN_DEFINITIONS;
-    case "qna":
-      return QNA_COLUMN_DEFINITIONS;
-    case "website":
-      return WEBSITES_COLUMN_DEFINITIONS;
-    case "rssfeed":
-      return RSS_COLUMN_DEFINITIONS;*/
+      return FILES_COLUMN_DEFINITIONS;   
+    case "feedback":
+      return FEEDBACK_COLUMN_DEFINITIONS;
     default:
       return [];
   }

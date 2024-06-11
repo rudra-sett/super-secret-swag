@@ -25,10 +25,6 @@ export interface NavigationPanelState {
 }
 
 export type LoadingStatus = "pending" | "loading" | "finished" | "error";
-export type RagDocumentType =
+export type AdminDataType =
   | "file"
-  | "text"
-  | "qna"
-  | "website"
-  | "rssfeed"
-  | "rsspost";
+  | "feedback";

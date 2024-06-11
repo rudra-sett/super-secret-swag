@@ -25,6 +25,7 @@ export default function DataPage() {
   const apiClient = new ApiClient(appContext);
   const [lastSyncTime, setLastSyncTime] = useState("")
 
+  /** Function to get the last synced time */
   const refreshSyncTime = async () => {
     try {
       const lastSync = await apiClient.knowledgeManagement.lastKendraSync();
@@ -34,18 +35,16 @@ export default function DataPage() {
     }
   }
 
+  /** Checks for admin status */
   useEffect(() => {
     (async () => {
-      const result = await Auth.currentAuthenticatedUser();
-      // console.log(result);  
-      if (!result || Object.keys(result).length === 0) {
-        console.log("Signed out!")
-        Auth.signOut();
-        return;
-      }
-
       try {
         const result = await Auth.currentAuthenticatedUser();
+        if (!result || Object.keys(result).length === 0) {
+          console.log("Signed out!")
+          Auth.signOut();
+          return;
+        }
         const admin = result?.signInUserSession?.idToken?.payload["custom:role"]
         if (admin) {
           const data = JSON.parse(admin);
@@ -54,13 +53,16 @@ export default function DataPage() {
           }
         }
       }
+      /** If there is some issue checking for admin status, just do nothing and the
+       * error page will show up
+        */
       catch (e) {
-        // const userName = result?.attributes?.email;
         console.log(e);
-      }      
-    })();    
+      }
+    })();
   }, []);
 
+  /** If the admin status check fails, just show an access denied page*/
   if (!admin) {
     return (
       <div
@@ -78,6 +80,7 @@ export default function DataPage() {
       </div>
     );
   }
+
   return (
     <BaseAppLayout
       contentType="cards"
@@ -117,8 +120,8 @@ export default function DataPage() {
                 // </Header>
                 "Manage the chatbot's data here. You can view, add, or remove data for the chatbot to reference."
               }
-            >              
-            Last successful sync: {lastSyncTime}
+            >
+              Last successful sync: {lastSyncTime}
             </Container>
             <Tabs
               tabs={[
@@ -127,6 +130,7 @@ export default function DataPage() {
                   id: "file",
                   content: (
                     <DocumentsTab
+                      tabChangeFunction={() => setActiveTab("add-data")}
                       documentType="file"
                       statusRefreshFunction={refreshSyncTime}
                     />
@@ -136,7 +140,9 @@ export default function DataPage() {
                   label: "Add Files",
                   id: "add-data",
                   content: (
-                    <DataFileUpload />
+                    <DataFileUpload 
+                      tabChangeFunction={() => setActiveTab("file")}
+                    />
                   ),
                 },
               ]}

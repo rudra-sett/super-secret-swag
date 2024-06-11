@@ -19,7 +19,7 @@ import { v4 as uuidv4 } from "uuid";
 import {SessionRefreshContext} from "../common/session-refresh-context"
 import { useNotifications } from "../components/notif-manager";
 import { Utils } from "../common/utils.js";
-import SessionButton from "../components/session-button"
+
 
 export default function NavigationPanel() {
   const appContext = useContext(AppContext);
@@ -92,8 +92,7 @@ export default function NavigationPanel() {
         items: sessions.map(session => ({
           type: "link",
           text: `${session.title}`,
-          href: `/chatbot/playground/${session.session_id}`,
-          // info: <SessionButton title={session.title} id={session.session_id}></SessionButton>
+          href: `/chatbot/playground/${session.session_id}`,          
         })).concat([{
           type: "link",
           info: <Box margin="xxs" textAlign="center" ><Button onClick={onReloadClick} iconName="refresh" loading={loadingSessions} variant="link">Reload Sessions</Button></Box>

@@ -11,7 +11,7 @@ import { AppContext } from "./common/app-context";
 import GlobalHeader from "./components/global-header";
 import Playground from "./pages/chatbot/playground/playground";
 import DataPage from "./pages/admin/data-view-page";
-import UserFeedbackPage from "./pages/admin/user-feedback";
+import UserFeedbackPage from "./pages/admin/user-feedback-page";
 import SessionPage from "./pages/chatbot/sessions/sessions"
 import { v4 as uuidv4 } from "uuid";
 import "./styles/app.scss";

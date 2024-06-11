@@ -63,7 +63,11 @@ const mimeTypes = {
   '.tar': 'application/x-tar'
 };
 
-export default function DataFileUpload() {
+export interface FileUploadTabProps {
+  tabChangeFunction: () => void;  
+}
+
+export default function DataFileUpload(props: FileUploadTabProps) {
   const appContext = useContext(AppContext);
   const apiClient = new ApiClient(appContext);
   const navigate = useNavigate();
@@ -265,9 +269,7 @@ export default function DataFileUpload() {
                 buttonText:
                   uploadingStatus === "success" ? "View files" : undefined,
                 onButtonClick: () =>
-                  navigate(
-                    `/admin/data`
-                  ),
+                  props.tabChangeFunction()
               },
             ]}
           />

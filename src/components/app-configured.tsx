@@ -46,7 +46,7 @@ export default function AppConfigured() {
   useEffect(() => {  
     if (!authenticated && configured) {
       console.log("No authenticated user, initiating sign-in.");
-      Auth.federatedSignIn({ customProvider: federatedIdName });
+      Auth.federatedSignIn({ customProvider: config.federatedSignInProvider });
     }
   }, [authenticated]);
 

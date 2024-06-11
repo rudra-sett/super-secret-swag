@@ -8,33 +8,20 @@ import {
   Header,
   Modal,
   Select,
-  Spinner,
-  FormField,
-  Textarea,
-  TextContent,
   DateRangePickerProps,
 } from "@cloudscape-design/components";
 import { I18nProvider } from '@cloudscape-design/components/i18n';
 import messages from '@cloudscape-design/components/i18n/messages/all.all';
-import { DateTime } from "luxon";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import RouterButton from "../../components/wrappers/router-button";
-import { RagDocumentType } from "../../common/types";
-import { TableEmptyState } from "../../components/table-empty-state";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
-import { PropertyFilterI18nStrings } from "../../common/i18n/property-filter-i18n-strings";
-// import {I18nStrings} from 
-// import { I18nProvider } from '@cloudscape-design/components/i18n';
-// import {DatePickerProps.I18nStrings} from ;
 import { getColumnDefinition } from "./columns";
-// import { I18nProviderProps } from "@cloudscape-design/components/i18n";
 import { Utils } from "../../common/utils";
 import { useCollection } from "@cloudscape-design/collection-hooks";
 import React from 'react';
 import { useNotifications } from "../../components/notif-manager";
-import {feedbackCategories, feedbackTypes} from '../../common/constants'
-//import { FeedbackResult } from "../../../API";
+import { feedbackCategories } from '../../common/constants'
+
 export interface FeedbackTabProps {
   updateSelectedFeedback: React.Dispatch<any>;
 }
@@ -52,16 +39,16 @@ export default function FeedbackTab(props: FeedbackTabProps) {
   const [
     selectedOption,
     setSelectedOption
-  ] = React.useState({label: "Any", value: "any"});
+  ] = React.useState({ label: "Any", value: "any" });
   const [value, setValue] = React.useState<DateRangePickerProps.AbsoluteValue>({
     type: "absolute",
     startDate: (new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 1)).toISOString().split("T")[0],
     endDate: (new Date()).toISOString().split("T")[0]
   });
 
-
   const { addNotification, removeNotification } = useNotifications();
 
+  /** Theoretically handles pagination but I think it works without this actually */
   const { items, collectionProps, paginationProps } = useCollection(pages, {
     filtering: {
       empty: (
@@ -84,24 +71,31 @@ export default function FeedbackTab(props: FeedbackTabProps) {
     selection: {},
   });
 
+  /** This is the memoized function that is used to get feedback. It takes in a
+   * page index to set the data locally to the correct page as well as a token that the
+   * API uses to paginate the results.
+   */
   const getFeedback = useCallback(
     async (params: { pageIndex?, nextPageToken?}) => {
       setLoading(true);
       try {
-        // console.log(selectedOption);
-        // console.log(value);
         const result = await apiClient.userFeedback.getUserFeedback(selectedOption.value, value.startDate + "T00:00:00", value.endDate + "T23:59:59", params.nextPageToken)
-        // console.log(result);
+
         setPages((current) => {
+          /** When any of the filters change, we want to reset the display back to page 1.
+           * Therefore, when needsRefresh is true, we want to set the pages array so that whatever was just retrieved
+           * is set as the first page
+           */
           if (needsRefresh.current) {
-            // console.log("needed a refresh!")
             needsRefresh.current = false;
             return [result];
           }
+          /** If there was a provided page index, then pop it in that index */
           if (typeof params.pageIndex !== "undefined") {
             current[params.pageIndex - 1] = result;
             return [...current];
           } else {
+            /** Otherwise, not, and just append it to the end and hope it's correct */
             console.log("pages?")
             return [...current, result];
           }
@@ -109,30 +103,29 @@ export default function FeedbackTab(props: FeedbackTabProps) {
       } catch (error) {
         console.error(Utils.getErrorMessage(error));
       }
-
-      console.log(pages);
       setLoading(false);
     },
     [appContext, selectedOption, value, needsRefresh]
   );
 
 
+  /** The getFeedback function is a memoized function.
+   * When any of the filters change, getFeedback will also change and we therefore need a refresh
+   */
   useEffect(() => {
-    setCurrentPageIndex(1);    
+    setCurrentPageIndex(1);
     setSelectedItems([]);
     if (needsRefresh.current) {
       // console.log("needs refresh!")
-      getFeedback({ pageIndex: 1 });      
-    } else { 
-      getFeedback({ pageIndex: currentPageIndex }); 
+      getFeedback({ pageIndex: 1 });
+    } else {
+      getFeedback({ pageIndex: currentPageIndex });
     }
   }, [getFeedback]);
 
+  /** Handles next page clicks */
   const onNextPageClick = async () => {
-    // console.log(pages);
     const continuationToken = pages[currentPageIndex - 1]?.NextPageToken;
-    // console.log("next page", currentPageIndex)
-    // console.log(pages);
     if (continuationToken) {
       if (pages.length <= currentPageIndex || needsRefresh.current) {
         await getFeedback({ nextPageToken: continuationToken });
@@ -141,18 +134,15 @@ export default function FeedbackTab(props: FeedbackTabProps) {
     }
   };
 
-
+  /** Handles previous page clicks */
   const onPreviousPageClick = async () => {
-    // console.log("prev page", currentPageIndex)
-    // console.log(pages);
     setCurrentPageIndex((current) =>
       Math.max(1, Math.min(pages.length - 1, current - 1))
     );
   };
 
+  /** Handles page refreshes */
   const refreshPage = async () => {
-    // console.log(pages[Math.min(pages.length - 1, currentPageIndex - 1)]?.Contents!)
-
     if (currentPageIndex <= 1) {
       await getFeedback({ pageIndex: currentPageIndex });
     } else {
@@ -162,40 +152,11 @@ export default function FeedbackTab(props: FeedbackTabProps) {
   };
 
 
-  const columnDefinitions = [
-    {
-      id: "problem",
-      header: "Problem",
-      cell: (item) => item.Problem,
-      isRowHeader: true,
-    },
-    {
-      id: "topic",
-      header: "Topic",
-      cell: (item) => item.Topic,
-      isRowHeader: true,
-    },
-    {
-      id: "createdAt",
-      header: "Submission date",
-      cell: (item) =>
-        DateTime.fromISO(new Date(item.CreatedAt).toISOString()).toLocaleString(
-          DateTime.DATETIME_SHORT
-        ),
-    },
-    {
-      id: "prompt",
-      header: "User Prompt",
-      cell: (item) => item.UserPrompt,
-      isRowHeader: true
-    },
+  const columnDefinitions = getColumnDefinition("feedback");
 
-  ];
-  //getColumnDefinition(props.documentType);
-
+  /** Deletes all selected feedback */
   const deleteSelectedFeedback = async () => {
     if (!appContext) return;
-
     setLoading(true);
     setShowModalDelete(false);
     const apiClient = new ApiClient(appContext);
@@ -212,28 +173,28 @@ export default function FeedbackTab(props: FeedbackTabProps) {
   return (
     <>
       <Modal
-      onDismiss={() => setShowModalDelete(false)}
-      visible={showModalDelete}
-      footer={
-        <Box float="right">
-          <SpaceBetween direction="horizontal" size="xs">
-            {" "}
-            <Button variant="link" onClick={() => setShowModalDelete(false)}>
-              Cancel
-            </Button>
-            <Button variant="primary" onClick={deleteSelectedFeedback}>
-              Ok
-            </Button>
-          </SpaceBetween>{" "}
-        </Box>
-      }
-      header={"Delete feedback" + (selectedItems.length > 1 ? "s" : "")}
-    >
-      Do you want to delete{" "}
-      {selectedItems.length == 1
-        ? `Feedback ${selectedItems[0].FeedbackID!}?`
-        : `${selectedItems.length} Feedback?`}
-    </Modal>
+        onDismiss={() => setShowModalDelete(false)}
+        visible={showModalDelete}
+        footer={
+          <Box float="right">
+            <SpaceBetween direction="horizontal" size="xs">
+              {" "}
+              <Button variant="link" onClick={() => setShowModalDelete(false)}>
+                Cancel
+              </Button>
+              <Button variant="primary" onClick={deleteSelectedFeedback}>
+                Ok
+              </Button>
+            </SpaceBetween>{" "}
+          </Box>
+        }
+        header={"Delete feedback" + (selectedItems.length > 1 ? "s" : "")}
+      >
+        Do you want to delete{" "}
+        {selectedItems.length == 1
+          ? `Feedback ${selectedItems[0].FeedbackID!}?`
+          : `${selectedItems.length} Feedback?`}
+      </Modal>
       <I18nProvider locale="en" messages={[messages]}>
 
 
@@ -258,7 +219,9 @@ export default function FeedbackTab(props: FeedbackTabProps) {
                 <SpaceBetween direction="horizontal" size="xs">
                   <DateRangePicker
                     onChange={({ detail }) => {
-                      console.log(detail);
+                      /** If the date changes, refresh all of the feedback. This
+                       * prevents bugs where one page is up-to-date and the previous/next ones are not
+                       */
                       needsRefresh.current = true;
                       setValue(detail.value as DateRangePickerProps.AbsoluteValue)
                     }}
@@ -289,7 +252,7 @@ export default function FeedbackTab(props: FeedbackTabProps) {
                         type: "relative"
                       }
                     ]}
-                    
+
                     isValidRange={range => {
                       if (range.type === "absolute") {
                         const [
@@ -327,32 +290,25 @@ export default function FeedbackTab(props: FeedbackTabProps) {
                     timeInputFormat="hh:mm:ss"
                     rangeSelectorMode="absolute-only"
                   />
-                  {/* <FormField label="Filter Topic"> */}
-                    <Select
-                      selectedOption={selectedOption}
-                      onChange={({ detail }) => {
-                        // Ensure label and value are defined, or set default
-                        const label = detail.selectedOption.label ?? "Default Label";
-                        const value = detail.selectedOption.value ?? "Default Value";
-                        // console.log(detail);
-                        needsRefresh.current = true;
-                        setSelectedOption({ label: detail.selectedOption.label!, value: detail.selectedOption.value });
-                        // setTopic(detail.selectedOption.value); 
-                      }}
-                      placeholder="Choose a category"
-                      options={[...feedbackCategories, {label : "Any", value: "any", disabled: false}]}
-                    />
-                  {/* </FormField> */}
-
+                  <Select
+                    selectedOption={selectedOption}
+                    onChange={({ detail }) => {
+                      /** If the topic changes, refresh all of the feedback */
+                      needsRefresh.current = true;
+                      setSelectedOption({ label: detail.selectedOption.label!, value: detail.selectedOption.value });
+                    }}
+                    placeholder="Choose a category"
+                    options={feedbackCategories}
+                  />
                   <Button iconName="refresh" onClick={refreshPage} />
-                  <Button 
-                variant="primary"
-                onClick={() => {
-                  apiClient.userFeedback.downloadFeedback(selectedOption.value, value.startDate, value.endDate);
-                  const id = addNotification("success","Your files have been downloaded.")
-                  Utils.delay(3000).then(() => removeNotification(id));
-                }}
-                >Download</Button>
+                  <Button
+                    variant="primary"
+                    onClick={() => {
+                      apiClient.userFeedback.downloadFeedback(selectedOption.value, value.startDate, value.endDate);
+                      const id = addNotification("success", "Your files have been downloaded.")
+                      Utils.delay(3000).then(() => removeNotification(id));
+                    }}
+                  >Download</Button>
                   <Button
                     variant="primary"
                     disabled={selectedItems.length == 0}
@@ -371,13 +327,7 @@ export default function FeedbackTab(props: FeedbackTabProps) {
             </Header>
           }
           empty={
-            /*<TableEmptyState
-              resourceName={"Feedback"}
-              // createHref={`/rag/workspaces/add-data?workspaceId=${props.workspaceId}&tab=${props.documentType}`}
-              // createHref={`/admin/add-data`}
-              // createText={"Add Feedback"}
-            />*/
-            <Box textAlign="center">No more feedback</Box>
+            <Box textAlign="center">No feedback available</Box>
           }
           pagination={
             pages.length === 0 ? null : (
