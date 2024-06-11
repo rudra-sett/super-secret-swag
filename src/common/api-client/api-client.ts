@@ -12,7 +12,7 @@ export class ApiClient {
 
  
 
-
+  /** Construct the Knowledge Management sub-client */
   public get knowledgeManagement() {
     if (!this._knowledgeManagementClient) {
       this._knowledgeManagementClient = new KnowledgeManagementClient(this._appConfig);      
@@ -21,7 +21,7 @@ export class ApiClient {
     return this._knowledgeManagementClient;
   }
 
-
+  /** Construct the Sessions sub-client */
   public get sessions() {
     if (!this._sessionsClient) {
       this._sessionsClient = new SessionsClient(this._appConfig);
@@ -31,7 +31,7 @@ export class ApiClient {
   }
 
 
-
+  /** Construct the Feedback sub-client */
   public get userFeedback() {
     if (!this._userFeedbackClient) {
       this._userFeedbackClient = new UserFeedbackClient(this._appConfig);
