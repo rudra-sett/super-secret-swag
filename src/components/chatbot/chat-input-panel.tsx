@@ -308,7 +308,10 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
   };
 
   const handleClearSearch = () => {
+    // Clear the search input state
     setState({ value: "", systemPrompt: defaultPrompt });
+    // Clear the message history state
+    props.setMessageHistory([]);
   };
 
   const connectionStatus = {
@@ -453,7 +456,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
                   }
                 }}
                 value={state.value}
-                placeholder={"Enter Search ex. \"Grants for new farmers\""}
+                placeholder={"Enter Search ex. \"energy efficiency\""}
               />
               <Button
                 disabled={
@@ -482,7 +485,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
                 variant="link"
                 style={{ marginLeft: '8px' }}
               >
-                Clear Search
+                Clear
               </Button>
             </div>
           </Container>
