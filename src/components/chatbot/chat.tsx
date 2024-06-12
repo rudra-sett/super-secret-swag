@@ -157,10 +157,12 @@ export default function Chat(props: { sessionId?: string }) {
         }
         header="Welcome to the Massachusetts EEA Grants Navigator!"
       >
-        Discover the grants offered by the EEA from Agriculture, Energy, Environmental, and more!<br />
-        - Enter your search term. For example: "Composting", into the search bar and see which grant programs relate to composting.<br />
-        - <strong>Select your organization before searching so the results are tailored to you!</strong>
-
+        <p>Discover the grants offered by the EEA from Agriculture, Energy, Environmental, and more!</p>
+        <ul>
+          <li>Enter your search term. For example: <em>"Composting"</em>, into the search bar and see which grant programs relate to composting.</li>
+          <li>Clearing a search is only available after a full response has been generated.</li>
+          <li><strong>Select your organization before searching so the results are tailored to you!</strong></li>
+        </ul>
       </Modal>
      </div>
       <SpaceBetween direction="vertical" size="m">
