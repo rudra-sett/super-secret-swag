@@ -179,8 +179,8 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
       // first deployment URL 'wss://zrkw21d01g.execute-api.us-east-1.amazonaws.com/prod/';
       const TEST_URL = appContext.wsEndpoint+"/"
 
-      // Get a JWT token for the API to authenticate on
-      const TOKEN = (await Auth.currentSession()).getAccessToken().getJwtToken()  
+      // Get a JWT token for the API to authenticate on      
+      const TOKEN = await Utils.authenticate()
                 
       const wsUrl = TEST_URL+'?Authorization='+TOKEN;
       const ws = new WebSocket(wsUrl);
@@ -313,6 +313,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
               <Button
                 iconName={listening ? "microphone-off" : "microphone"}
                 variant="icon"
+                ariaLabel="microphone-access"
                 onClick={() =>
                   listening
                     ? SpeechRecognition.stopListening()

@@ -8,6 +8,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import styles from "../../styles/chat.module.scss";
 import { AppContext } from "../../common/app-context";
+import { Utils } from "../../common/utils";
 
 
 export interface EmailPanelProps {
@@ -37,7 +38,7 @@ export default function EmailPanel(props: EmailPanelProps) {
       const TEST_URL = appContext.wsEndpoint + "/";
 
       // Create a new WebSocket connection
-      const TOKEN = (await Auth.currentSession()).getAccessToken().getJwtToken()
+      const TOKEN = await Utils.authenticate();
 
       // console.log(TOKEN)
       const wsUrl = TEST_URL + '?Authorization=' + TOKEN;
