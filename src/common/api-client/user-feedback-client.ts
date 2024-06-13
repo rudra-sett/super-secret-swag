@@ -1,7 +1,13 @@
 import {Utils} from "../utils"
-import {API} from "../constants"
+
+import { AppConfig } from "../types";
 
 export class UserFeedbackClient {
+
+  private readonly API;
+  constructor(protected _appConfig: AppConfig) {
+    this.API = _appConfig.httpEndpoint.slice(0,-1);
+  }
 
   // Takes in a piece of feedback (which has a prompt, completion, session ID, and the actual feedback (1 or 0))
   async sendUserFeedback(feedbackData) {
@@ -9,7 +15,7 @@ export class UserFeedbackClient {
     // TODO: use API Gateway
     console.log(feedbackData);
     const auth = await Utils.authenticate();
-    const response = await fetch(API + '/user-feedback', {
+    const response = await fetch(this.API + '/user-feedback', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -21,7 +27,7 @@ export class UserFeedbackClient {
 
   async downloadFeedback(topic : string, startTime? : string, endTime? : string) {
     const auth = await Utils.authenticate();
-    const response = await fetch(API + '/user-feedback/download-feedback', {
+    const response = await fetch(this.API + '/user-feedback/download-feedback', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -67,7 +73,7 @@ export class UserFeedbackClient {
     keysForDel.forEach(key => {
       params.delete(key);
     });
-    const response = await fetch(API + '/user-feedback?' + params.toString(), {
+    const response = await fetch(this.API + '/user-feedback?' + params.toString(), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -81,7 +87,7 @@ export class UserFeedbackClient {
   async deleteFeedback(topic : string, createdAt : string) {
     const auth = await Utils.authenticate();
     let params = new URLSearchParams({topic, createdAt});
-    await fetch(API + '/user-feedback?' + params.toString(), {
+    await fetch(this.API + '/user-feedback?' + params.toString(), {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

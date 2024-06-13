@@ -51,8 +51,6 @@ export interface ChatMessageProps {
   onThumbsDown: (feedbackTopic : string, feedbackType : string, feedbackMessage: string) => void;
 }
 
-
-
 export default function ChatMessage(props: ChatMessageProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [message] = useState<ChatBotHistoryItem>(props.message);
