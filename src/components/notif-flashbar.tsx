@@ -15,7 +15,6 @@ export default function NotificationBar() {
     <Flashbar  items={notifications.map(notif => ({
         content: notif.content,
         dismissible: notif.dismissible,
-        // sticky : true,
         onDismiss: () => notif.onDismiss(),
         type: notif.type
       }))} />    

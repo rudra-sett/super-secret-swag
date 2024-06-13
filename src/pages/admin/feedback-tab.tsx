@@ -52,7 +52,7 @@ export default function FeedbackTab(props: FeedbackTabProps) {
   const [
     selectedOption,
     setSelectedOption
-  ] = React.useState(undefined);
+  ] = React.useState({label : "Any", value: "any", disabled: false});
   const [value, setValue] = React.useState<DateRangePickerProps.AbsoluteValue>({
     type: "absolute",
     startDate: (new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 1)).toISOString(),
@@ -337,7 +337,7 @@ export default function FeedbackTab(props: FeedbackTabProps) {
                         setSelectedOption({ label: detail.selectedOption.label!, value: detail.selectedOption.value });
                         // setTopic(detail.selectedOption.value); 
                       }}
-                      placeholder="Choose a category"
+                      
                       options={[...feedbackCategories, {label : "Any", value: "any", disabled: false}]}
                     />
                   {/* </FormField> */}
