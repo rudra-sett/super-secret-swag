@@ -144,6 +144,57 @@
   z-index: 10; // Adjust as necessary to ensure it's above other content
 }
 
+.ma__brand-banner {
+  width: calc(100% - 20px); /* Adjust the width to account for the margin */
+  margin-right: 20px; /* Add margin to the right */
+  position: relative;
+  left: 0;
+  background-color: #f0f0f0; /* Adjust the background color as needed */
+}
+
+.ma__brand-banner-container {
+  max-width: 1200px; /* Optional: constrain the maximum width */
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  cursor: pointer; /* Make the entire container clickable */
+}
+
+.ma__brand-banner-logo {
+  height: 50px;
+  margin-right: 20px;
+}
+
+.ma__brand-banner-text {
+  font-size: 14px;
+}
+
+.ma__brand-banner-expansion {
+  display: none; /* Start collapsed */
+  justify-content: space-between;
+  padding: 10px 20px;
+  list-style: none;
+  background-color: #e0e0e0; /* Adjust the background color as needed */
+}
+
+.ma__brand-banner-expansion.expanded {
+  display: flex; /* Show when expanded */
+}
+
+.ma__brand-banner-expansion-item {
+  display: flex;
+  align-items: center;
+}
+
+.ma__brand-banner-expansion-item-content {
+  margin-left: 10px;
+}
+
+.ma__brand-banner-expansion-item svg {
+  margin-right: 10px;
+}
+
 .modal.custom-modal {
   background-color: #388557 !important; // Change this to your desired color
   color: #333 !important; // Optional: Change the text color if needed
