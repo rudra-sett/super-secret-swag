@@ -195,7 +195,7 @@ export default function Chat(props: { sessionId?: string }) {
           </SpaceBetween>
         </div>
       </div>
-      <footer style={{ position: 'fixed', bottom: 0, width: '100%'}}>
+      <footer style={{ position: 'fixed', bottom: 0, width: 'calc(100% - 50px)'}}>
         <BrandBanner />
       </footer>
     </div>

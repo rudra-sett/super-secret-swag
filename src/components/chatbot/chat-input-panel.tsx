@@ -383,6 +383,7 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
                   selectPrompt(detail.selectedOption.value || 'General');
                 }}
                 placeholder="Select type"
+                expandToViewport
               />
               <span style={{ fontFamily: 'Calibri, sans-serif', fontSize: 18, marginLeft: '8px' }}>looking for grants for</span>
               <TextareaAutosize
@@ -426,7 +427,6 @@ export default function ChatInputPanel(props: ChatInputPanelProps) {
                 iconAlign="left"
                 iconName="close"
                 variant="link"
-                style={{ marginLeft: '8px' }}
               >
                 Clear
               </Button>

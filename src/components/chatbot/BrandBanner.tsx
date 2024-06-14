@@ -21,10 +21,6 @@ const BrandBanner: React.FC = () => {
     };
   }, []);
 
-  const toggleExpanded = () => {
-    setExpanded(!expanded);
-  };
-
   return (
     <div className="ma__brand-banner ma__brand-banner--c-primary-alt-bg-light">
       <button
