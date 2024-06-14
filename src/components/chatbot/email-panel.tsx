@@ -9,6 +9,7 @@ import remarkGfm from "remark-gfm";
 import styles from "../../styles/chat.module.scss";
 import { AppContext } from "../../common/app-context";
 import { Utils } from "../../common/utils";
+import { useNotifications } from "../notif-manager";
 
 
 export interface EmailPanelProps {
@@ -23,6 +24,8 @@ export default function EmailPanel(props: EmailPanelProps) {
 
   const firstRender = useRef(true);
   const appContext = useContext(AppContext);
+
+  const {addNotification, removeNotification} = useNotifications()
 
   useEffect(() => {
     const handleGenerateEmail = async () => {
@@ -97,6 +100,10 @@ export default function EmailPanel(props: EmailPanelProps) {
       });
       // Handle WebSocket closure
       ws.addEventListener('close', async function close() {
+        const emailTest = /[\w.+-]+@[\w-]+\.[\w.-]+/
+        if (emailTest.test(recieved)) {
+          addNotification("warning","Warning: this email contains personal emails, please take caution before sending it to anyone outside your organization.")
+        }
         setGeneratedEmail(recieved);
         console.log('Disconnected from the WebSocket server');
       });
