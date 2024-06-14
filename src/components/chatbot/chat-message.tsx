@@ -181,7 +181,7 @@ export default function ChatMessage(props: ChatMessageProps) {
                   <ButtonDropdown
                   items={(props.message.metadata.Sources as any[]).map((item) => { return {id: "id", disabled: false, text : item.title, href : item.uri, external : true, externalIconAriaLabel: "(opens in new tab)"}})}
             
-                  >Sources</ButtonDropdown>
+                  >Learn More</ButtonDropdown>
                 )}
                 >
           {content?.length === 0 ? (

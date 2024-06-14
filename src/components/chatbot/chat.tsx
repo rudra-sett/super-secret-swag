@@ -14,6 +14,7 @@ import Modal from "@cloudscape-design/components/modal";
 import ChatInputPanel, { ChatScrollState } from "./chat-input-panel";
 import styles from "../../styles/chat.module.scss";
 import Box from '@cloudscape-design/components/box';
+import BrandBanner from "./BrandBanner"; // Import the new Dropdown component
 
 const DefaultButton = () => {
   return <Button variant="link">Other</Button>;
@@ -47,7 +48,6 @@ export default function Chat(props: { sessionId?: string }) {
     id: props.sessionId ?? uuidv4(),
     loading: typeof props.sessionId !== "undefined",
   });
-
   const [configuration, setConfiguration] = useState<ChatBotConfiguration>(
     () => ({
       streaming: true,
@@ -157,41 +157,20 @@ export default function Chat(props: { sessionId?: string }) {
         }
         header="Welcome to the Massachusetts EEA Grants Navigator!"
       >
-        Discover the grants offered by the EEA from Agriculture, Energy, Environmental, and more!<br />
-        - Enter your search term. For example: "Composting", into the search bar and see which grant programs relate to composting.<br />
-        - Select your organization before searching so the results are tailored to you!
-
+        <p>Discover the grants offered by the EEA from Agriculture, Energy, Environmental, and more!</p>
+        <ul>
+          <li>Enter your search term. For example: <em>"Composting"</em>, into the search bar and see which grant programs relate to composting.</li>
+          <li>Clearing a search is only available after a full response has been generated.</li>
+          <li><strong>Select your organization before searching so the results are tailored to you!</strong></li>
+        </ul>
       </Modal>
      </div>
       <SpaceBetween direction="vertical" size="m">
 
       <SpaceBetween direction="vertical" size="m"></SpaceBetween>
-        {/* {messageHistory.map((message, idx) => (
-          <ChatMessage
-            key={idx}
-            message={message}
-            showMetadata={configuration.showMetadata}
-            onThumbsUp={() => handleFeedback(1,idx, message)}
-            onThumbsDown={(feedbackTopic : string, feedbackType : string, feedbackMessage: string) => handleFeedback(0,idx, message,feedbackTopic, feedbackType, feedbackMessage)}
-          />
-        ))} */}
       </SpaceBetween>
-      <div className={styles.welcome_text}>
-        {session?.loading && (
-          <center>
-            <StatusIndicator type="loading">Loading session</StatusIndicator>
-          </center>
-        )}
-      </div>
       <div className={styles.input_container}>
         <SpaceBetween direction="horizontal" size="l">
-            {/* <div style={{ display: 'flex', justifyContent: 'center'}}>
-              <FarmButton/>
-              <BusinessButton/>
-              <NonprofitButton/>
-              <TownButton/>
-              <DefaultButton/>
-            </div> */}
           </SpaceBetween> 
         <SpaceBetween direction="vertical" size="s">
           <ChatInputPanel
@@ -216,8 +195,9 @@ export default function Chat(props: { sessionId?: string }) {
           </SpaceBetween>
         </div>
       </div>
+      <footer style={{ position: 'fixed', bottom: 0, width: 'calc(100% - 50px)'}}>
+        <BrandBanner />
+      </footer>
     </div>
   );
-  
-
-}
+};
