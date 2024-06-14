@@ -38,13 +38,12 @@ export default function NavigationPanel() {
 
 
 
-  // update the list of sessions every now and then
+  // update the list of sessions
   const loadSessions = async () => {
     let username;
     try {
     await Auth.currentAuthenticatedUser().then((value) => username = value.username);
-    if (username && needsRefresh) {
-      // let's wait for about half a second before refreshing the sessions      
+    if (username && needsRefresh) {           
       const fetchedSessions = await apiClient.sessions.getSessions(username);  
       await updateItems(fetchedSessions);
       console.log("fetched sessions")
@@ -66,13 +65,10 @@ export default function NavigationPanel() {
     setLoadingSessions(false);
   }
 }
-  useEffect(() => {
-   
 
-    // const interval = setInterval(loadSessions, 1000);
-    // loadSessions();
-
-    // return () => clearInterval(interval);
+// this hook allows other components (specifically the chat handler)
+// to request a session refresh (such as if a chat has just been created)
+  useEffect(() => {    
     loadSessions(); 
   }, [needsRefresh]);
 
@@ -164,18 +160,8 @@ export default function NavigationPanel() {
             onFollow(event);
           }
         }}
-        onChange={onChange}
-        // header={{ href: "/", text: "The Ride Guide AI" }}
-        // items={items.map((item, idx) => ({
-        //   ...item,
-        //   defaultExpanded: !navigationPanelState.collapsedSections[idx]
-        // }))}  
+        onChange={onChange}        
         items={items}
-        // items={Array.isArray(items) ? items.map((item, idx) => ({
-        //   ...item,
-        //   defaultExpanded: !navigationPanelState.collapsedSections[idx]
-        // })) : []}
-        
       /> : 
       <Box margin="xs" padding="xs" textAlign="center">
         <StatusIndicator type="loading">Loading sessions...</StatusIndicator>

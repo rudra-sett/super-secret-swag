@@ -28,9 +28,12 @@ export const languageList = [
 ];
 
 export const feedbackCategories = [
-  {label: "TRAC", value:"trac", disabled: false},
-  {label: "RIDE", value:"ride", disabled: false},
-  {label: "MBTA", value:"mbta", disabled: false},
+  {label: "Ride Policy", value:"rp", disabled: false},
+  {label: "Ride Flex", value:"rf", disabled: false},
+  {label: "Eligibility", value:"elig", disabled: false},
+  {label: "Scheduling/Reservation", value:"sr", disabled: false},
+  {label: "Mobility Management/Travel Training", value:"mmtt", disabled: false},
+  {label: "Trip Taking", value:"trip", disabled: false},
   {label: "Other", value:"other", disabled: false},
   {label : "Any", value: "any", disabled: false}
 ]
@@ -40,7 +43,8 @@ export const feedbackTypes = [
   {label: "Relevance", value:"relevance", disabled: false},
   {label: "Clarity", value:"clarity", disabled: false},
   {label: "Formatting", value:"completeness", disabled: false},
+  {label: "Incomplete", value:"incomplete", disabled: false},
   {label: "Other", value:"other", disabled: false}
 ]
 
-export const CHATBOT_NAME = "MBTA The RIDE Guide AI";
+export const CHATBOT_NAME = "MBTA The RIDE AI";
