@@ -38,5 +38,6 @@ export interface FeedbackData {
   completion: string;    
   topic: string,
   problem: string,
-  comment: string     
+  comment: string,
+  sources: string     
 }

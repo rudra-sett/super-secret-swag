@@ -206,7 +206,7 @@ export default function FeedbackTab(props: FeedbackTabProps) {
           selectionType="single"
           onSelectionChange={({ detail }) => {
             // console.log(detail);
-            needsRefresh.current = true;
+            // needsRefresh.current = true;
             props.updateSelectedFeedback(detail.selectedItems[0])
             setSelectedItems(detail.selectedItems);
           }}
