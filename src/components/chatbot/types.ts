@@ -163,6 +163,9 @@ export interface FeedbackData {
   key: number;
   feedback: number;
   prompt: string;
-  completion: string;
-  model: string;
+  completion: string;    
+  topic: string,
+  problem: string,
+  comment: string,
+  sources: string     
 }

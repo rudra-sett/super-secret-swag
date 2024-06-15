@@ -116,7 +116,8 @@ export default function Chat(props: { sessionId?: string, updateEmailFunction : 
         completion: completion,
         topic: feedbackTopic,
         problem: feedbackProblem,
-        comment: feedbackMessage     
+        comment: feedbackMessage,
+        sources: JSON.stringify(message.metadata.Sources)
       };
       addUserFeedback(feedbackData);
     // }
