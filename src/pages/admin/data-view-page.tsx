@@ -24,11 +24,12 @@ export default function DataPage() {
   const appContext = useContext(AppContext);
   const apiClient = new ApiClient(appContext);
   const [lastSyncTime, setLastSyncTime] = useState("")
+  const [showUnsyncedAlert, setShowUnsyncedAlert] = useState(false);
 
   /** Function to get the last synced time */
   const refreshSyncTime = async () => {
     try {
-      const lastSync = await apiClient.knowledgeManagement.lastKendraSync();
+      const lastSync = await apiClient.knowledgeManagement.lastKendraSync();    
       setLastSyncTime(lastSync);
     } catch (e) {
       console.log(e);
@@ -112,16 +113,32 @@ export default function DataPage() {
           <SpaceBetween size="l">
             <Container
               header={
-                // <Header
-                //   variant="h4"
-                //   // description="Container description"
-                // >
-                //   Manage the chatbot's data here. You can view, add, or remove data for the chatbot to reference.
-                // </Header>
-                "Manage the chatbot's data here. You can view, add, or remove data for the chatbot to reference."
+                <Header
+                  variant="h3"
+                  // description="Container description"
+                >
+                  Last successful sync: {lastSyncTime}
+                </Header>                
               }
             >
-              Last successful sync: {lastSyncTime}
+              <SpaceBetween size="xxs">
+              Manage the chatbot's data here. You can view, add, or remove data for the chatbot to reference.
+
+              Please make sure to sync data with the chatbot when you are done adding or removing new files.
+              <br></br>
+              {showUnsyncedAlert && (
+                <Alert
+                  type="warning"
+                  dismissAriaLabel="Close alert"
+                  // dismissible
+                  onDismiss={() => setShowUnsyncedAlert(false)}
+                >
+                  Some files have been added or modified since the last sync.
+                  Please sync the data to ensure the chatbot has the latest
+                  information.
+                </Alert>
+              )}
+              </SpaceBetween>
             </Container>
             <Tabs
               tabs={[
@@ -133,6 +150,8 @@ export default function DataPage() {
                       tabChangeFunction={() => setActiveTab("add-data")}
                       documentType="file"
                       statusRefreshFunction={refreshSyncTime}
+                      lastSyncTime={lastSyncTime}
+                      setShowUnsyncedAlert={setShowUnsyncedAlert}
                     />
                   ),
                 },

@@ -21,6 +21,8 @@ export interface DocumentsTabProps {
   tabChangeFunction: () => void;
   documentType: AdminDataType;
   statusRefreshFunction: () => void;
+  lastSyncTime: string;
+  setShowUnsyncedAlert: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function DocumentsTab(props: DocumentsTabProps) {
@@ -59,6 +61,52 @@ export default function DocumentsTab(props: DocumentsTabProps) {
     },
     selection: {},
   });
+
+  useEffect(() => {
+    // Function to parse the lastSyncTime
+    const parseLastSyncTime = (timeString: string) => {
+      try {
+        const dateParts = timeString.split(', ');
+        const datePart = dateParts.slice(0, 2).join(', ');
+        const timePart = dateParts.slice(2).join(', ');
+      
+        const [month, day, year] = datePart.split(' ');
+        const [time, period] = timePart.split(' ');
+        const [hours, minutes] = time.split(':');
+      
+        const date = new Date(Date.UTC(
+          parseInt(year),
+          new Date(Date.parse(month + " 1, " + year)).getUTCMonth(),
+          parseInt(day),
+          parseInt(hours),
+          parseInt(minutes)
+        ));
+      
+        if (period.toLowerCase() === 'pm' && parseInt(hours) !== 12) {
+          date.setUTCHours(date.getUTCHours() + 12);
+        } else if (period.toLowerCase() === 'am' && parseInt(hours) === 12) {
+          date.setUTCHours(0);
+        }
+      
+        return date;
+      } catch (error) {
+        console.log(error)
+        return new Date();
+      }
+    };
+
+    const lastSyncDate = parseLastSyncTime(props.lastSyncTime);
+
+    // Check if any files have a LastModified date newer than the lastSyncTime
+    const hasUnsyncedFiles = pages.some((page) =>
+      page.Contents?.some((file) => {
+        const fileDate = new Date(file.LastModified);
+        return fileDate > lastSyncDate;
+      })
+    );
+
+    props.setShowUnsyncedAlert(hasUnsyncedFiles);
+  }, [pages, props.lastSyncTime, props.setShowUnsyncedAlert]);
 
   /** Function to get documents */
   const getDocuments = useCallback(
