@@ -80,7 +80,7 @@ export default function EmailPanel(props: FeedbackPanelProps) {
                   </ColumnLayout>
                 </ExpandableSection>
 
-                : "No feedback selected"}
+                : <></>}
           </Container>
         </ColumnLayout>
       </SplitPanel>
