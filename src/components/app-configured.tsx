@@ -42,7 +42,7 @@ export default function AppConfigured() {
         // but that is very unlikely
         console.error("Authentication check error:", e);
         try {
-          Auth.federatedSignIn({ customProvider: currentConfig.federatedSignInProvider });
+          Auth.federatedSignIn();
         } catch (error) {
           // however, just in case, we'll add another try catch
           setError(true);
@@ -55,7 +55,7 @@ export default function AppConfigured() {
   useEffect(() => {
     if (!authenticated && configured) {
       console.log("No authenticated user, initiating sign-in.");
-      Auth.federatedSignIn({ customProvider: config.federatedSignInProvider });
+      Auth.federatedSignIn();
     }
   }, [authenticated, configured]);
 
