@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useEffect } from 'react';
-import { Box, ColumnLayout, Container, ContentLayout, ExpandableSection, Header, Link, SpaceBetween, SplitPanel, TextContent, } from '@cloudscape-design/components';
+import { Box, Cards, ColumnLayout, Container, ContentLayout, ExpandableSection, Header, Link, SpaceBetween, SplitPanel, TextContent, } from '@cloudscape-design/components';
 import { Auth } from 'aws-amplify';
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -44,7 +44,7 @@ export default function EmailPanel(props: FeedbackPanelProps) {
             >
               {props.selectedFeedback.FeedbackComments ? props.selectedFeedback.FeedbackComments : "No feedback selected"}
             </Container>
-            
+
           </SpaceBetween>
           <Container
             header={
@@ -57,30 +57,38 @@ export default function EmailPanel(props: FeedbackPanelProps) {
           >
             {props.selectedFeedback.ChatbotMessage ? props.selectedFeedback.ChatbotMessage : "No feedback selected"}
             {props.selectedFeedback.Sources ?
-                
-                <ExpandableSection headerText="Sources">
-                  <ColumnLayout columns={2} variant="text-grid">
-                    <SpaceBetween size="l">
-                      <Box variant="h3" padding="n">
-                        Title
-                      </Box>
-                      {(JSON.parse(props.selectedFeedback.Sources) as any[]).map((item) =>
-                        item.title)}
-                    </SpaceBetween>
-                    <SpaceBetween size="l">
-                      <Box variant="h3" padding="n">
-                        URL
-                      </Box>
-                      
-                      {(JSON.parse(props.selectedFeedback.Sources) as any[]).map((item) =>
-                        <Link href={item.uri} external={true} variant="primary">
-                          {item.uri.match(/^(?:https?:\/\/)?([\w-]+(\.[\w-]+)+)/)[1]}
-                        </Link>)}
-                    </SpaceBetween>
-                  </ColumnLayout>
-                </ExpandableSection>
 
-                : <></>}
+              <ExpandableSection headerText="Sources">
+                {<Cards                      
+                      cardDefinition={{
+                        header: item => (
+                          <Link href={item.uri} external={true} fontSize="body-s">
+                            {item.title}
+                          </Link>
+                        ),                        
+                      }}
+                      cardsPerRow={[
+                        { cards: 1 },
+                        { minWidth: 500, cards: 3 }
+                      ]}
+                      items={JSON.parse(props.selectedFeedback.Sources) as any[]}
+                      loadingText="Loading sources..."
+                      empty={
+                        <Box
+                          margin={{ vertical: "xs" }}
+                          textAlign="center"
+                          color="inherit"
+                        >
+                          <SpaceBetween size="m">
+                            <b>No sources</b>                            
+                          </SpaceBetween>
+                        </Box>
+                      }
+                    // header={<Header>Example Cards</Header>}
+                    />}
+              </ExpandableSection>
+
+              : <></>}
           </Container>
         </ColumnLayout>
       </SplitPanel>

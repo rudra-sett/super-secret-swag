@@ -10,9 +10,27 @@ export class MetricClient {
 
   async getInvocationCount() {
     try {
-      const auth = await Utils.authenticate();
-      console.log("inside the comprehend medical client")
+      const auth = await Utils.authenticate();      
       const response = await fetch(this.API + '/chat-invocations-count', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization' : auth
+        },        
+      });
+      console.log(response);
+      return await response.json()
+    }
+    catch (err) {
+      console.log(err);
+      return "unknown";
+    }
+  }
+
+  async getResponseTime() {
+    try {
+      const auth = await Utils.authenticate();      
+      const response = await fetch(this.API + '/response-time', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

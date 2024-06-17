@@ -57,7 +57,7 @@ export class ApiClient {
       this._metricClient = new MetricClient(this._appConfig);
     }
 
-    return this._comprehendMedicalClient; //
+    return this._metricClient; //
   }
 
 

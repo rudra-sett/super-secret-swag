@@ -103,6 +103,7 @@ export default function NavigationPanel() {
     if (admin) {
       const data = JSON.parse(admin);
       if (data.includes("Admin")) {
+        const invocationCount = await apiClient.metrics.getInvocationCount();
         console.log("admin found!")
         newItems.push({
           type: "section",
@@ -110,7 +111,9 @@ export default function NavigationPanel() {
           items: [
             { type: "link", text: "Update Data", href: "/admin/add-data" },
             { type: "link", text: "Data", href: "/admin/data" },
-            { type: "link", text: "User Feedback", href: "/admin/user-feedback" }
+            { type: "link", text: "User Feedback", href: "/admin/user-feedback" },            
+            invocationCount? { type: "link", text: `Message Count (past 24hrs): ${invocationCount}`, href: ""} 
+            : {type: "link", text: "Message Count (past 24hrs): unknown", href: ""}
           ],
         },)
       }
