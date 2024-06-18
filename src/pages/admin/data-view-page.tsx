@@ -3,27 +3,22 @@ import {
   ContentLayout,
   Header,
   SpaceBetween,
-  Alert
+  Alert,
+  Tabs,
+  Container
 } from "@cloudscape-design/components";
-import {
-  Authenticator,
-  Heading,
-  useTheme,
-} from "@aws-amplify/ui-react";
-import BaseAppLayout from "../../components/base-app-layout";
 import useOnFollow from "../../common/hooks/use-on-follow";
-import FeedbackTab from "./feedback-tab";
-import FeedbackPanel from "../../components/feedback-panel";
+import BaseAppLayout from "../../components/base-app-layout";
+import DocumentsTab from "./documents-tab";
 import { CHATBOT_NAME } from "../../common/constants";
 import { useState, useEffect } from "react";
 import { Auth } from "aws-amplify";
+import DataFileUpload from "./file-upload-tab";
 
-
-export default function UserFeedbackPage() {
+export default function DataPage() {
   const onFollow = useOnFollow();
-  const { tokens } = useTheme();
-  const [feedback, setFeedback] = useState<any>({});
   const [admin, setAdmin] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState("file");
 
   useEffect(() => {
     (async () => {
@@ -45,7 +40,7 @@ export default function UserFeedbackPage() {
           }
         }
       }
-      catch (e){
+      catch (e) {
         // const userName = result?.attributes?.email;
         console.log(e);
       }
@@ -69,8 +64,7 @@ export default function UserFeedbackPage() {
       </div>
     );
   }
-
-  return (    
+  return (
     <BaseAppLayout
       contentType="cards"
       breadcrumbs={
@@ -81,19 +75,61 @@ export default function UserFeedbackPage() {
               text: CHATBOT_NAME,
               href: "/",
             },
-
             {
-              text: "View Feedback",
-              href: "/admin/user-feedback",
+              text: "View Data",
+              href: "/admin/data",
             },
           ]}
         />
       }
-      splitPanel={<FeedbackPanel selectedFeedback={feedback}/>}
       content={
-        <ContentLayout header={<Header variant="h1">View Feedback</Header>}>
+        <ContentLayout
+          header={
+            <Header
+              variant="h1"
+            >
+              Data Dashboard
+            </Header>
+          }
+        >
           <SpaceBetween size="l">
-                <FeedbackTab updateSelectedFeedback={setFeedback}/>
+            <Container
+              // header={
+              //   <Header
+              //     variant="h4"
+              //     // description="Container description"
+              //   >
+              //     Manage the chatbot's data here. You can view, add, or remove data for the chatbot to reference.
+              //   </Header>
+              // }
+            >              
+            Manage the chatbot's data here. You can view, add, or remove data for the chatbot to reference.
+            </Container>
+            <Tabs
+              tabs={[
+                {
+                  label: "Current Files",
+                  id: "file",
+                  content: (
+                    <DocumentsTab
+                      documentType="file"
+                    />
+                  ),
+                },
+                {
+                  label: "Add Files",
+                  id: "add-data",
+                  content: (
+                    <DataFileUpload />
+                  ),
+                },
+              ]}
+              activeTabId={activeTab}
+              onChange={({ detail: { activeTabId } }) => {
+                setActiveTab(activeTabId);
+              }}
+            />
+
           </SpaceBetween>
         </ContentLayout>
       }

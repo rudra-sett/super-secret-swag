@@ -45,7 +45,7 @@ export default function NavigationPanel() {
     if (username && needsRefresh) {
       // let's wait for about half a second before refreshing the sessions      
       const fetchedSessions = await apiClient.sessions.getSessions(username);  
-      updateItems(fetchedSessions);
+      await updateItems(fetchedSessions);
       console.log("fetched sessions")
       // console.log(fetchedSessions);
       if (!loaded) {
@@ -83,8 +83,8 @@ export default function NavigationPanel() {
   };
 
 
-  const updateItems = (sessions) => {
-    const newItems: SideNavigationProps.Item[] = [
+  const updateItems = async (sessions) => {
+    let newItems: SideNavigationProps.Item[] = [
       {
         type: "section",
         text: "Session History",
@@ -96,17 +96,28 @@ export default function NavigationPanel() {
           type: "link",
           info: <Box margin="xxs" textAlign="center" ><Button onClick={onReloadClick} iconName="refresh" loading={loadingSessions} variant="link">Reload Sessions</Button></Box>
         }]),
-      },
-      {
-        type: "section",
-        text: "Admin",
-        items: [
-          { type: "link", text: "Update Data", href: "/admin/add-data" },
-          { type: "link", text: "Data", href: "/admin/data" },
-          { type: "link", text: "User Feedback", href: "/admin/user-feedback" }
-        ],
-      },
+      },      
     ];
+    try {
+    const result = await Auth.currentAuthenticatedUser();
+    const admin = result?.signInUserSession?.idToken?.payload["custom:role"]
+    if (admin) {
+      const data = JSON.parse(admin);
+      if (data.includes("Admin")) {
+        console.log("admin found!")
+        newItems.push({
+          type: "section",
+          text: "Admin",
+          items: [            
+            { type: "link", text: "Data", href: "/admin/data" },
+            { type: "link", text: "User Feedback", href: "/admin/user-feedback" }
+          ],
+        },)
+      }
+    }
+  } catch (e) {
+    console.log(e)
+  }
     setItems(newItems);
   };
 
