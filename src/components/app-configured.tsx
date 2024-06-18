@@ -19,9 +19,6 @@ export default function AppConfigured() {
   const [theme, setTheme] = useState(StorageHelper.getTheme());
   const [configured, setConfigured] = useState<boolean>(false);
 
-  // this is the authentication provider that Cognito needs
-  const federatedIdName: string = "AzureAD-OIDC-MassGov";
-
   // trigger authentication state when needed
   useEffect(() => {
     (async () => {
@@ -42,7 +39,11 @@ export default function AppConfigured() {
         // but that is very unlikely
         console.error("Authentication check error:", e);
         try {
-          Auth.federatedSignIn();
+          if (currentConfig.federatedSignInProvider != "") {
+            Auth.federatedSignIn({ customProvider: currentConfig.federatedSignInProvider });
+          } else {
+            Auth.federatedSignIn();
+          }
         } catch (error) {
           // however, just in case, we'll add another try catch
           setError(true);
@@ -55,7 +56,11 @@ export default function AppConfigured() {
   useEffect(() => {
     if (!authenticated && configured) {
       console.log("No authenticated user, initiating sign-in.");
-      Auth.federatedSignIn();
+      if (config.federatedSignInProvider != "") {
+        Auth.federatedSignIn({ customProvider: config.federatedSignInProvider });
+      } else {
+        Auth.federatedSignIn();
+      }
     }
   }, [authenticated, configured]);
 
