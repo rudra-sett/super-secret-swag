@@ -3,6 +3,7 @@ import { SessionsClient } from "./sessions-client";
 import { KnowledgeManagementClient } from "./knowledge-management-client";
 import { UserFeedbackClient } from "./user-feedback-client";
 import { ComprehendMedicalClient } from "./comprehend-medical-client";
+import { MetricClient } from "./metrics-client";
 
 export class ApiClient {
 
@@ -10,6 +11,7 @@ export class ApiClient {
   private _knowledgeManagementClient : KnowledgeManagementClient | undefined;
   private _userFeedbackClient: UserFeedbackClient | undefined;
   private _comprehendMedicalClient: ComprehendMedicalClient | undefined;
+  private _metricClient: MetricClient | undefined;
 
  
 
@@ -48,6 +50,14 @@ export class ApiClient {
     }
 
     return this._comprehendMedicalClient; //
+  }
+
+  public get metrics() {
+    if (!this._metricClient) {
+      this._metricClient = new MetricClient(this._appConfig);
+    }
+
+    return this._metricClient; //
   }
 
 
