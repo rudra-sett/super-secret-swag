@@ -3,7 +3,7 @@
   "Auth": {
     "region": "us-east-1",
     "userPoolId": "us-east-1_BHned34tF",
-    "userPoolWebClientId": "4qn890ga2uh7a04ia5hkqaep3b",    
+    "userPoolWebClientId": "657dsvjcbccmk6al61ub8cgdfa",    
     "oauth": {
       "domain": "sandbox-mass-gov.auth.us-east-1.amazoncognito.com",
       "scope": ["email", "openid", "profile"],
