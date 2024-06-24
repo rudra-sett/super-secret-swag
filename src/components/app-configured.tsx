@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import {
+import {  
   ThemeProvider,
   defaultDarkModeOverride,
 } from "@aws-amplify/ui-react";
 import App from "../app";
-import { Amplify, Auth } from "aws-amplify";
+import { Amplify, Auth} from "aws-amplify";
 import { AppConfig } from "../common/types";
 import { AppContext } from "../common/app-context";
 import { Alert, StatusIndicator } from "@cloudscape-design/components";
@@ -17,52 +17,38 @@ export default function AppConfigured() {
   const [error, setError] = useState<boolean | null>(null);
   const [authenticated, setAuthenticated] = useState<boolean>(null);
   const [theme, setTheme] = useState(StorageHelper.getTheme());
-  const [configured, setConfigured] = useState<boolean>(false);
+  const [configured, setConfigured] = useState<boolean>(false);  
+
+  // this is the authentication provider that Cognito needs
+  const federatedIdName : string = "AzureAD-OIDC-MassGov";
 
   // trigger authentication state when needed
   useEffect(() => {
     (async () => {
-      let currentConfig: AppConfig;
-      try {
+      try {     
         const result = await fetch("/aws-exports.json");
         const awsExports = await result.json();
-        currentConfig = Amplify.configure(awsExports) as AppConfig | null;
-        const user = await Auth.currentAuthenticatedUser();
-        if (user) {
-          setAuthenticated(true);
-        }
-        setConfig(awsExports);
+        Amplify.configure(awsExports);   
         setConfigured(true);
+        const currentUser = await Auth.currentAuthenticatedUser();
+        // console.log("Authenticated user:", currentUser);
+        setAuthenticated(true);
+        // console.log(authenticated);
+        setConfig(awsExports);
       } catch (e) {
-        // If you get to this state, then this means the user check failed
-        // technically it is possible that loading aws-exports.json failed too or some other step
-        // but that is very unlikely
         console.error("Authentication check error:", e);
-        try {
-          if (currentConfig.federatedSignInProvider != "") {
-            Auth.federatedSignIn({ customProvider: currentConfig.federatedSignInProvider });
-          } else {
-            Auth.federatedSignIn();
-          }
-        } catch (error) {
-          // however, just in case, we'll add another try catch
-          setError(true);
-        }
+        setAuthenticated(false);
       }
     })();
   }, []);
-
+  
   // whenever the authentication state changes, if it's changed to un-authenticated, re-verify
-  useEffect(() => {
+  useEffect(() => {  
     if (!authenticated && configured) {
       console.log("No authenticated user, initiating sign-in.");
-      if (config.federatedSignInProvider != "") {
-        Auth.federatedSignIn({ customProvider: config.federatedSignInProvider });
-      } else {
-        Auth.federatedSignIn();
-      }
+      Auth.federatedSignIn({ customProvider: federatedIdName });
     }
-  }, [authenticated, configured]);
+  }, [authenticated]);
 
   // dark/light theme
   useEffect(() => {
@@ -129,7 +115,7 @@ export default function AppConfigured() {
           alignItems: "center",
         }}
       >
-        <StatusIndicator type="loading">Loading</StatusIndicator>
+        <StatusIndicator type="loading">Loading</StatusIndicator>        
       </div>
     );
   }
@@ -143,10 +129,10 @@ export default function AppConfigured() {
           overrides: [defaultDarkModeOverride],
         }}
         colorMode={theme === Mode.Dark ? "dark" : "light"}
-      >
+      >        
         {authenticated ? (
-          <App />
-        ) : (
+          <App/>
+        ) : (          
           // <TextContent>Are we authenticated: {authenticated}</TextContent>
           <></>
         )}

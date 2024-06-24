@@ -334,7 +334,7 @@ export default function FeedbackTab(props: FeedbackTabProps) {
                         const value = detail.selectedOption.value ?? "Default Value";
                         // console.log(detail);
                         needsRefresh.current = true;
-                        setSelectedOption({ label: detail.selectedOption.label!, value: detail.selectedOption.value, disabled:false });
+                        setSelectedOption({ label: detail.selectedOption.label!, value: detail.selectedOption.value });
                         // setTopic(detail.selectedOption.value); 
                       }}
                       
