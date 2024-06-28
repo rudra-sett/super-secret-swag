@@ -101,9 +101,7 @@ export default function EmailPanel(props: EmailPanelProps) {
       // Handle WebSocket closure
       ws.addEventListener('close', async function close() {
         const emailTest = /[\w.+-]+@[\w-]+\.[\w.-]+/
-        if (emailTest.test(recieved)) {
-          addNotification("warning","Warning: an email summary was generated that may contain internal TRAC/MBTA emails, please take caution before sending it to anyone outside your organization.")
-        }
+        received = received.replace(emailTest, '[REDACTED]');
         setGeneratedEmail(recieved);
         console.log('Disconnected from the WebSocket server');
       });
